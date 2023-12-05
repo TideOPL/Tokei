@@ -1,0 +1,46 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev",
+    "lint": "next lint",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@clerk/nextjs": "^4.21.10",
+    "@clerk/types": "^3.48.1",
+    "@rvxlab/tailwind-plugin-ios-full-height": "^1.1.0",
+    "@t3-oss/env-nextjs": "^0.3.1",
+    "axios": "^1.6.2",
+    "next": "^13.4.2",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-player": "^2.12.0",
+    "zod": "^3.21.4"
+  },
+  "devDependencies": {
+    "@types/eslint": "^8.37.0",
+    "@types/node": "^18.16.0",
+    "@types/prettier": "^2.7.2",
+    "@types/react": "^18.2.6",
+    "@types/react-dom": "^18.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^6.2.0",
+    "autoprefixer": "^10.4.14",
+    "eslint": "^8.46.0",
+    "eslint-config-next": "^13.4.2",
+    "eslint-plugin-react": "^7.33.0",
+    "eslint-plugin-tailwindcss": "^3.13.0",
+    "eslint-prettier-config": "^1.0.1",
+    "postcss": "^8.4.21",
+    "prettier": "^2.8.8",
+    "prettier-plugin-tailwindcss": "^0.2.8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5.0.4"
+  },
+  "ct3aMetadata": {
+    "initVersion": "7.14.0"
+  }
+}
