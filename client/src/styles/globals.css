@@ -1,4 +1,6 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
     scrollbar-width: thin;
@@ -58,9 +60,8 @@
     color: white !important;
 
   }
+
+  .cl-internal-1b63r8w {
+    color: white !important;
+  }
 }
-
-
-
-@tailwind components;
-@tailwind utilities;

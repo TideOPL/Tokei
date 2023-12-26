@@ -49,16 +49,16 @@ const Channel = ({ channel }: InferGetServerSidePropsType<typeof getServerSidePr
   }, []);
 
   return (
-    <div className="w-full sm:min-h-screen min-h-screen-ios bg-light-primary-light dark:bg-dark-primary-dark scroll-smooth">
+    <div className="w-full sm:min-h-screen min-h-screen-ios min-h-screen bg-light-primary-light dark:bg-dark-primary-dark scroll-smooth">
     <Head>
-      <title>{"Tokei -" + channel.username}</title>
+      <title>{"Tokei - " + channel.username}</title>
       <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport" />
     </Head>
     <div className="sticky top-0 z-[1000] h-24">
       {/*@ts-ignore -- Bug with Clerk types.*/}
       <Nav user={user}/>
     </div>
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center min-h-[50%]">
       {channel.isLive && 
         <div className="flex flex-col h-4/5 w-4/5 max-w-6xl">
             {hasWindow && 
@@ -81,6 +81,24 @@ const Channel = ({ channel }: InferGetServerSidePropsType<typeof getServerSidePr
             </div>
         </div>
       }
+      {!channel.isLive &&
+        <div className="flex flex-col h-4/5 w-4/5 max-w-6xl">
+          <div className="flex flex-col h-96 w-full justify-center">
+            <div className="text-center font-extrabold text-8xl dark:text-white">
+              {channel.username}
+            </div>
+            <div className="text-center font-bold text-4xl dark:text-white">
+              Is currently offline
+            </div>
+          </div>
+          <div className="">
+            <div className="title dark:text-white font-bold text-2xl">{"TITLE TO ADD"}</div>
+            <button className="channel dark:text-white font-semibold hover:text-primary transition-all">
+              {channel.username}
+            </button>
+          </div>
+        </div>
+      } 
     </div>
   </div>
   )

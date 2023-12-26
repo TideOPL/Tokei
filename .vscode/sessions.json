@@ -1,0 +1,32 @@
+{
+  "$schema": "https://cdn.statically.io/gh/nguyenngoclongdev/cdn/main/schema/v9/terminal-keeper.json",
+  "theme": "tribe",
+  "active": "tokei",
+  "activateOnStartup": true,
+  "keepExistingTerminals": false,
+  "sessions": {
+    "default": [
+      {
+        "name": "terminal"
+      }
+    ],
+    "tokei": [
+      {
+        "name": "client",
+        "commands": [
+          "cd client && yarn dev",
+          ""
+        ],
+        "icon": "browser"
+      },
+      {
+        "name": "server",
+        "commands": [
+          "cd server && yarn dev",
+          ""
+        ],
+        "icon": "server"
+      }
+    ]
+  }
+}
