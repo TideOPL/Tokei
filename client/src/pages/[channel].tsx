@@ -76,7 +76,7 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
                   {hasWindow && 
                     <div className="relative pt-[56.25%]">
                         <ReactPlayer
-                          url={`http://83.104.242.112:8001/api/v1/${channel.username}/index.m3u8`}
+                          url={`http://${env.NEXT_PUBLIC_URL}:8001/api/v1/${channel.username}/index.m3u8`}
                           style={{position: "absolute", top: 0, left: 0}}
                           playing={true}
                           muted={true}
