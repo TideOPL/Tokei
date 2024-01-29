@@ -10,11 +10,13 @@ interface useChannelType {
   stream: Stream | null
   follow: (genToken: () => Promise<string | null>) => Promise<boolean>
   following?: boolean
+  followers: string
 }
 
 const useChannel = (getToken: () => Promise<string | null>, channel: Channel): useChannelType => {
-  const [stream, setStream] = useState<Stream | null>(null)
+  const [stream, setStream] = useState<Stream | null>(null);
   const [following, setFollowing] = useState<boolean>(false);
+  const [followers, setFollowers] = useState<string>("");
 
   useEffect(() => {
     const fetch = async () => {
@@ -29,6 +31,13 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
       console.log(following)
       setFollowing(following);
     }
+
+    const getFollowers = async () => {
+      const { data } = await axios.get<string>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowerCount?channel=${channel.username}`)
+      setFollowers(data)
+    }
+
+    getFollowers();
 
 
   
@@ -52,7 +61,7 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
   }
 
   //@ts-ignore
-  return {channel, stream, follow, following}
+  return {channel, stream, follow, following, followers}
 }
 
 export default useChannel;

@@ -18,8 +18,10 @@ import Sidebar from "~/component/nav/Sidebar";
 import Chat from "~/component/chat/chat";
 import Viewers from "~/component/ui/viewers";
 import { Button } from "~/component/ui/button";
-import { Star, UserRound } from "lucide-react";
-import { StarFilledIcon } from "@radix-ui/react-icons";
+import { Github, Instagram, LucideInstagram, Star, Twitter, UserRound, X, Youtube } from "lucide-react";
+import { DiscordLogoIcon, InstagramLogoIcon, StarFilledIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import SocialLink from "~/component/ui/social-link";
+import YouTubePlayer from "react-player/youtube";
 
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
@@ -53,7 +55,7 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
   const { signOut, getToken } = useAuth();
   const [hasWindow, setHasWindow] = useState(true);
   //@ts-ignore
-  const {channel, stream, follow, following} = useChannel(getToken, channelData, user)
+  const {channel, stream, follow, following, followers} = useChannel(getToken, channelData, user)
   const [viewers, setViewers] = useState(1);
 
   return (
@@ -67,7 +69,6 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
         {/*@ts-ignore -- Bug with Clerk types.*/}
         <Nav user={user} signOut={() => signOut()}/>
         
-
         <div className="flex flex-1 max-h-[calc(100%-64px)]">
           <Sidebar />
           <div className="flex flex-grow h-full max-h-full overflow-y-scroll">
@@ -76,7 +77,7 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
                   {hasWindow && 
                     <div className="relative pt-[56.25%]">
                         <ReactPlayer
-                          url={`http://83.104.242.112:8001/api/v1/${channel.username}/index.m3u8`}
+                          url={`http://${env.NEXT_PUBLIC_URL}:8001/api/v1/${channel.username}/index.m3u8`}
                           style={{position: "absolute", top: 0, left: 0}}
                           playing={true}
                           muted={true}
@@ -86,55 +87,78 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
                         />
                       </div>
                   }
-                <div className="flex flex-row space-x-3 py-2 px-5">
-                  <div className="relative h-fit w-fit self-center border-primary border-2 rounded-full">
-                    <div className="font-bold md:font-semibold text-white text-sm md:text-md top-10 left-[8px] md:top-12 md:left-3.5 absolute  z-10 justify-self-end bg-primary rounded-lg px-1">
-                        LIVE
+                <div className="flex flex-col justify-center">
+                  <div className="flex flex-row space-x-3 py-2 px-5">
+                    <div className="relative h-fit w-fit self-center border-primary border-2 rounded-full">
+                      <div className="font-bold md:font-semibold text-white text-sm md:text-md top-10 left-[8px] md:top-12 md:left-3.5 absolute  z-10 justify-self-end bg-primary rounded-lg px-1">
+                          LIVE
+                      </div>
+                      <Avatar className="min-w-[52px] min-h-[52px] md:min-w-[64px] md:min-h-[64px]">
+                            <AvatarImage src={channel.pfp} alt="profile" className="object-cover"/>
+                            <AvatarFallback>{channel.username.at(0)?.toUpperCase()}</AvatarFallback>
+                      </Avatar>
                     </div>
-                    <Avatar className="min-w-[52px] min-h-[52px] md:min-w-[64px] md:min-h-[64px]">
-                          <AvatarImage src={channel.pfp} alt="profile" className="object-cover"/>
-                          <AvatarFallback>{channel.username.at(0)?.toUpperCase()}</AvatarFallback>
-                    </Avatar>
+                    <div className="flex flex-row justify-between w-full">
+                      <div className="flex flex-col">
+                      <button className="channel dark:text-white font-semibold transition-all flex flex-row space-x-2">  
+                          <div className="self-center text-xl font-bold">
+                            {channel.username}
+                          </div>
+                        </button>
+                        <div className="title dark:text-white font-semibold">{stream?.streamTitle}</div>
+                        <div className="flex flex-row">
+                          <div className="category text-primary_lighter dark:text-primary font-semibold">{stream?.category}</div>
+                          <div className="pl-2 space-x-2">
+                            {stream?.tags.map((tag) => (
+                                <Badge key={tag} variant="secondary" className="w-fit rounded-xl">{tag}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex flex-row gap-x-2 justify-end items-center">
+                          <Viewers viewers={viewers} />
+                          <Clock timestamp={stream?.timestamp || '0'} />
+                        </div>
+                        { user && user.id != channel.clerk_id ?
+                          <div className="flex flex-row gap-x-2 justify-end items-center py-2">
+                            {following ? 
+                              <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-fit px-3" onClick={() => follow(() => getToken())}> <UserRound className="h-4 w-4 mt-[1px] self-center"/></Button>
+                              :
+                              <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]" onClick={() => follow(() => getToken())}> <UserRound className="mr-1 h-4 w-4 mt-[1px] self-center"/> Follow</Button>
+                            }
+                            <Button className="dark:bg-blue-500 hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]"> <StarFilledIcon className="mr-1 h-4 w-4 mt-[1px] self-center"/> {following ? "Subscribe" : "Subscribe"}</Button>
+                          </div>
+                          : 
+                          <></>
+                        }
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-row justify-between w-full">
-                    <div className="flex flex-col">
-                    <button className="channel dark:text-white font-semibold transition-all flex flex-row space-x-2">  
-                        <div className="self-center text-xl font-bold">
-                          {channel.username}
-                        </div>
-                      </button>
-                      <div className="title dark:text-white font-semibold">{stream?.streamTitle}</div>
-                      <div className="flex flex-row">
-                        <div className="category text-primary_lighter dark:text-primary font-semibold">{stream?.category}</div>
-                        <div className="pl-2 space-x-2">
-                          {stream?.tags.map((tag) => (
-                              <Badge key={tag} variant="secondary" className="w-fit rounded-xl">{tag}</Badge>
-                          ))}
-                        </div>
+                </div>
+                <div className="flex w-full items-center justify-center pb-10">
+                  
+                  <div className="justify-between flex-row flex h-fit py-5 w-[85%] bg-zinc-600/20 mt-12 rounded-lg px-5 shadow-md">
+                    <div className="relative flex-col flex space-y-1 pt-3">
+                      <div className="text-white font-noto-sans font-bold text-2xl">
+                       About {channel.username}
+                      </div>
+                      <div className="text-white font-noto-sans font-semibold">
+                          {followers || 0} followers
+                      </div>
+                      <div className="text-white font-noto-sans font-normal">
+                      abc
                       </div>
                     </div>
-                    <div>
-                      <div className="flex flex-row gap-x-2 justify-end items-center">
-                        <Viewers viewers={viewers} />
-                        <Clock timestamp={stream?.timestamp || '0'} />
-                      </div>
-                      { user && user.id != channel.clerk_id ?
-                        <div className="flex flex-row gap-x-2 justify-end items-center py-2">
-                          {following ? 
-                            <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-fit px-3" onClick={() => follow(() => getToken())}> <UserRound className="h-4 w-4 mt-[1px] self-center"/></Button>
-                            :
-                            <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]" onClick={() => follow(() => getToken())}> <UserRound className="mr-1 h-4 w-4 mt-[1px] self-center"/> Follow</Button>
-                          }
-                          <Button className="dark:bg-blue-500 hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]"> <StarFilledIcon className="mr-1 h-4 w-4 mt-[1px] self-center"/> {following ? "Subscribe" : "Subscribe"}</Button>
-                        </div>
-                        : 
-                        <></>
-                      }
+                    <div className="space-y-1.5">
+                      <SocialLink icon={ <Twitter fill="inherit" strokeWidth={0}/> } link={"https://twitter.com"} title="Twitter"/>
+                      <SocialLink icon={ <LucideInstagram fill="inherit" stroke="inherit"/> } link={"https://Instagram.com"} title="Instagram"/>
+                      <SocialLink icon={ <Youtube fill="inherit" stroke="inherit"/> } link={"https://youtube.com"} title="Youtube"/>
+                      <SocialLink icon={ <Github fill="inherit" stroke="inherit"/> } link={"https://github.com"} title="Github"/>
                     </div>
                   </div>
                 </div>
               </div>
-
             }
             {!channel.isLive &&
               <div className="flex flex-col h-[60vh] w-full min-h-fit max-w-[100%]">
