@@ -67,7 +67,7 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
         {/*@ts-ignore -- Bug with Clerk types.*/}
         <Nav user={user} signOut={() => signOut()}/>
         
-
+        {/*hELLO wORLD */}
         <div className="flex flex-1 max-h-[calc(100%-64px)]">
           <Sidebar />
           <div className="flex flex-grow h-full max-h-full overflow-y-scroll">
