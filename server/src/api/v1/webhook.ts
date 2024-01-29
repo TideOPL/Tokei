@@ -5,6 +5,8 @@ import express, { Request, Response, Router } from 'express';
 import { Webhook } from 'svix';
 import makeKey from '../../util/makeKey';
 import { User } from '../../model/user';
+import { Stream } from '../../model/stream';
+import getColor from '../../util/getColor';
 
 const router: Router = express.Router();
 // POST /signup
@@ -63,6 +65,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
       // Create stream key
       const key = makeKey();
       await clerkClient.users.updateUserMetadata(evt.data.id, { privateMetadata: { streamKey: key } });
+      await clerkClient.users.updateUserMetadata(evt.data.id, { publicMetadata: { color: getColor() } });
 
       const username = evt.data.username == null ? evt.data.first_name : evt.data.username;
 
@@ -71,11 +74,22 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
         username: username,
         isLive: false,
         stream_key: key,
+        pfp: evt.data.image_url,
       });
       user.save();
 
+      // Setup account
+      const stream = new Stream({
+        streamTitle: username + '\'s Stream!',
+        category: 'Just Chatting',
+        channelID: evt.data.id,
+        timestamp: '0',
+        tags: [],
+      });
+      stream.save();
+
     } catch (e) {
-      console.log('[⚠] ' + e);
+      console.warn('[⚠] ' + e);
     }
   
   }
@@ -90,7 +104,16 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
 
       user.deleteOne().exec();
     } catch (e) {
-      console.log('[⚠] Caught error whilst trying to delete user via webhook.');
+      console.warn('[⚠] Caught error whilst trying to delete user via webhook.');
+    }
+  }
+
+  if (eventType == 'user.updated') {
+    try {
+      await User.findOneAndUpdate({ clerk_id: evt.data.id }, { pfp: evt.data.image_url }).exec();
+    } catch (e) {
+      console.warn('[⚠] Caught error whilst trying to update user via webhook.');
+
     }
   }
  
@@ -101,4 +124,3 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
 });
 
 export default router;
-

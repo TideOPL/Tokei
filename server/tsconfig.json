@@ -2,8 +2,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "sourceMap": true,
-    "target": "esnext",
-    "module": "commonjs",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ESNext",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitAny": true,

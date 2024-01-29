@@ -1,6 +1,4 @@
-import axios from 'axios';
 import { Html, Head, Main, NextScript } from 'next/document'
-import { env } from '~/env.mjs';
  
 export default function Document() {
     return (

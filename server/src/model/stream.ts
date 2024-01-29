@@ -5,9 +5,21 @@ const stream = new mongoose.Schema({
     require: true,
     type: String,
   },
-  userID: {
+  category: {
     require: true,
     type: String,
+  },
+  channelID: {
+    require: true,
+    type: String,
+  },
+  timestamp: {
+    require: true,
+    type: String,
+  },
+  tags: {
+    require: true,
+    type: Array<String>,
   },
 });
 

@@ -11,13 +11,17 @@ Tokei 時計 is a revolutionary open-source project that aims to redefine live s
 - 🌟 **Innovation Unleashed**: Break free from traditional live streaming boundaries and explore new possibilities.
 - 🤝 **Community-Driven Development**: Collaborate with a global community passionate about reshaping the live entertainment landscape.
 - 🚀 **Seamless Integration**: Easily integrate Tokei 時計 into your projects and unleash the power of live streaming.
+- 🚛 **Live chat support**: Allow your community to interact with streamers live! 
 
 ## Tech
 
 - ✨ **TailwindCSS**
-- 📺 **Node Media Server**
+- 🖌 **ShadCN**
+- 📺 **Node Media Server (Custom Fork to allow for faster encoding)**
 - 🌐 **NextJS**
 - 📁 **MongoDB with Mongoose**
+- 🔒 **ClerkJS**
+- 🔌 **SocketIO (Live Chat)**
 - 🖥 **ExpressJS**
 - 🎉 **Typescript**
 
