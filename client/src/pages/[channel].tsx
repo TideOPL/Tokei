@@ -53,7 +53,7 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
   const { signOut, getToken } = useAuth();
   const [hasWindow, setHasWindow] = useState(true);
   //@ts-ignore
-  const {channel, stream, follow, following} = useChannel(getToken, channelData, user)
+  const {channel, stream, follow, following, followers} = useChannel(getToken, channelData, user)
   const [viewers, setViewers] = useState(1);
 
   return (
@@ -67,7 +67,6 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
         {/*@ts-ignore -- Bug with Clerk types.*/}
         <Nav user={user} signOut={() => signOut()}/>
         
-        {/*hELLO wORLD */}
         <div className="flex flex-1 max-h-[calc(100%-64px)]">
           <Sidebar />
           <div className="flex flex-grow h-full max-h-full overflow-y-scroll">
@@ -86,55 +85,64 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
                         />
                       </div>
                   }
-                <div className="flex flex-row space-x-3 py-2 px-5">
-                  <div className="relative h-fit w-fit self-center border-primary border-2 rounded-full">
-                    <div className="font-bold md:font-semibold text-white text-sm md:text-md top-10 left-[8px] md:top-12 md:left-3.5 absolute  z-10 justify-self-end bg-primary rounded-lg px-1">
-                        LIVE
+                <div className="flex flex-col justify-center">
+                  <div className="flex flex-row space-x-3 py-2 px-5">
+                    <div className="relative h-fit w-fit self-center border-primary border-2 rounded-full">
+                      <div className="font-bold md:font-semibold text-white text-sm md:text-md top-10 left-[8px] md:top-12 md:left-3.5 absolute  z-10 justify-self-end bg-primary rounded-lg px-1">
+                          LIVE
+                      </div>
+                      <Avatar className="min-w-[52px] min-h-[52px] md:min-w-[64px] md:min-h-[64px]">
+                            <AvatarImage src={channel.pfp} alt="profile" className="object-cover"/>
+                            <AvatarFallback>{channel.username.at(0)?.toUpperCase()}</AvatarFallback>
+                      </Avatar>
                     </div>
-                    <Avatar className="min-w-[52px] min-h-[52px] md:min-w-[64px] md:min-h-[64px]">
-                          <AvatarImage src={channel.pfp} alt="profile" className="object-cover"/>
-                          <AvatarFallback>{channel.username.at(0)?.toUpperCase()}</AvatarFallback>
-                    </Avatar>
+                    <div className="flex flex-row justify-between w-full">
+                      <div className="flex flex-col">
+                      <button className="channel dark:text-white font-semibold transition-all flex flex-row space-x-2">  
+                          <div className="self-center text-xl font-bold">
+                            {channel.username}
+                          </div>
+                        </button>
+                        <div className="title dark:text-white font-semibold">{stream?.streamTitle}</div>
+                        <div className="flex flex-row">
+                          <div className="category text-primary_lighter dark:text-primary font-semibold">{stream?.category}</div>
+                          <div className="pl-2 space-x-2">
+                            {stream?.tags.map((tag) => (
+                                <Badge key={tag} variant="secondary" className="w-fit rounded-xl">{tag}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        <div className="flex flex-row gap-x-2 justify-end items-center">
+                          <Viewers viewers={viewers} />
+                          <Clock timestamp={stream?.timestamp || '0'} />
+                        </div>
+                        { user && user.id != channel.clerk_id ?
+                          <div className="flex flex-row gap-x-2 justify-end items-center py-2">
+                            {following ? 
+                              <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-fit px-3" onClick={() => follow(() => getToken())}> <UserRound className="h-4 w-4 mt-[1px] self-center"/></Button>
+                              :
+                              <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]" onClick={() => follow(() => getToken())}> <UserRound className="mr-1 h-4 w-4 mt-[1px] self-center"/> Follow</Button>
+                            }
+                            <Button className="dark:bg-blue-500 hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]"> <StarFilledIcon className="mr-1 h-4 w-4 mt-[1px] self-center"/> {following ? "Subscribe" : "Subscribe"}</Button>
+                          </div>
+                          : 
+                          <></>
+                        }
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex flex-row justify-between w-full">
-                    <div className="flex flex-col">
-                    <button className="channel dark:text-white font-semibold transition-all flex flex-row space-x-2">  
-                        <div className="self-center text-xl font-bold">
-                          {channel.username}
-                        </div>
-                      </button>
-                      <div className="title dark:text-white font-semibold">{stream?.streamTitle}</div>
-                      <div className="flex flex-row">
-                        <div className="category text-primary_lighter dark:text-primary font-semibold">{stream?.category}</div>
-                        <div className="pl-2 space-x-2">
-                          {stream?.tags.map((tag) => (
-                              <Badge key={tag} variant="secondary" className="w-fit rounded-xl">{tag}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div>
-                      <div className="flex flex-row gap-x-2 justify-end items-center">
-                        <Viewers viewers={viewers} />
-                        <Clock timestamp={stream?.timestamp || '0'} />
-                      </div>
-                      { user && user.id != channel.clerk_id ?
-                        <div className="flex flex-row gap-x-2 justify-end items-center py-2">
-                          {following ? 
-                            <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-fit px-3" onClick={() => follow(() => getToken())}> <UserRound className="h-4 w-4 mt-[1px] self-center"/></Button>
-                            :
-                            <Button className="dark:bg-primary hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]" onClick={() => follow(() => getToken())}> <UserRound className="mr-1 h-4 w-4 mt-[1px] self-center"/> Follow</Button>
-                          }
-                          <Button className="dark:bg-blue-500 hover:dark:bg-primary_lighter dark:text-white font-semibold min-w-[93.92px]"> <StarFilledIcon className="mr-1 h-4 w-4 mt-[1px] self-center"/> {following ? "Subscribe" : "Subscribe"}</Button>
-                        </div>
-                        : 
-                        <></>
-                      }
+                </div>
+                <div className="flex w-full items-center justify-center">
+                  
+                  <div className="flex items-center h-20 w-[85%] bg-zinc-600/20 mt-12 rounded-lg px-5 shadow-md">
+                    <div className="text-white font-noto-sans font-semibold text-lg">
+                        {followers || 0} followers
                     </div>
                   </div>
                 </div>
               </div>
-
             }
             {!channel.isLive &&
               <div className="flex flex-col h-[60vh] w-full min-h-fit max-w-[100%]">
