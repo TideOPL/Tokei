@@ -203,7 +203,7 @@ const Channel = ({
           {!channel.isLive && (
             <div className="flex h-[60vh] min-h-fit w-full max-w-[100%] flex-col">
               <div className="mb-4 flex h-full min-h-[52rem] w-full flex-col justify-center bg-[#212224]/75 dark:bg-zinc-800/50">
-                <div className="text-center text-4xl font-extrabold text-white md:text-8xl">
+                <div className="pb-2 text-center text-4xl font-extrabold text-white md:text-8xl">
                   {channel.username}
                 </div>
                 <div className="text-center text-2xl font-bold text-white md:text-4xl">
