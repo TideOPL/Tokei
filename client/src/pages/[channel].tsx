@@ -199,6 +199,28 @@ const Channel = ({ channelData }: InferGetServerSidePropsType<typeof getServerSi
                     </div>
                   </div>
                 </div>
+                  <div className="flex w-full items-center justify-center pb-10">
+                    
+                    <div className="justify-between flex-row flex h-fit py-5 w-[85%] bg-zinc-600/20 mt-12 rounded-lg px-5 shadow-md">
+                      <div className="relative flex-col flex space-y-1 pt-3">
+                        <div className="text-white font-noto-sans font-bold text-2xl">
+                        About {channel.username}
+                        </div>
+                        <div className="text-white font-noto-sans font-semibold">
+                            {followers || 0} followers
+                        </div>
+                        <div className="text-white font-noto-sans font-normal">
+                        abc
+                        </div>
+                      </div>
+                      <div className="space-y-1.5">
+                        <SocialLink icon={ <Twitter fill="inherit" strokeWidth={0}/> } link={"https://twitter.com"} title="Twitter"/>
+                        <SocialLink icon={ <LucideInstagram fill="inherit" stroke="inherit"/> } link={"https://Instagram.com"} title="Instagram"/>
+                        <SocialLink icon={ <Youtube fill="inherit" stroke="inherit"/> } link={"https://youtube.com"} title="Youtube"/>
+                        <SocialLink icon={ <Github fill="inherit" stroke="inherit"/> } link={"https://github.com"} title="Github"/>
+                      </div>
+                  </div>
+                </div>
               </div>
             } 
         </div>
