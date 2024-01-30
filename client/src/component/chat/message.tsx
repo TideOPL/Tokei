@@ -12,7 +12,7 @@ interface Message {
   icons: string[]
 }
 
-interface IconProp {
+export interface IconProp {
   name: string
   icon: JSX.Element
   style: CSSProperties
@@ -41,10 +41,6 @@ const Message = ({ icons, username, message, color }: Message) => {
 
   const userIcon = IconsList.filter(item => icons.includes(item.name));
 
-  const fetch = async () => {
-
-  }
-
   return (
     <div className="flex flex-1 flex-row h-fit font-medium py-0.5">
       <Popover>
@@ -67,8 +63,8 @@ const Message = ({ icons, username, message, color }: Message) => {
               {username}<span className="text-white">:&nbsp;</span>
             </div>
           </PopoverTrigger>
-        <PopoverContent className="absolute right-16 -bottom-16 dark:bg-[#292a2d] border-none w-[15vw] h-[12vh] rounded-sm flex flex-col p-0 pt-3 z-[99]">
-          <UserPopUp username={username} color={color} />
+        <PopoverContent className="absolute right-16 -bottom-16 dark:bg-[#292a2d] border-none w-80 h-fit rounded-sm flex flex-col p-0 pt-3 z-[99]">
+          <UserPopUp username={username} color={color} icons={userIcon} />
         </PopoverContent>
       </Popover>
       <div className="break-all">
