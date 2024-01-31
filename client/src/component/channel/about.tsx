@@ -1,6 +1,14 @@
 import { Github, LucideInstagram, Twitter, Youtube } from "lucide-react";
 import SocialLink from "../ui/social-link";
 import { Channel } from "~/interface/Channel";
+import {
+  FaXTwitter,
+  FaInstagram,
+  FaYoutube,
+  FaGithub,
+  FaTiktok,
+  FaDiscord,
+} from "react-icons/fa6";
 
 interface Props {
   channel: Channel;
@@ -22,24 +30,34 @@ const About = ({ channel, followers }: Props) => {
         </div>
         <div className="space-y-1.5">
           <SocialLink
-            icon={<Twitter fill="inherit" strokeWidth={0} />}
-            link={"https://twitter.com"}
-            title="Twitter"
+            icon={<FaXTwitter fill="inherit" strokeWidth={0} />}
+            link={"https://X.com"}
+            title="X"
           />
           <SocialLink
-            icon={<LucideInstagram fill="inherit" stroke="inherit" />}
+            icon={<FaInstagram fill="inherit" stroke="inherit" />}
             link={"https://Instagram.com"}
             title="Instagram"
           />
           <SocialLink
-            icon={<Youtube fill="inherit" stroke="inherit" />}
+            icon={<FaYoutube fill="inherit" stroke="inherit" />}
             link={"https://youtube.com"}
             title="Youtube"
           />
           <SocialLink
-            icon={<Github fill="inherit" stroke="inherit" />}
+            icon={<FaGithub fill="inherit" stroke="inherit" />}
             link={"https://github.com"}
             title="Github"
+          />
+          <SocialLink
+            icon={<FaTiktok fill="inherit" stroke="inherit" />}
+            link={"https://tiktok.com"}
+            title="TikTok"
+          />
+          <SocialLink
+            icon={<FaDiscord fill="inherit" stroke="inherit" />}
+            link={"https://discord.com"}
+            title="Discord"
           />
         </div>
       </div>

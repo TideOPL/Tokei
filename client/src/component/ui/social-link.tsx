@@ -11,12 +11,12 @@ const SocialLink = ({ title, link, icon }: Props) => {
     <Link
       target="_blank"
       href={link}
-      className="group flex flex-row space-x-1.5 text-white"
+      className="group flex flex-row space-x-1.5 text-white "
     >
-      <div className="pt-0.25 fill-zinc-500 stroke-zinc-700 transition-all group-hover:fill-white group-hover:stroke-zinc-500">
+      <div className="fill-zinc-500 stroke-zinc-700 pt-0.5 transition-all group-hover:fill-white group-hover:stroke-zinc-500">
         {icon}
       </div>
-      <div className="text-zinc-500 transition-all group-hover:text-primary_lighter">
+      <div className="text-zinc-500 transition-all hover:underline  group-hover:text-primary_lighter">
         {title}
       </div>
     </Link>

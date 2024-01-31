@@ -130,7 +130,13 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                   <TooltipTrigger onClick={() => console.log("Mod Added")}>
                     <GoShieldCheck className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-primary_lighter" />
                   </TooltipTrigger>
-                  <TooltipContent>Add Moderator</TooltipContent>
+                  <TooltipContent
+                    style={{
+                      color: "#DC3BB1",
+                    }}
+                  >
+                    Add Moderator
+                  </TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger
@@ -138,7 +144,13 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                   >
                     <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                   </TooltipTrigger>
-                  <TooltipContent>Ban {username}</TooltipContent>
+                  <TooltipContent
+                    style={{
+                      color: "#FF6347",
+                    }}
+                  >
+                    Ban {username}
+                  </TooltipContent>
                 </Tooltip>
                 <div className="absolute bottom-0 right-0">
                   <Tooltip>
@@ -147,7 +159,13 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                     >
                       <GoAlert className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                     </TooltipTrigger>
-                    <TooltipContent>Report {username}</TooltipContent>
+                    <TooltipContent
+                      style={{
+                        color: "#FF6347",
+                      }}
+                    >
+                      Report {username}
+                    </TooltipContent>
                   </Tooltip>
                 </div>
               </TooltipProvider>
