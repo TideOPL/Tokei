@@ -183,7 +183,7 @@ io.on('connection', (socket) => {
 
 export const limiter = rateLimit({
   windowMs: 10 * 1000, // 15 Seconds
-  max: 7,
+  max: 100,
   standardHeaders: true,
   legacyHeaders: false,
 
