@@ -1,4 +1,3 @@
-import { Github, LucideInstagram, Twitter, Youtube } from "lucide-react";
 import SocialLink from "../ui/social-link";
 import { Channel } from "~/interface/Channel";
 import {
