@@ -128,11 +128,11 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger onClick={() => console.log("Mod Added")}>
-                    <GoShieldCheck className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-primary_lighter" />
+                    <GoShieldCheck className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-primary" />
                   </TooltipTrigger>
                   <TooltipContent
                     style={{
-                      color: "#DC3BB1",
+                      color: "#D966BD",
                     }}
                   >
                     Add Moderator

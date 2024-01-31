@@ -73,8 +73,11 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
               >
                 <div className="flex h-16 max-h-16 w-full flex-row-reverse items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
                   <div className=" absolute right-32 space-x-4 sm:space-x-12 ">
-                    <div className="font-noto-sans font-bold text-primary transition-all hover:underline sm:text-xl">
-                      {user.username} -
+                    <div className="font-noto-sans font-bold text-white transition-all sm:text-xl">
+                      <span className="hover:text-primary hover:underline">
+                        {user.username}
+                      </span>
+                      &nbsp;-
                     </div>
                   </div>
                   <Avatar className=" min-h-[32px] min-w-[32px] md:min-h-[42px] md:min-w-[42px]">

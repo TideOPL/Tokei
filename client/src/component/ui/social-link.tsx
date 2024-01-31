@@ -16,7 +16,7 @@ const SocialLink = ({ title, link, icon }: Props) => {
       <div className="fill-zinc-500 stroke-zinc-700 pt-0.5 transition-all group-hover:fill-white group-hover:stroke-zinc-500">
         {icon}
       </div>
-      <div className="text-zinc-500 transition-all hover:underline  group-hover:text-primary_lighter">
+      <div className="text-zinc-500 transition-all group-hover:text-primary_lighter  group-hover:underline">
         {title}
       </div>
     </Link>

@@ -214,7 +214,7 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
         </Button>
         <Button
           type="submit"
-          className="font-semibold dark:bg-primary dark:text-white hover:dark:bg-primary_lighter"
+          className="font-semibold dark:bg-primary dark:text-black hover:dark:bg-primary_lighter"
           onClick={() => {
             submit(currentMessage, setCurrentMessage);
           }}
