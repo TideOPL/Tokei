@@ -12,7 +12,13 @@ const follower = new mongoose.Schema({
   timestamp: {
     require: true,
     type: String,
-  }
+  },
 });
+
+follower.set('toJSON', {
+  versionKey: false,
+  transform: function (doc, ret) { delete ret.user_id; delete ret.channel_id; },
+});
+
 
 export const Follower = mongoose.model('Follower', follower);

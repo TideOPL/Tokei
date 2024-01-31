@@ -7,11 +7,13 @@ interface useChannelType {
   follow: (genToken: () => Promise<string | null>) => Promise<boolean>
   following?: boolean
   followers: string
+  chatRoomFollowSince: string
 }
 
-const useFollow = (getToken: () => Promise<string | null>, username: string): useChannelType => {
+const useFollow = (getToken: () => Promise<string | null>, username: string, chatRoom: string): useChannelType => {
   const [following, setFollowing] = useState<boolean>(false);
   const [followers, setFollowers] = useState<string>("");
+  const [chatRoomFollowSince, setChatRoomFollowSince] = useState<string>("");
 
   useEffect(() => {
     const fetch = async () => {
@@ -30,8 +32,18 @@ const useFollow = (getToken: () => Promise<string | null>, username: string): us
       setFollowers(data)
     }
 
-    getFollowers();
+    const getFollowSince = async () => {
+       const value = await axios.get(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/followCheck?channel=${chatRoom}&user=${username}`).then((res) => {
+        if (res.status == 200) {
+          return res.data.timestamp;
+        }
+        return ""
+      }).catch((err) => {console.log(err); return false})
+      setChatRoomFollowSince(value);
+    }
 
+    getFollowers();
+    getFollowSince();
 
   
     fetch();  
@@ -54,7 +66,7 @@ const useFollow = (getToken: () => Promise<string | null>, username: string): us
   }
 
   //@ts-ignore
-  return { follow, following, followers}
+  return { follow, following, followers, chatRoomFollowSince}
 }
 
 export default useFollow;
