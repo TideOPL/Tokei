@@ -4,6 +4,8 @@ import express, { Router, Request, Response } from 'express';
 import makeKey from '../../../util/makeKey';
 import { User } from '../../../model/user';
 import { getOrSetCache } from '../../../util/cache';
+import { Follower } from '../../../model/follower';
+import { timeStamp } from 'console';
 
 const router: Router = express.Router();
 // POST /signup
@@ -55,19 +57,25 @@ router.get('/follow/getFollowerCount', async (req: Request, res: Response) => {
       return User.findOne({ username: req.query.channel }).exec();
     };
 
+    const getFollowCount = async (channelId: string) => {
+      return Follower.find({ channel_id: channelId })
+    }
+
     const channel = await getChannel();
 
-    if (channel == null) {
+    if (channel == null || channel.clerk_id == null) {
       res.status(404).send();
       return;
     }
 
-    if (channel?.followers == null || channel?.followers == undefined) {
+    const followList = await getFollowCount(channel.clerk_id);
+
+    if (!followList) {
       res.status(200).send('0');
       return;
     }
 
-    res.status(200).send(channel.followers.length.toString());
+    res.status(200).send(followList.length.toString());
   } catch (e) {
     res.status(500).send(e?.toString());
   }
@@ -89,6 +97,10 @@ router.post('/follow/follow', ClerkExpressRequireAuth(), async (req: RequireAuth
       return User.findOne({ clerk_id: req.auth.userId }).exec();
     };
 
+    const getFollow = async ( channelId: string ) => {
+      return Follower.findOne({ user_id: req.auth.userId, channel_id: channelId }).exec();
+    }
+
     const channel = await getChannel();
     const user = await getUser();
 
@@ -106,31 +118,46 @@ router.post('/follow/follow', ClerkExpressRequireAuth(), async (req: RequireAuth
       res.status(400).send();
     }
 
+    //Check with Obi
+    let follow = await getFollow( channel.clerk_id );
+
     const channelFollowers: string[] = channel.followers;
     const userFollowing: string[] = user.following;
+    
+    console.log(follow)
 
-    if (channel.followers.indexOf(user.clerk_id) == -1) {
-      channelFollowers.push(user.clerk_id);
-      userFollowing.push(channel.clerk_id);
-
-      channel.updateOne({ followers: channelFollowers }).exec();
-      user.updateOne({ following: userFollowing }).exec();
-
-      res.status(200).send();
-      return;
-    } else {
-      const updatedChannelFollowers: string[] = channelFollowers.filter(follower => follower !== user.clerk_id);
-      const updatedUserFollowing: string[] = userFollowing.filter(following => following !== channel.clerk_id);
+    if (follow) {
+      const followId = follow._id.toString()
+      const updatedChannelFollowers: string[] = channelFollowers.filter(follower => follower !== followId);
+      const updatedUserFollowing: string[] = userFollowing.filter(following => following !== followId);
   
       channel.updateOne({ followers: updatedChannelFollowers }).exec();
       user.updateOne({ following: updatedUserFollowing }).exec();
 
+      follow.deleteOne().exec();
+
       res.status(200).send();
       return;
+
     }
 
+    follow = await new Follower({
+      user_id: user.clerk_id,
+      channel_id: channel.clerk_id,
+      timestamp: Date.now().toString(),
+    }).save()
 
-    res.status(500).send();
+    const followId = follow._id.toString()
+
+    channelFollowers.push(followId);
+    userFollowing.push(followId);
+
+    channel.updateOne({ followers: channelFollowers }).exec();
+    user.updateOne({ following: userFollowing }).exec();
+
+    res.status(200).send();
+    return;
+
   } catch (e) {
     res.status(500).send(e?.toString());
   }
@@ -149,6 +176,10 @@ router.get('/follow/amIFollowing', ClerkExpressRequireAuth(), async (req: Requir
       return User.findOne({ username: req.query.channel }).exec();
     };
 
+    const getFollow = async (channelId: string) => {
+      return Follower.findOne({ user_id: req.auth.userId, channel_id: channelId })
+    }
+
     const getUser = async () => {
       return User.findOne({ clerk_id: req.auth.userId }).exec();
     };
@@ -161,17 +192,15 @@ router.get('/follow/amIFollowing', ClerkExpressRequireAuth(), async (req: Requir
       return;
     }
 
-    if (user?.following == null) {
-      res.status(204).send('false');
-      return;
-    }
-
     if (channel.clerk_id == undefined) {
       res.status(500).send();
       return;
     }
 
-    if (user.following.indexOf(channel.clerk_id) == -1) {
+    const following = await getFollow(channel.clerk_id);
+    
+   
+    if (!following) {
       res.status(204).send('false');
       return;
     }
