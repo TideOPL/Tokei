@@ -25,6 +25,7 @@ import useFollow from "~/hook/useFollow";
 import { Separator } from "../ui/separator";
 import { GoAlert, GoShieldCheck } from "react-icons/go";
 import { IoBanOutline } from "react-icons/io5";
+import { date } from "zod";
 
 interface Props {
   username: string;
@@ -37,7 +38,18 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   const { isSignedIn, user } = useUser();
   const { getToken } = useAuth();
   const [channel, setChannel] = useState<Channel | null>(null);
-  const { follow, following, followers } = useFollow(getToken, username);
+  const { follow, following, followers, chatRoomFollowSince } = useFollow(
+    getToken,
+    username,
+    chatRoom.username,
+  );
+  const date = new Date(parseInt(chatRoomFollowSince.trim()));
+
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  const formattedDate = `${day} ${month}  ${year}`;
 
   useEffect(() => {
     const fetch = async () => {
@@ -49,6 +61,8 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
 
     fetch();
   }, []);
+
+  console.log(chatRoomFollowSince);
 
   return (
     <div className="flex h-full flex-col justify-between px-4 py-4">
@@ -67,9 +81,23 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
           <div className="text-lg" style={{ color }}>
             {username}
           </div>
-          <div>
-            <div className="text-sm text-zinc-400">Followers</div>
-            <div>{followers}</div>
+          <div className="flex flex-row">
+            <div>
+              <div className="text-sm text-zinc-400">Followers</div>
+              <div className="text-center">{followers}</div>
+            </div>
+            {chatRoomFollowSince.length > 1 && (
+              <>
+                <Separator
+                  orientation="vertical"
+                  className="mx-4 dark:bg-zinc-600"
+                />
+                <div>
+                  <div className="text-sm text-zinc-400">Followed Since</div>
+                  <div className="text-center">{formattedDate}</div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>
