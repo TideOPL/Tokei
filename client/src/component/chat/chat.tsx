@@ -14,6 +14,8 @@ import {
   Settings,
 } from "lucide-react";
 import ChatIdentity from "./chat-identity";
+import ChatEmotes from "./chat-emotes";
+
 import { UserResource } from "@clerk/types";
 
 interface Props {
@@ -52,7 +54,7 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
 
     // Listen for incoming messages
     socket.on(`message_${channel.username}`, (message) => {
-      if (count >= 150) {
+      if (count >= 100) {
         setMessages((prevMessages) => {
           const updatedMessages = prevMessages.slice(1);
           return [...updatedMessages, message];
@@ -203,6 +205,9 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
             getToken={getToken}
             setColor={setColor}
           />
+        </div>
+        <div className="absolute right-5 top-3">
+          <ChatEmotes />
         </div>
       </div>
       <div className="my-2 flex self-end">
