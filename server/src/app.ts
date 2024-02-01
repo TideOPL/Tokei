@@ -12,6 +12,7 @@ import signup from './api/v1/routes/user';
 import settings from './api/v1/routes/settings';
 import webhook from './api/v1/webhook';
 import streams from './api/v1/routes/streams';
+import chats from './api/v1/routes/chat';
 import { User } from './model/user';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -196,13 +197,14 @@ export const limiter = rateLimit({
 
 
 app.use(cors());
-app.use('/api/v1/user/', limiter);
-app.use('/api/v1/user/', signup);
+app.use('/api/v1/user/',     limiter);
+app.use('/api/v1/user/',     signup);
+app.use('/api/v1/chat',      chats);
 app.use('/api/v1/settings/', settings);
 app.use('/api/v1/settings/', limiter);
 app.use('/api/v1/getStream', limiter);
-app.use('/api/v1', streams);
-app.use('/api/v1', webhook);
+app.use('/api/v1',           streams);
+app.use('/api/v1',           webhook);
 
 httpServer.listen(8001, () => {
   console.log(`[⚡️]: Server is running at http://localhost:${port}`);
@@ -217,14 +219,12 @@ globalNMS.on('prePublish', (id: any, StreamPath: string) => {
   const findUserFromKey = async (_key: string, _id: string) => {
     const user = await User.findOne({ stream_key: _key }).exec();
 
-  
-    console.log(user);
-    if (user == null) {
-      console.log(_id);
+    if (user == null || user.username == null) {
       let session = globalNMS.getSession(_id);
       session.reject();
       return;
     }
+    redis.del(user.username.toString());
 
     await Stream.findOneAndUpdate({ channelID: user.clerk_id }, { timestamp: Date.now() }).exec();
     
