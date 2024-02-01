@@ -194,7 +194,7 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
           onSubmit={(evt) => {
             submit(currentMessage, setCurrentMessage);
           }}
-          className="h-12 max-w-lg select-text break-all rounded-none border-none pl-10 focus:bg-none dark:bg-[#eaeaea]/5"
+          className="h-12 max-w-lg select-text break-all rounded-none border-none pl-10 pr-12 focus:bg-none dark:bg-[#eaeaea]/5"
         />
         <div className="absolute left-2 top-3">
           <ChatIdentity
@@ -205,7 +205,7 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
           />
         </div>
         <div className="absolute right-5 top-3">
-          <ChatEmotes />
+          <ChatEmotes setMessage={setCurrentMessage} />
         </div>
       </div>
       <div className="my-2 flex self-end">
