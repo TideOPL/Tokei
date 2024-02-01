@@ -19,12 +19,14 @@ import {
   PopoverContent,
 } from "@radix-ui/react-popover";
 import UserPopUp from "./user-popup";
+import { Channel } from "~/interface/Channel";
 
 interface Message {
   username: string;
   message: string;
   color: string;
   icons: string[];
+  chatRoom: Channel;
 }
 
 export interface IconProp {
@@ -57,7 +59,7 @@ const IconsList: IconProp[] = [
   },
 ];
 
-const Message = ({ icons, username, message, color }: Message) => {
+const Message = ({ icons, username, message, color, chatRoom }: Message) => {
   const userIcon = IconsList.filter((item) => icons.includes(item.name));
 
   return (
@@ -80,7 +82,12 @@ const Message = ({ icons, username, message, color }: Message) => {
           </div>
         </PopoverTrigger>
         <PopoverContent className="absolute -bottom-16 right-16 z-[99] flex h-fit w-80 flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#292a2d]">
-          <UserPopUp username={username} color={color} icons={userIcon} />
+          <UserPopUp
+            chatRoom={chatRoom}
+            username={username}
+            color={color}
+            icons={userIcon}
+          />
         </PopoverContent>
       </Popover>
       <div className="break-all">{message}</div>
