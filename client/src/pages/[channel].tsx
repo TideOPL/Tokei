@@ -36,6 +36,9 @@ import {
 } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
+import { useAppDispatch } from "~/store/hooks";
+import { IEmote } from "~/interface/chat";
+import { addEmote } from "~/store/slice/emoteSlice";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -82,6 +85,19 @@ const Channel = ({
     user,
   );
   const [viewers, setViewers] = useState(1);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await axios.get<IEmote[]>(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/chat/getEmotes`,
+      );
+
+      data.map((emote) => dispatch(addEmote(emote)));
+    };
+
+    fetch();
+  }, []);
 
   return (
     <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-y-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">

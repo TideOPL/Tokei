@@ -5,37 +5,12 @@ import { Input } from "../ui/input";
 import { FaSearch } from "react-icons/fa";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useState } from "react";
-
-const emotes = [
-  "FF0000", // Red
-  "FF6347", // Tomato (Close to Orange)
-  "FFA500", // Orange
-  "FF66B2", // Pink
-  "FF00FF", // Magenta
-  "DC143C", // Crimson
-  "DB7093", // PaleVioletRed
-  "B07ADF", // MediumPurple
-  "7AA2DF", // LightSkyBlue
-  "7ADFD5", // MediumTurquoise
-  "7AF667", // Aquamarine
-  "F2FD5B", // PaleGreen
-  "FAB81D", // DarkOrange
-  "FFCC99", // PeachPuff
-  "6B8E23", // OliveDrab
-  "32CD32", // LimeGreen
-  "20B2AA", // LightSeaGreen
-  "00CED1", // DarkTurquoise
-  "6495ED", // CornflowerBlue
-  "4169E1", // RoyalBlue
-  "87CEFA", // LightSkyBlue
-  "00FA9A", // MediumSpringGreen
-  "00FF00", // Green
-  "FF1493", // DeepPink
-  "B62BB6", // MediumSlateBlue
-];
+import { useAppSelector } from "~/store/hooks";
 
 const ChatEmotes = () => {
   const [search, setSearch] = useState<string>("");
+  const emotes = useAppSelector((state) => state.emotes);
+
   return (
     <Popover>
       <PopoverTrigger className="flex items-center justify-center rounded-md p-1 transition-colors hover:bg-[#eaeaea]/10 ">
@@ -86,7 +61,11 @@ const ChatEmotes = () => {
         <div className="h-full overflow-x-hidden overflow-y-scroll px-2">
           <div className="color">
             <div className="text-zinc-400">Chat Color</div>
-            <div className="grid grid-flow-row grid-cols-8 gap-2"></div>
+            <div className="grid grid-flow-row grid-cols-8 gap-2">
+              {emotes.emotes.map((emote) => (
+                <div>{emote.emote}</div>
+              ))}
+            </div>
           </div>
         </div>
       </PopoverContent>

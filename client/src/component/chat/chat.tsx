@@ -133,7 +133,6 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
 
         {isSignedIn != null && user != null && socket != null ? (
           <div className="mx-0 flex h-40 flex-initial flex-col px-2 pt-3 dark:bg-[#1f2023]">
-            {/**@ts-ignore */}
             <Form
               //@ts-ignore
               user={user}

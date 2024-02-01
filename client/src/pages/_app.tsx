@@ -1,16 +1,17 @@
 import { type AppType } from "next/dist/shared/lib/utils";
-import "~/styles/globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
-import axios from "axios";
-import { env } from "~/env.mjs";
+import { Provider } from "react-redux";
+import store from "~/store/store";
+import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-
   return (
     <ClerkProvider {...pageProps}>
-      <Component {...pageProps} />
+      <Provider store={store}>
+        <Component {...pageProps} />
+      </Provider>
     </ClerkProvider>
-  )
+  );
 };
 
 export default MyApp;
