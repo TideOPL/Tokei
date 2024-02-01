@@ -1,5 +1,5 @@
 import express, { Router, Request, Response } from 'express';
-import { Emote } from '../../../model/emoji';
+import { Emote } from '../../../model/emote';
 
 const router: Router = express.Router();
 // Get /chat/getEmotes
