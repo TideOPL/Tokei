@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import ChatIdentity from "./chat-identity";
 import ChatEmotes from "./chat-emotes";
+
 import { UserResource } from "@clerk/types";
 
 interface Props {
@@ -121,6 +122,7 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
               messages.map((message) => (
                 <div ref={divRef}>
                   <Message
+                    chatRoom={channel}
                     username={message.username}
                     color={message.color}
                     message={message.message}
@@ -218,7 +220,7 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
         </Button>
         <Button
           type="submit"
-          className="font-semibold dark:bg-primary dark:text-white hover:dark:bg-primary_lighter"
+          className="font-semibold dark:bg-primary dark:text-black hover:dark:bg-primary_lighter"
           onClick={() => {
             submit(currentMessage, setCurrentMessage);
           }}

@@ -29,7 +29,7 @@ const config = {
         },
       },
       textColor: {
-        primary: '#d926a9',
+        primary: '#F3A5DE',
         secondary: '#1fb2a6'
       },
       backgroundColor: {
@@ -44,8 +44,8 @@ const config = {
         }
       },
       colors: {
-        primary: '#d926a9',
-        primary_lighter: '#dc3bb1',
+        primary: '#C97BB7',
+        primary_lighter: '#CC94BE',
         secondary: '#1fb2a6'
       },
       fontFamily: {
