@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
 import emoteReducer from './slice/emoteSlice'
 import followReducer from './slice/followSlice'
+import channelReducer from './slice/userSlice'
 
 const store = configureStore({
   reducer: {
     emotes: emoteReducer,
-    following: followReducer
+    following: followReducer,
+    channels: channelReducer
   }
 })
 

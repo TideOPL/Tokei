@@ -36,9 +36,12 @@ import {
 } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
+import PlayerControls from "~/component/video/player-controls";
+import TokeiPlayer from "~/component/video/tokei-player";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
+import { addChannel } from "~/store/slice/userSlice";
 import { addFollowingChannel } from "~/store/slice/followSlice";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
@@ -58,7 +61,9 @@ export const getServerSideProps = (async (context) => {
 
   const channelData = (await axios
     .get(
-      `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${channel_name.concat()}`,
+      `http://${env.NEXT_PUBLIC_URL}:${
+        env.NEXT_PUBLIC_EXPRESS_PORT
+      }/api/v1/user/getChannel?channel=${channel_name.concat()}`
     )
     .then((res) => res.data)
     .catch()) as Channel | null | undefined;
@@ -82,7 +87,7 @@ const Channel = ({
     () => getToken(),
     channelData,
     //@ts-ignore
-    user,
+    user
   );
   const [viewers, setViewers] = useState(1);
   const [hasWindow, setHasWindow] = useState(true);
@@ -141,6 +146,7 @@ const Channel = ({
 
     getFollowingList();
     fetch();
+    dispatch(addChannel(channel));
   }, []);
 
   return (
@@ -161,19 +167,7 @@ const Channel = ({
         <div className="flex h-full max-h-full flex-grow overflow-y-scroll">
           {channel.isLive && (
             <div className="h-full max-h-[60%] w-full max-w-[71.2vw]">
-              {hasWindow && (
-                <div className="relative pt-[56.25%]">
-                  <ReactPlayer
-                    url={`http://${env.NEXT_PUBLIC_URL}:8001/api/v1/${channel.username}/index.m3u8`}
-                    style={{ position: "absolute", top: 0, left: 0 }}
-                    playing={true}
-                    muted={true}
-                    height={"100%"}
-                    width={"100%"}
-                    controls={true}
-                  />
-                </div>
-              )}
+              <TokeiPlayer channel={channel.username} />
               <div className="flex flex-col justify-center">
                 <div className="flex flex-row space-x-3 px-5 py-2">
                   <div className="relative h-fit w-fit self-center rounded-full border-2 border-primary">
@@ -230,7 +224,6 @@ const Channel = ({
                               className="min-w-fit px-3 font-semibold dark:bg-primary dark:text-white hover:dark:bg-primary_lighter"
                               onClick={() => follow(() => getToken())}
                             >
-                              {" "}
                               <UserRound className="mt-[1px] h-4 w-4 self-center" />
                             </Button>
                           ) : (
@@ -238,13 +231,11 @@ const Channel = ({
                               className="min-w-[93.92px] font-semibold dark:bg-primary dark:text-white hover:dark:bg-primary_lighter"
                               onClick={() => follow(() => getToken())}
                             >
-                              {" "}
                               <UserRound className="mr-1 mt-[1px] h-4 w-4 self-center" />{" "}
                               Follow
                             </Button>
                           )}
                           <Button className="min-w-[93.92px] font-semibold dark:bg-blue-500 dark:text-white hover:dark:bg-primary_lighter">
-                            {" "}
                             <StarFilledIcon className="mr-1 mt-[1px] h-4 w-4 self-center" />{" "}
                             {following ? "Subscribe" : "Subscribe"}
                           </Button>
