@@ -56,6 +56,8 @@ router.get('/getStream', async (req: Request, res: Response) => {
     return;
   }
 
+
+  
   res.status(200).send(stream);
   return;
 });
@@ -76,7 +78,7 @@ router.get('/:channel/:filename', async (req: Request, res: Response) => {
 
   const uri = req.params.filename;
 
-  const filename = path.join('C:/Users/Tide/Documents/Dev/Tokei/server/media/live/' + key, uri);
+  const filename = path.join((process.env.MEDIA_PATH || '') + key, uri);
   fs.exists(filename, function (exists: boolean) {
     if (!exists) {
       res.writeHead(404, { 'Content-Type': 'text/plain' });

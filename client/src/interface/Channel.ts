@@ -16,7 +16,12 @@ export interface Channel {
   channelMods: string[]
 }
 
+export interface Follow {
+  timestamp: String
+}
+
 export interface Browse {
   channel: Channel
   stream: Stream
 }
+

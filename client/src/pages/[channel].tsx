@@ -38,6 +38,9 @@ import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
 import PlayerControls from "~/component/video/player-controls";
 import TokeiPlayer from "~/component/video/tokei-player";
+import { useAppDispatch } from "~/store/hooks";
+import { IEmote } from "~/interface/chat";
+import { addEmote } from "~/store/slice/emoteSlice";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -86,6 +89,19 @@ const Channel = ({
     user
   );
   const [viewers, setViewers] = useState(1);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await axios.get<IEmote[]>(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/chat/getEmotes`,
+      );
+
+      data.map((emote) => dispatch(addEmote(emote)));
+    };
+
+    fetch();
+  }, []);
 
   return (
     <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-y-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
@@ -192,7 +208,7 @@ const Channel = ({
           {!channel.isLive && (
             <div className="flex h-[60vh] min-h-fit w-full max-w-[100%] flex-col">
               <div className="mb-4 flex h-full min-h-[52rem] w-full flex-col justify-center bg-[#212224]/75 dark:bg-zinc-800/50">
-                <div className="text-center text-4xl font-extrabold text-white md:text-8xl">
+                <div className="pb-2 text-center text-4xl font-extrabold text-white md:text-8xl">
                   {channel.username}
                 </div>
                 <div className="text-center text-2xl font-bold text-white md:text-4xl">
