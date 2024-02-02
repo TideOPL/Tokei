@@ -3,7 +3,7 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "~/component/nav/Nav";
 import dynamic from "next/dynamic";
 import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
@@ -18,27 +18,12 @@ import Sidebar from "~/component/nav/Sidebar";
 import Chat from "~/component/chat/chat";
 import Viewers from "~/component/ui/viewers";
 import { Button } from "~/component/ui/button";
-import {
-  Github,
-  Instagram,
-  LucideInstagram,
-  Star,
-  Twitter,
-  UserRound,
-  X,
-  Youtube,
-} from "lucide-react";
-import {
-  DiscordLogoIcon,
-  InstagramLogoIcon,
-  StarFilledIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
+import { UserRound } from "lucide-react";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
-import PlayerControls from "~/component/video/player-controls";
 import TokeiPlayer from "~/component/video/tokei-player";
-import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { useAppDispatch } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
 import { addChannel } from "~/store/slice/userSlice";
@@ -63,7 +48,7 @@ export const getServerSideProps = (async (context) => {
     .get(
       `http://${env.NEXT_PUBLIC_URL}:${
         env.NEXT_PUBLIC_EXPRESS_PORT
-      }/api/v1/user/getChannel?channel=${channel_name.concat()}`
+      }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
     )
     .then((res) => res.data)
     .catch()) as Channel | null | undefined;
@@ -87,7 +72,7 @@ const Channel = ({
     () => getToken(),
     channelData,
     //@ts-ignore
-    user
+    user,
   );
   const [viewers, setViewers] = useState(1);
   const [hasWindow, setHasWindow] = useState(true);
@@ -130,13 +115,6 @@ const Channel = ({
         liveFollowing.push({
           following: channel,
         });
-      }
-
-      console.log(liveFollowing.length);
-      console.log(liveFollowing.forEach((value) => console.log(value)));
-
-      for (let i = 0; i < liveFollowing.length; i++) {
-        console.log(liveFollowing[i]);
       }
 
       liveFollowing.map((following) =>
