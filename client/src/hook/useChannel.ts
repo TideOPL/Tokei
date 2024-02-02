@@ -28,7 +28,6 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
         return res.status == 200
       }).catch((err) => {console.log(err); return false})
 
-      console.log(following)
       setFollowing(following);
     }
 
@@ -42,7 +41,7 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
 
   
     fetch();  
-  }, [])
+  }, [channel])
 
 
   const follow = async (genToken: () => string | null) => {
@@ -59,6 +58,7 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
 
     return result;
   }
+
 
   //@ts-ignore
   return {channel, stream, follow, following, followers}
