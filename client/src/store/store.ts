@@ -5,7 +5,6 @@ import followReducer from './slice/followSlice'
 const store = configureStore({
   reducer: {
     emotes: emoteReducer,
-    channels: channelReducer,
     following: followReducer
   }
 })

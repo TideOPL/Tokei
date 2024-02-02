@@ -6,7 +6,7 @@ import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import Nav from "~/component/nav/Nav";
 import dynamic from "next/dynamic";
-import { Channel } from "~/interface/Channel";
+import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
 import axios from "axios";
 import { env } from "~/env.mjs";
 import useChannel from "~/hook/useChannel";
@@ -36,9 +36,10 @@ import {
 } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
-import { useAppDispatch } from "~/store/hooks";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
+import { addChannel } from "~/store/slice/followSlice";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -76,16 +77,15 @@ const Channel = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut, getToken } = useAuth();
-  const [hasWindow, setHasWindow] = useState(true);
-
+  const dispatch = useAppDispatch();
   const { channel, stream, follow, following, followers } = useChannel(
-    getToken,
+    () => getToken(),
     channelData,
     //@ts-ignore
     user,
   );
   const [viewers, setViewers] = useState(1);
-  const dispatch = useAppDispatch();
+  const [hasWindow, setHasWindow] = useState(true);
 
   useEffect(() => {
     const fetch = async () => {
@@ -96,6 +96,48 @@ const Channel = ({
       data.map((emote) => dispatch(addEmote(emote)));
     };
 
+    const getFollowingList = async () => {
+      const token = await getToken();
+      const { data } = await axios.get<Channel[]>(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const liveFollowing: ILiveFollowing[] = [];
+
+      for (let j = 0; j < data.length; j++) {
+        const channel = data[j];
+
+        if (!channel) {
+          continue;
+        }
+
+        if (channel.isLive) {
+          const { data } = await axios.get<Stream>(
+            `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
+          );
+          liveFollowing.push({
+            following: channel,
+            stream: data,
+          });
+          continue;
+        }
+
+        liveFollowing.push({
+          following: channel,
+        });
+      }
+
+      console.log(liveFollowing.length);
+      console.log(liveFollowing.forEach((value) => console.log(value)));
+
+      for (let i = 0; i < liveFollowing.length; i++) {
+        console.log(liveFollowing[i]);
+      }
+
+      liveFollowing.map((following) => dispatch(addChannel(following)));
+    };
+
+    getFollowingList();
     fetch();
   }, []);
 
