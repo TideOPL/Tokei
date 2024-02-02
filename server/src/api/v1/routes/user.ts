@@ -33,6 +33,10 @@ const getFollow = async ( clerk_id: string, channelId: string ) => {
   return Follower.findOne({ user_id: clerk_id, channel_id: channelId }).exec();
 };
 
+const getFollowByObjectID = async (objectId: string) => {
+  return Follower.findById(objectId).exec();
+};
+
 // GET api/v1/user/getChannel
 router.get('/getChannel', async (req: Request, res: Response) => {
   try {
@@ -227,6 +231,40 @@ router.get('/follow/followCheck', async (req: Request, res: Response) => {
     }
 
     res.status(204).send();
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+router.get('/follow/getFollowingList', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    // Get all follow objects from the user
+    const user = await getUserById(req.auth.userId);
+
+    if (user == null || user.following == null) {
+      res.status(404).send();
+      return;
+    }
+
+    const followObjects: any[] = [];
+    for (let i = 0; i < user.following.length; i++) {
+      const followObject = await getFollowByObjectID(user.following[i]);
+      followObjects.push(followObject);
+    }
+
+    const channels: Object[] = [];
+    // Loop through the follow objects gathering user models
+    for (let j = 0; j < followObjects.length; j++) {
+      const channel = await getUserById(followObjects[j].channel_id);
+      if (channel) {
+        channels.push(channel.toJSON());
+      }
+    }
+
+    console.log(channels);
+
+    res.status(200).send(channels);
+    // return list of user models
   } catch (err) {
     res.status(500).send(err);
   }

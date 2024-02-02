@@ -25,3 +25,7 @@ export interface Browse {
   stream: Stream
 }
 
+export interface ILiveFollowing {
+  following: Channel
+  stream?: Stream
+}

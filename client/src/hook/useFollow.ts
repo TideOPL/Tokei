@@ -3,14 +3,14 @@ import axios from "axios";
 import { env } from "~/env.mjs"
 import { useEffect, useState } from "react";
 
-interface useChannelType {
+interface useFollowType {
   follow: (genToken: () => Promise<string | null>) => Promise<boolean>
   following?: boolean
   followers: string
   chatRoomFollowSince: string
 }
 
-const useFollow = (getToken: () => Promise<string | null>, username: string, chatRoom: string): useChannelType => {
+const useFollow = (getToken: () => Promise<string | null>, username: string, chatRoom: string): useFollowType => {
   const [following, setFollowing] = useState<boolean>(false);
   const [followers, setFollowers] = useState<string>("");
   const [chatRoomFollowSince, setChatRoomFollowSince] = useState<string>("");
