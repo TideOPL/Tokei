@@ -41,6 +41,7 @@ import TokeiPlayer from "~/component/video/tokei-player";
 import { useAppDispatch } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
+import { addChannel } from "~/store/slice/userSlice";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -101,6 +102,7 @@ const Channel = ({
     };
 
     fetch();
+    dispatch(addChannel(channel));
   }, []);
 
   return (

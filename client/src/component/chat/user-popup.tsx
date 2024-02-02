@@ -26,6 +26,7 @@ import { Separator } from "../ui/separator";
 import { GoAlert, GoShieldCheck } from "react-icons/go";
 import { IoBanOutline } from "react-icons/io5";
 import { date } from "zod";
+import { useAppSelector } from "~/store/hooks";
 
 interface Props {
   username: string;
@@ -43,6 +44,8 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
     username,
     chatRoom.username,
   );
+  const channels = useAppSelector((state) => state.channels);
+
   const date = new Date(parseInt(chatRoomFollowSince.trim()));
 
   const month = date.toLocaleString("en-US", { month: "short" });
@@ -58,6 +61,15 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
       );
       setChannel(data);
     };
+
+    const channel: Channel[] = channels.channels.filter(
+      (channel) => channel.username === username,
+    );
+
+    if (channel[0] != null) {
+      setChannel(channel[0]);
+      return;
+    }
 
     fetch();
   }, []);

@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
 import emoteReducer from './slice/emoteSlice'
+import channelReducer from './slice/userSlice'
 
 const store = configureStore({
   reducer: {
-    emotes: emoteReducer
+    emotes: emoteReducer,
+    channels: channelReducer
   }
 })
 

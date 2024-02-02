@@ -21,9 +21,9 @@ const ChatEmotes = ({ setMessage }: Props) => {
         <FaRegFaceGrin className="h-5 w-5" />
       </PopoverTrigger>
       <PopoverContent className="mb-5 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#141516] ">
-        <div className="title sticky top-0 z-10 flex h-fit w-full  flex-col border-b-[4px] border-b-zinc-700 font-noto-sans ">
+        <div className="title sticky top-0 z-10 flex h-fit w-full  flex-col border-b-[2px] border-b-zinc-700 font-noto-sans ">
           <div className="mb-5 text-center font-bold uppercase">Emotes</div>
-          <div className="flex h-10 flex-col border-t-[4px] border-t-zinc-700 pb-16 pr-8 dark:bg-[#1f2023]">
+          <div className="flex h-10 flex-col pb-16 pr-8 dark:bg-[#1f2023]">
             <div className="flex flex-col px-4 text-zinc-400">
               <div className="relative">
                 <div className="absolute left-2 top-[1.4rem] flex flex-col">
@@ -69,6 +69,7 @@ const ChatEmotes = ({ setMessage }: Props) => {
               {emotes.emotes.map((emote) => (
                 <Button
                   variant={"ghost"}
+                  className="text-xl antialiased"
                   onClick={() => setMessage((prev) => prev + emote.emote)}
                 >
                   {emote.emote}
