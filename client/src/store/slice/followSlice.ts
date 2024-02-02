@@ -18,13 +18,13 @@ export const followingSlice = createSlice({
   // `createSlice` will infer the state type from the `initialState` argument
   initialState,
   reducers: {
-    addChannel: (state, action: PayloadAction<ILiveFollowing>) => {
+    addFollowingChannel: (state, action: PayloadAction<ILiveFollowing>) => {
       state.following.push(action.payload);
     },
   }
 })
 
-export const { addChannel } = followingSlice.actions
+export const { addFollowingChannel } = followingSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectChannel = (state: RootState) => state.following

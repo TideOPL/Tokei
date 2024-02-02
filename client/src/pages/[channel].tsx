@@ -39,7 +39,7 @@ import ChannelLink from "~/component/channel/channel-links";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
-import { addChannel } from "~/store/slice/followSlice";
+import { addFollowingChannel } from "~/store/slice/followSlice";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -134,7 +134,9 @@ const Channel = ({
         console.log(liveFollowing[i]);
       }
 
-      liveFollowing.map((following) => dispatch(addChannel(following)));
+      liveFollowing.map((following) =>
+        dispatch(addFollowingChannel(following)),
+      );
     };
 
     getFollowingList();
