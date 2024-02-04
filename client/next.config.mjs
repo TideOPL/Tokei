@@ -19,7 +19,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ['img.clerk.com', "images.clerk.dev"],
+    domains: ['img.clerk.com', "images.clerk.dev", "steamcdn-a.akamaihd.net"],
   },};
 
 export default config;
