@@ -30,6 +30,7 @@ import { addChannel } from "~/store/slice/userSlice";
 import { addFollowingChannel } from "~/store/slice/followSlice";
 import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
+import EditStream from "~/component/channel/edit-stream";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -172,7 +173,7 @@ const Channel = ({
                       <div className="title font-semibold dark:text-white">
                         {stream?.streamTitle}
                       </div>
-                      <div className="flex flex-row">
+                      <div className=" relative flex flex-row">
                         <div className="category font-semibold text-primary_lighter dark:text-primary">
                           {stream?.category}
                         </div>
@@ -187,6 +188,9 @@ const Channel = ({
                             </Badge>
                           ))}
                         </div>
+                        <div className="absolute -right-20 -top-10">
+                          <EditStream />
+                        </div>
                       </div>
                     </div>
                     <div>
@@ -194,15 +198,17 @@ const Channel = ({
                         <Viewers viewers={viewers} />
                         <Clock timestamp={stream?.timestamp || "0"} />
                       </div>
-                      {user && user.id != channel.clerk_id ? (
-                        <FollowContainer
-                          follow={() => follow}
-                          getToken={() => getToken()}
-                          following={following}
-                        />
-                      ) : (
-                        <></>
-                      )}
+                      <div className="flex flex-row">
+                        {user && user.id != channel.clerk_id ? (
+                          <FollowContainer
+                            follow={() => follow}
+                            getToken={() => getToken()}
+                            following={following}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
