@@ -13,6 +13,7 @@ import settings from './api/v1/routes/settings';
 import webhook from './api/v1/webhook';
 import streams from './api/v1/routes/streams';
 import chats from './api/v1/routes/chat';
+import categories from './api/v1/routes/categories';
 import { User } from './model/user';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -198,6 +199,7 @@ export const limiter = rateLimit({
 
 app.use(cors());
 app.use('/api/v1/user/',     limiter);
+app.use('/api/v1/categories/', categories);
 app.use('/api/v1/user/',     signup);
 app.use('/api/v1/chat',      chats);
 app.use('/api/v1/settings/', settings);
