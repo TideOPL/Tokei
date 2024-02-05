@@ -15,6 +15,7 @@ import { useKeyPress } from "~/hook/useKeyPress";
 interface Props {
   state: boolean;
   volume: number;
+  disableControls: boolean;
   setState: React.Dispatch<React.SetStateAction<boolean>>;
   setVolume: React.Dispatch<React.SetStateAction<number>>;
   setMuted: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,6 +27,7 @@ const PlayerControls = ({
   volume,
   setVolume,
   setMuted,
+  disableControls,
 }: Props) => {
   const toggleFullscreen = () => {
     if (document.fullscreenElement) {
@@ -36,9 +38,9 @@ const PlayerControls = ({
     document.getElementById("TokeiVideo")?.requestFullscreen();
   };
 
-  useKeyPress(() => toggleFullscreen(), ["KeyF"]);
-  useKeyPress(() => document.exitFullscreen, ["Escape"]);
-  useKeyPress(() => setMuted((prev) => !prev), ["KeyM"]);
+  useKeyPress(() => toggleFullscreen(), ["KeyF"], disableControls);
+  useKeyPress(() => document.exitFullscreen, ["Escape"], disableControls);
+  useKeyPress(() => setMuted((prev) => !prev), ["KeyM"], disableControls);
 
   return (
     <div className="absolute top-0 z-10 h-[100%] w-full flex-col  bg-transparent p-5 opacity-0 transition-all group-hover:opacity-100 ">

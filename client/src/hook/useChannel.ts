@@ -4,6 +4,8 @@ import { Channel, Stream } from "~/interface/Channel";
 import { env } from "~/env.mjs"
 import { useEffect, useState } from "react";
 import { UserResource } from "@clerk/types";
+import { useAppDispatch } from "~/store/hooks";
+import { setStreamInfo } from "~/store/slice/streamInfoSlice";
 
 interface useChannelType {
   channel: Channel
@@ -17,11 +19,22 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
   const [stream, setStream] = useState<Stream | null>(null);
   const [following, setFollowing] = useState<boolean>(false);
   const [followers, setFollowers] = useState<string>("");
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     const fetch = async () => {
       const { data } = await axios.get<Stream>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`)
       setStream(data)
+
+
+      if (data) {
+        dispatch(
+          setStreamInfo({
+            title: data.streamTitle || "",
+            category: data.category || "",
+            tags: data.tags,
+          }));
+      }
 
       const token = await getToken()
       const following = await axios.get(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/amIFollowing?channel=${channel.username}`, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {

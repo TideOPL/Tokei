@@ -23,7 +23,7 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
 import TokeiPlayer from "~/component/video/tokei-player";
-import { useAppDispatch } from "~/store/hooks";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
 import { addChannel } from "~/store/slice/userSlice";
@@ -31,6 +31,7 @@ import { addFollowingChannel } from "~/store/slice/followSlice";
 import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
+import { setStreamInfo } from "~/store/slice/streamInfoSlice";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -76,6 +77,8 @@ const Channel = ({
     user,
   );
   const [viewers, setViewers] = useState(1);
+  const [disableControls, setDisableControls] = useState(false);
+  const streamInfo = useAppSelector((state) => state.streamInfo);
 
   useEffect(() => {
     const fetch = async () => {
@@ -145,7 +148,10 @@ const Channel = ({
         <div className="flex h-full max-h-full flex-grow overflow-y-scroll">
           {channel.isLive && (
             <div className="h-full max-h-[60%] w-full max-w-[71.2vw]">
-              <TokeiPlayer channel={channel.username} />
+              <TokeiPlayer
+                channel={channel.username}
+                disableControls={disableControls}
+              />
               <div className="flex flex-col justify-center">
                 <div className="flex flex-row space-x-3 px-5 py-2">
                   <div className="relative h-fit w-fit self-center rounded-full border-2 border-primary">
@@ -171,14 +177,14 @@ const Channel = ({
                         </div>
                       </button>
                       <div className="title font-semibold dark:text-white">
-                        {stream?.streamTitle}
+                        {streamInfo?.streamInfo?.title}
                       </div>
                       <div className=" relative flex flex-row">
                         <div className="category font-semibold text-primary_lighter dark:text-primary">
-                          {stream?.category}
+                          {streamInfo?.streamInfo?.category}
                         </div>
                         <div className="space-x-2 pl-2">
-                          {stream?.tags.map((tag) => (
+                          {streamInfo?.streamInfo?.tags.map((tag) => (
                             <Badge
                               key={tag}
                               variant="secondary"
@@ -189,7 +195,7 @@ const Channel = ({
                           ))}
                         </div>
                         <div className="absolute -right-20 -top-10">
-                          <EditStream />
+                          <EditStream setActive={setDisableControls} />
                         </div>
                       </div>
                     </div>

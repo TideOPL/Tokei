@@ -48,8 +48,6 @@ const ChatIdentity = ({ user, initialColor, getToken, setColor }: Props) => {
   }, []);
 
   const updateColor = async (color: string) => {
-    console.log(initialColor);
-    console.log(color);
     if ("#" + color == initialColor) {
       return;
     }

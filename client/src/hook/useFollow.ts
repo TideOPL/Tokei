@@ -23,7 +23,6 @@ const useFollow = (getToken: () => Promise<string | null>, username: string, cha
         return res.status == 200
       }).catch((err) => {console.log(err); return false})
 
-      console.log(following)
       setFollowing(following);
     }
 

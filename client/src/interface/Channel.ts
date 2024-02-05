@@ -29,3 +29,9 @@ export interface ILiveFollowing {
   following: Channel
   stream?: Stream
 }
+
+export interface IStreamInfo {
+  title: string
+  category: string
+  tags: string[]
+}

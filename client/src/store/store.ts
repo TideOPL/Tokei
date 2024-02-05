@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit'
 import emoteReducer from './slice/emoteSlice'
 import followReducer from './slice/followSlice'
 import channelReducer from './slice/userSlice'
+import streamInfoReducer from './slice/streamInfoSlice'
 
 const store = configureStore({
   reducer: {
     emotes: emoteReducer,
     following: followReducer,
-    channels: channelReducer
+    channels: channelReducer,
+    streamInfo: streamInfoReducer
   }
 })
 
