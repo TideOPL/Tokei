@@ -28,6 +28,11 @@ import Image from "next/image";
 const EditStream = () => {
   const [result, setResult] = useState<ICategory[]>([]);
   const search = async (query: string) => {
+    if (query.length < 1) {
+      setResult([]);
+      return;
+    }
+
     const { data } = await axios.get<ICategory[]>(
       `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${query}`,
     );
@@ -85,22 +90,45 @@ const EditStream = () => {
                   className="pl-8"
                   placeholder="Enter a Category"
                   onChange={async (event) => search(event.currentTarget.value)}
+                  onBlur={(event) => setResult([])}
                 />
                 <div className="absolute left-3 top-3">
                   <FaSearch />
                 </div>
               </div>
-              <div className="">
-                <DropdownMenu open>
-                  <DropdownMenuTrigger className="hidden">
-                    {" "}
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="absolute left-[38rem] top-[49rem] z-[9999] max-h-32 overflow-y-scroll ">
-                    {result.map((res) => (
-                      <DropdownMenuItem>{res.name}</DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              <div className="relative">
+                <div className="absolute">
+                  {result.length > 0 && (
+                    <div className="max-h-56 rounded-lg bg-[#1f2023] px-2 py-2">
+                      <div className="max-h-52 space-y-2 overflow-y-scroll">
+                        {result.map((res) => (
+                          <Button
+                            variant={"ghost"}
+                            className="flex h-fit w-96 flex-row items-start justify-start space-x-2"
+                          >
+                            <div>
+                              <Image
+                                src={res.image}
+                                alt={res.name}
+                                width={32}
+                                height={64}
+                                className="rounded-sm"
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <div className="... w-80 truncate text-left font-bold text-white">
+                                {res.name}
+                              </div>
+                              <div className="text-left">
+                                {res.developer?.split(",")[0]}
+                              </div>
+                            </div>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

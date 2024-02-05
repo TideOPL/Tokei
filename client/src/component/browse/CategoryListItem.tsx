@@ -9,7 +9,7 @@ interface Props {
 const CategoryListItem = ({ category }: Props): JSX.Element => {
   return (
     <a
-      className="group relative flex h-40 w-fit flex-col justify-self-center overflow-x-hidden rounded-lg p-5 transition-all hover:cursor-pointer hover:bg-light-primary-dark dark:hover:bg-dark-primary-light/5  min-[1920px]:h-64 min-[2160px]:h-72"
+      className="group relative flex h-40 w-fit flex-col justify-self-center overflow-x-hidden overflow-y-hidden rounded-lg p-5 transition-all hover:cursor-pointer hover:bg-light-primary-dark  dark:hover:bg-dark-primary-light/5 min-[1920px]:h-64 min-[2160px]:h-72"
       href={`/category/${category.name.toLowerCase().replaceAll("'", "").replaceAll(":", "").replaceAll(" ", "-")}`}
     >
       <div className={"h-fit w-fit justify-start rounded-xl"}>
@@ -28,7 +28,7 @@ const CategoryListItem = ({ category }: Props): JSX.Element => {
             {category.name}
           </p>
           <div className="... w-[75%] truncate font-noto-sans text-sm dark:text-gray-500">
-            {category.developer?.split(",")[0]}
+            {category.developer?.split(",")[0] || ""}
           </div>
         </div>
       </div>

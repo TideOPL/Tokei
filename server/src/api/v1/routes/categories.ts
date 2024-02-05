@@ -6,7 +6,7 @@ const router: Router = express.Router();
 // Get /categories/getCategories
 router.get('/createCategories', async (req: Request, res: Response) => {
 
-  const bannedPublishers = ['winged cloud', 'atlus', 'huniepot', 'neko works', '落叶岛项目组, 橘子班', 'stage-nana', 'zloy krot studio'];
+  const bannedPublishers = ['winged cloud', 't3 entertainment', 'atlus', 'huniepot', 'neko works', '落叶岛项目组, 橘子班', 'stage-nana', 'zloy krot studio', 'animu game', 'simon blasen', 'team psykskallar', 'cherry pop games', 'hanako games', 'sanctum games', 'lion games co', 'moonlit works', 'eternal dream'];
 
   try {
     Category.collection.drop();
