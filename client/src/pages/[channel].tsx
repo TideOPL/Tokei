@@ -194,9 +194,6 @@ const Channel = ({
                             </Badge>
                           ))}
                         </div>
-                        <div className="absolute -right-20 -top-10">
-                          <EditStream setActive={setDisableControls} />
-                        </div>
                       </div>
                     </div>
                     <div>
@@ -204,6 +201,11 @@ const Channel = ({
                         <Viewers viewers={viewers} />
                         <Clock timestamp={stream?.timestamp || "0"} />
                       </div>
+
+                      <div className=" relative bottom-2 left-12">
+                        <EditStream setActive={setDisableControls} />
+                      </div>
+
                       <div className="flex flex-row">
                         {user && user.id != channel.clerk_id ? (
                           <FollowContainer

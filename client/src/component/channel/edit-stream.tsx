@@ -76,8 +76,8 @@ const EditStream = ({ setActive }: Props) => {
   return (
     <Dialog onOpenChange={(open) => setActive(open)}>
       <DialogTrigger asChild>
-        <Button variant={"ghost"} className="group mx-3 mt-2">
-          <FaPencil className="flex h-5 w-5 fill-zinc-400 transition-colors group-hover:fill-white" />
+        <Button variant={"link"} className="group mx-3 mt-2">
+          <FaPencil className="flex h-5 w-5 rotate-[5deg] fill-zinc-400 transition-all group-hover:rotate-[-25deg] group-hover:fill-white" />
         </Button>
       </DialogTrigger>
       <DialogContent style={{ backgroundColor: "#141516", border: "none" }}>
@@ -122,6 +122,7 @@ const EditStream = ({ setActive }: Props) => {
                     id="tags"
                     className="pl-8"
                     placeholder="Enter a Tag"
+                    autoComplete="off"
                     value={newTag}
                     onChange={(event) => setNewTag(event.currentTarget.value)}
                   />
