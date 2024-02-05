@@ -13,8 +13,27 @@ import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import { FaSearch } from "react-icons/fa";
+import axios from "axios";
+import { ICategory } from "~/interface/Category";
+import { env } from "~/env.mjs";
+import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import Image from "next/image";
 
 const EditStream = () => {
+  const [result, setResult] = useState<ICategory[]>([]);
+  const search = async (query: string) => {
+    const { data } = await axios.get<ICategory[]>(
+      `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${query}`,
+    );
+    setResult(data);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -54,70 +73,34 @@ const EditStream = () => {
                 >
                   English
                 </Badge>
-
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  Gaming
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
-                <Badge
-                  key={"tag1"}
-                  variant="secondary"
-                  className="w-fit rounded-xl"
-                >
-                  VR
-                </Badge>
+              </div>
+            </div>
+            <div>
+              <Label htmlFor="category" className="font-semibold">
+                Category
+              </Label>
+              <div className="relative">
+                <Input
+                  id="category"
+                  className="pl-8"
+                  placeholder="Enter a Category"
+                  onChange={async (event) => search(event.currentTarget.value)}
+                />
+                <div className="absolute left-3 top-3">
+                  <FaSearch />
+                </div>
+              </div>
+              <div className="">
+                <DropdownMenu open>
+                  <DropdownMenuTrigger className="hidden">
+                    {" "}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="absolute left-[38rem] top-[49rem] z-[9999] max-h-32 overflow-y-scroll ">
+                    {result.map((res) => (
+                      <DropdownMenuItem>{res.name}</DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
