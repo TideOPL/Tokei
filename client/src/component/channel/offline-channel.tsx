@@ -5,6 +5,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Channel, Stream } from "~/interface/Channel";
 import FollowContainer from "./follow-container";
+import EditStream from "./edit-stream";
+import { useState } from "react";
 
 interface Props {
   signedIn: boolean | undefined;
@@ -27,6 +29,8 @@ const OfflineChannel = ({
   getToken,
   following,
 }: Props) => {
+  const [active, setActive] = useState(false);
+
   return (
     <div className="flex h-[60vh] min-h-fit w-full max-w-[100%] flex-col">
       <div className="mb-4 flex h-full min-h-[52rem] w-full flex-col justify-center bg-[#212224]/75 dark:bg-zinc-800/50">
@@ -62,7 +66,7 @@ const OfflineChannel = ({
               </div>
             </button>
             <div className="title font-semibold dark:text-white">
-              {stream?.streamTitle}
+              {stream?.title}
             </div>
             <div className="flex flex-row">
               <div className="category font-semibold text-primary_lighter dark:text-primary">
@@ -89,6 +93,13 @@ const OfflineChannel = ({
             )}
           </div>
         </div>
+        {userId == channel.clerk_id ? (
+          <div className=" relative bottom-2 left-5">
+            <EditStream setActive={setActive} getToken={() => getToken()} />
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
       <About channel={channel} followers={followers} />
       <ChannelLink />
