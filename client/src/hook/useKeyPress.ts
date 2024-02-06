@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 
-export function useKeyPress(callback: () => void, keyCodes: string[]): void {
+export function useKeyPress(callback: () => void, keyCodes: string[], disabled: boolean): void {
   const handler = ({ code }: KeyboardEvent) => {
     if (keyCodes.includes(code)) {
+      if (disabled) {
+        return;
+      }
       callback();
     }
   };
@@ -12,5 +15,5 @@ export function useKeyPress(callback: () => void, keyCodes: string[]): void {
     return () => {
       window.removeEventListener("keydown", handler);
     };
-  }, []);
+  }, [disabled]);
 }

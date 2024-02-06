@@ -1,7 +1,7 @@
 export interface Stream {
-  streamTitle: string
+  title: string
   category: string
-  channelID: string
+  clerkId: string
   viewers: string  
   timestamp: string
   tags: string[]
@@ -28,4 +28,10 @@ export interface Browse {
 export interface ILiveFollowing {
   following: Channel
   stream?: Stream
+}
+
+export interface IStreamInfo {
+  title: string
+  category: string
+  tags: string[]
 }

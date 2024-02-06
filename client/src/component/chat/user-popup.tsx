@@ -74,8 +74,6 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
     fetch();
   }, []);
 
-  console.log(chatRoomFollowSince);
-
   return (
     <div className="flex h-full flex-col justify-between px-4 py-4">
       <div className="flex flex-row">
