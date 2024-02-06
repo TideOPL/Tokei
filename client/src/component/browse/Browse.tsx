@@ -11,14 +11,14 @@ import { env } from "~/env.mjs";
 const Browse = (): JSX.Element => {
   const { browseItems, categoryItems, showMoreCategory } = useBrowse();
   return (
-    <div className="overflow-x-hidden">
-      <div className="grid h-full w-full grid-cols-11 justify-center px-10 pb-5">
+    <div className="w-full overflow-x-hidden">
+      <div className="grid h-fit w-fit grid-cols-11 justify-center px-10 pb-5">
         {categoryItems.map((category: ICategory) => (
           <CategoryListItem category={category} />
         ))}
       </div>
-      <div className="w-full ">
-        <div className="absolute flex w-full items-center justify-center">
+      <div className="relative w-full">
+        <div className="flex justify-center">
           <Button
             variant="ghost"
             className="absolute -top-[10px] h-[20px] font-noto-sans font-semibold text-white transition-all dark:bg-zinc-600 hover:dark:bg-primary_lighter"
@@ -26,10 +26,6 @@ const Browse = (): JSX.Element => {
           >
             Show More
           </Button>
-          {/* mt-[-11px] h-[20px] font-noto-sans font-semibold text-white
-          transition-all dark:bg-zinc-600 hover:dark:bg-primary_lighter */}
-
-          {/* group mt-[-11px] h-[20px] rounded-lg border-primary font-noto-sans font-semibold text-white transition-colors hover:border-2 dark:bg-zinc-600 hover:dark:bg-zinc-600 hover:dark:text-primary */}
         </div>
         <div className="px-12">
           <Separator

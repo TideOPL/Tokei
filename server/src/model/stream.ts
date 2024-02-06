@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 const stream = new mongoose.Schema({
-  streamTitle: {
+  clerkId: {
+    require: true,
+    type: String,
+  },
+  title: {
     require: true,
     type: String,
   },
@@ -9,17 +13,13 @@ const stream = new mongoose.Schema({
     require: true,
     type: String,
   },
-  channelID: {
+  tags: {
     require: true,
-    type: String,
+    type: Array<String>,
   },
   timestamp: {
     require: true,
     type: String,
-  },
-  tags: {
-    require: true,
-    type: Array<String>,
   },
 });
 

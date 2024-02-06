@@ -4,6 +4,7 @@ import Nav from "~/component/nav/Nav";
 import Browse from "../component/browse/Browse";
 import Head from "next/head";
 import Categories from "../component/browse/Browse";
+import Sidebar from "~/component/nav/Sidebar";
 
 export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -15,7 +16,7 @@ export default function Home() {
   }
 
   return (
-    <body className="min-h-screen w-full scroll-smooth bg-light-primary-light min-h-screen-ios dark:bg-[#212224]">
+    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
       <Head>
         <title>Tokei - Browse</title>
         <meta
@@ -23,13 +24,15 @@ export default function Home() {
           name="viewport"
         />
       </Head>
-      <div className="sticky top-0 z-[1] h-24">
-        {/**@ts-ignore**/}
-        <Nav user={user} signOut={() => signOut()} />
+      {/**@ts-ignore**/}
+      <Nav user={user} signOut={() => signOut()} />
+
+      <div className="flex max-h-[calc(100%-64px)] flex-1 overflow-hidden">
+        <Sidebar />
+        <div className="flex h-full max-h-full flex-grow ">
+          <Browse />
+        </div>
       </div>
-      <div className="h-full">
-        <Browse />
-      </div>
-    </body>
+    </div>
   );
 }
