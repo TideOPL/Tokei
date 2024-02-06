@@ -202,9 +202,16 @@ const Channel = ({
                         <Clock timestamp={stream?.timestamp || "0"} />
                       </div>
 
-                      <div className=" relative bottom-2 left-12">
-                        <EditStream setActive={setDisableControls} />
-                      </div>
+                      {user && user.id == channel.clerk_id ? (
+                        <div className=" relative bottom-2 left-12">
+                          <EditStream
+                            setActive={setDisableControls}
+                            getToken={() => getToken()}
+                          />
+                        </div>
+                      ) : (
+                        <></>
+                      )}
 
                       <div className="flex flex-row">
                         {user && user.id != channel.clerk_id ? (

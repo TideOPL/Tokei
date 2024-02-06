@@ -24,9 +24,10 @@ import { setStreamInfo } from "~/store/slice/streamInfoSlice";
 
 interface Props {
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
+  getToken: () => Promise<string | null>;
 }
 
-const EditStream = ({ setActive }: Props) => {
+const EditStream = ({ setActive, getToken }: Props) => {
   const dispatch = useAppDispatch();
   const streamInfo = useAppSelector((state) => state.streamInfo);
   const [result, setResult] = useState<ICategory[]>([]);
@@ -71,6 +72,28 @@ const EditStream = ({ setActive }: Props) => {
 
   const setCurrentCategory = (category: ICategory) => {
     setCategory(category);
+  };
+
+  const update = async () => {
+    const token = await getToken();
+    const status = await axios
+      .post(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/updateStreamInfo`,
+        { title: title, tags: tags, category: category?.name },
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+      .then(() => true)
+      .catch(() => false);
+
+    if (status) {
+      dispatch(
+        setStreamInfo({
+          title: title,
+          category: category?.name || "Unkown Category",
+          tags: tags,
+        }),
+      );
+    }
   };
 
   return (
@@ -248,15 +271,7 @@ const EditStream = ({ setActive }: Props) => {
                 <Button
                   variant={"default"}
                   className="bg-primary_lighter font-bold hover:bg-primary_lighter/5 dark:bg-primary dark:hover:bg-primary/90"
-                  onClick={() =>
-                    dispatch(
-                      setStreamInfo({
-                        title: title,
-                        category: category?.name || "Geometry Dash",
-                        tags: tags,
-                      }),
-                    )
-                  }
+                  onClick={async () => await update()}
                 >
                   Done
                 </Button>

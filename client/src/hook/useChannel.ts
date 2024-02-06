@@ -3,7 +3,6 @@ import axios from "axios";
 import { Channel, Stream } from "~/interface/Channel";
 import { env } from "~/env.mjs"
 import { useEffect, useState } from "react";
-import { UserResource } from "@clerk/types";
 import { useAppDispatch } from "~/store/hooks";
 import { setStreamInfo } from "~/store/slice/streamInfoSlice";
 
@@ -30,7 +29,7 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
       if (data) {
         dispatch(
           setStreamInfo({
-            title: data.streamTitle || "",
+            title: data.title || "",
             category: data.category || "",
             tags: data.tags,
           }));

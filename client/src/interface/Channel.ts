@@ -1,7 +1,7 @@
 export interface Stream {
-  streamTitle: string
+  title: string
   category: string
-  channelID: string
+  clerkId: string
   viewers: string  
   timestamp: string
   tags: string[]
