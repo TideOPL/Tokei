@@ -20,6 +20,7 @@ import cors from 'cors';
 import { Stream } from './model/stream';
 import Redis from 'ioredis';
 import { getOrSetCache } from './util/cache';
+import bodyParser from 'body-parser';
 
 const NodeMediaServer = require('tokei-media-server');
 
@@ -197,6 +198,7 @@ export const limiter = rateLimit({
 });
 
 
+app.use(bodyParser.json());
 app.use(cors());
 app.use('/api/v1/user/',     limiter);
 app.use('/api/v1/categories/', categories);

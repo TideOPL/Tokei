@@ -2,6 +2,8 @@
 import express, { Router, Request, Response } from 'express';
 import { User } from '../../../model/user';
 import { Stream } from '../../../model/stream';
+import { env } from 'process';
+import { ClerkExpressRequireAuth, RequireAuthProp } from '@clerk/clerk-sdk-node';
 
 var fs = require('fs');
 var path = require('path');
@@ -29,7 +31,7 @@ router.get('/getAllStreams', async (req: Request, res: Response) => {
     }
 
     for (let i = 0; i < channels.length; i++) {
-      updatedStreams.push({ 'channel': channels[i], 'stream': streams.find(obj => obj.channelID === channels[i].clerk_id) });
+      updatedStreams.push({ 'channel': channels[i], 'stream': streams.find(obj => obj.clerkId === channels[i].clerk_id) });
     }
 
     res.status(200).send(updatedStreams);
@@ -46,7 +48,7 @@ router.get('/getStream', async (req: Request, res: Response) => {
   }
 
   const getStream = async () => {
-    return Stream.findOne({ channelID: req.query.channelID }).exec();
+    return Stream.findOne({ clerkId: req.query.channelID }).exec();
   };
 
   const stream = await getStream();
@@ -56,10 +58,62 @@ router.get('/getStream', async (req: Request, res: Response) => {
     return;
   }
 
-
-  
   res.status(200).send(stream);
   return;
+});
+
+router.get('/getThumbnail/:channel', async (req: Request, res: Response) => {
+  console.log(req.params.channel);
+  const getChannel =  async () => {
+    return User.findOne({ username: req.params.channel }).exec();
+  };
+
+  const channel = await getChannel();
+  if (channel != null) {
+    const filePath = path.join(env.MEDIA_PATH + '/' + channel.stream_key + '/thumb.png');
+    console.log(filePath);
+
+    fs.exists(filePath, (exists: boolean) => {
+      if (!exists) {
+        res.status(404).send(exists);
+        return;
+      }
+      
+      fs.readFile(filePath, (err: any, content: any) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+
+        res.setHeader('content-type', 'image/png');
+        res.status(200).send(content);
+        return;
+      });
+    });
+    return;
+  }
+  res.status(404).send();
+
+  return;
+});
+
+
+router.post('/updateStreamInfo', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+  if (req.body.title == null || req.body.tags == null || req.body.category == null) {
+    res.status(401).send();
+  }
+
+  const updateStream = async (title: string, tags: string[], category: string) => {
+    return Stream.findOneAndUpdate({ clerkId: req.auth.userId }, { title: title, tags: tags, category: category }).exec();
+  };
+  
+  const stream = await updateStream(req.body.title, req.body.tags, req.body.category);
+
+  if (stream) {
+    res.status(200).send(stream);
+    return;
+  }
+
+  res.status(404).send();
 });
 
 router.get('/:channel/:filename', async (req: Request, res: Response) => {
@@ -127,20 +181,6 @@ router.get('/:channel/:filename', async (req: Request, res: Response) => {
       }
     }
   });
-
-
-  // try {
-  //   fetch(`http://localhost:${process.env.NMS_PORT}/live/${key}/index.m3u8`)
-  //     .then(r => r.body)
-  //     .then(s => {
-  //       s.pipe(res);
-  //     })
-  //     .catch(e => {
-  //       res.status(500).send(e?.toString());
-  //     });
-  // } catch (e) {
-  //   res.status(500).send(e?.toString());
-  // }
 });
 
 export default router;
