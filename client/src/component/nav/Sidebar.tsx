@@ -11,7 +11,7 @@ const Sidebar = (): JSX.Element => {
   const followingList = useAppSelector((state) => state.following);
 
   return (
-    <div className="sticky min-h-full w-[10%] flex-col space-y-5 border-r border-zinc-500 bg-[#fefefe] px-2 py-8 font-noto-sans text-white dark:bg-[#1f2023]">
+    <div className="sticky min-h-full flex-col space-y-5 border-r border-zinc-500 bg-[#fefefe] px-2 py-8 font-noto-sans text-white dark:bg-[#1f2023]">
       <div className="text-sm font-semibold uppercase">Followed Channels</div>
       {followingList.following.map((following) => (
         <User followingUser={following} />
@@ -65,3 +65,5 @@ const User = ({ followingUser }: UserProps) => {
 };
 
 export default Sidebar;
+
+const SmallSize = () => {};

@@ -57,7 +57,7 @@ router.get('/getCategories', async (req: Request, res: Response) => {
     }
 
     const getCategories = async (_page: number) => {
-      return Category.find({}).sort({ weight: 'asc' }).skip( _page * 11 ).limit( 11 ).exec();
+      return Category.find({}).sort({ weight: 'asc' }).skip( _page * 10 ).limit( 10 ).exec();
     };
 
     const categories = await getCategories(page);

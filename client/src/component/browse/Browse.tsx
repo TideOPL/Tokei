@@ -12,7 +12,7 @@ const Browse = (): JSX.Element => {
   const { browseItems, categoryItems, showMoreCategory } = useBrowse();
   return (
     <div className="w-full overflow-x-hidden">
-      <div className="grid h-fit w-fit grid-cols-11 justify-center px-10 pb-5">
+      <div className="grid h-fit w-full grid-cols-5 justify-center px-10 pb-5 2xl:grid-cols-10">
         {categoryItems.map((category: ICategory) => (
           <CategoryListItem category={category} />
         ))}
