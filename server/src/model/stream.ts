@@ -21,6 +21,10 @@ const stream = new mongoose.Schema({
     require: true,
     type: String,
   },
+  viewers: {
+    require: false,
+    type: String,
+  },
 });
 
 export const Stream = mongoose.model('Stream', stream);

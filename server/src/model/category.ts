@@ -17,6 +17,22 @@ const category = new mongoose.Schema({
     require: true,
     type: Number,
   },
+  searchName: {
+    require: true,
+    type: String,
+  },
+  tags: {
+    require: true,
+    type: [String],
+  },
+  description: {
+    require: false,
+    type: String,
+  },
+  age: {
+    require: false,
+    type: String,
+  },
 });
 
 export const Category = mongoose.model('Category', category);

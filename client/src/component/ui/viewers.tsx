@@ -1,16 +1,16 @@
 import { Eye, EyeIcon } from "lucide-react";
 
 interface Props {
-  viewers: number
+  viewers: string;
 }
 
 const Viewers = ({ viewers }: Props) => {
   return (
-    <div className="viewers dark:text-red-400 font-semibold transition-all flex flex-row">
-      <Eye className="mr-1 h-4 w-4 mt-[1px] self-center" />
+    <div className="viewers flex flex-row font-semibold transition-all dark:text-red-400">
+      <Eye className="mr-1 mt-[1px] h-4 w-4 self-center" />
       {viewers}
     </div>
-  )
-}
+  );
+};
 
 export default Viewers;

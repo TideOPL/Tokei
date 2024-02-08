@@ -5,6 +5,7 @@ import { env } from "~/env.mjs"
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "~/store/hooks";
 import { setStreamInfo } from "~/store/slice/streamInfoSlice";
+import { addNewFollowingChannel } from "~/store/slice/followSlice";
 
 interface useChannelType {
   channel: Channel
@@ -38,7 +39,7 @@ const useChannel = (getToken: () => Promise<string | null>, channel: Channel): u
       const token = await getToken()
       const following = await axios.get(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/amIFollowing?channel=${channel.username}`, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {
         return res.status == 200
-      }).catch((err) => {console.log(err); return false})
+      }).catch((err) => {console.warn(err); return false})
 
       setFollowing(following);
     }

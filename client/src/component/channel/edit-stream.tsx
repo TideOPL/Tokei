@@ -46,9 +46,8 @@ const EditStream = ({ setActive, getToken }: Props) => {
 
       if (streamInfo.streamInfo?.category) {
         const { data } = await axios.get<ICategory[]>(
-          `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${streamInfo.streamInfo.category}`,
+          `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${streamInfo.streamInfo.category.name}`,
         );
-        console.log(data);
 
         if (data[0]) {
           setCategory(data[0]);
@@ -79,17 +78,17 @@ const EditStream = ({ setActive, getToken }: Props) => {
     const status = await axios
       .post(
         `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/updateStreamInfo`,
-        { title: title, tags: tags, category: category?.name },
+        { title: title, tags: tags, category: category?._id },
         { headers: { Authorization: `Bearer ${token}` } },
       )
       .then(() => true)
       .catch(() => false);
 
-    if (status) {
+    if (status && category) {
       dispatch(
         setStreamInfo({
           title: title,
-          category: category?.name || "Unkown Category",
+          category: category,
           tags: tags,
         }),
       );

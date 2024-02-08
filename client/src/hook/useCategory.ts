@@ -1,25 +1,26 @@
 import axios from "axios";
 import { env } from "~/env.mjs"
 import { useEffect, useState } from "react";
-import { ICategory } from "~/interface/Category";
+import { Browse } from "~/interface/Channel";
 
 interface useChannelType {
-  items: Array<ICategory>
+  browseItems: Array<Browse>
 }
 
-const useCategory = (): useChannelType => {
-  const [items, setItems] = useState<Array<ICategory>>([])
+const useCategory = (category: string): useChannelType => {
+  const [browseItems, setBrowseItems] = useState<Array<Browse>>([])
+
 
   useEffect(() => {
-    const fetch = async () => {
-      const { data } = await axios.get<Array<ICategory>>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategories?page=0`)
-      setItems(data)
+    const fetchBrowse = async () => {
+      const { data } = await axios.get<Array<Browse>>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getAllStreamsByCategory?category=${category}`)
+      setBrowseItems(data)
     }
   
-    fetch();  
+    fetchBrowse();  
   }, [])
 
-  return {items}
+  return {browseItems}
 }
 
 export default useCategory;

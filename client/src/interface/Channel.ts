@@ -1,6 +1,8 @@
+import { ICategory } from "./Category"
+
 export interface Stream {
   title: string
-  category: string
+  category: ICategory
   clerkId: string
   viewers: string  
   timestamp: string
@@ -32,6 +34,6 @@ export interface ILiveFollowing {
 
 export interface IStreamInfo {
   title: string
-  category: string
+  category: ICategory
   tags: string[]
 }

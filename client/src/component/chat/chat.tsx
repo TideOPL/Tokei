@@ -20,7 +20,7 @@ import { UserResource } from "@clerk/types";
 
 interface Props {
   channel: Channel;
-  setViewers: React.Dispatch<React.SetStateAction<number>>;
+  setViewers: React.Dispatch<React.SetStateAction<string>>;
   getToken: () => Promise<string | null>;
 }
 
@@ -66,13 +66,11 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
       count++;
     });
 
-    socket.on(`viewers_${channel.username}`, (viewers: string[]) => {
-      setViewers(viewers.length);
+    socket.on(`viewers_${channel.username}`, (viewers: string) => {
+      setViewers(viewers);
     });
 
-    if (user) {
-      socket.emit("join", { chat: channel.username, username: user?.username });
-    }
+    socket.emit("join", { chat: channel.username });
 
     // Clean up the socket connection on unmount
     return () => {

@@ -70,7 +70,7 @@ const OfflineChannel = ({
             </div>
             <div className="flex flex-row">
               <div className="category font-semibold text-primary_lighter dark:text-primary">
-                {stream?.category}
+                {stream?.category.name}
               </div>
               <div className="space-x-2 pl-2">
                 {stream?.tags.map((tag: string) => (
@@ -84,8 +84,7 @@ const OfflineChannel = ({
           <div className="flex flex-row items-center justify-end gap-x-2">
             {signedIn && userId != channel.clerk_id ? (
               <FollowContainer
-                follow={() => follow}
-                getToken={() => getToken()}
+                follow={() => follow(() => getToken())}
                 following={following}
               />
             ) : (

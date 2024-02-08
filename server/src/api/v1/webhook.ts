@@ -49,7 +49,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
     }) as WebhookEvent;
   } catch (err: any) {
     // Console log and return errro
-    console.log('Webhook failed to verify. Error:', err.message);
+    console.warn('Webhook failed to verify. Error:', err.message);
     return res.status(400).json({
       success: false,
       message: err.message,
@@ -75,14 +75,18 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
         isLive: false,
         stream_key: key,
         pfp: evt.data.image_url,
+        channelMods: [],
+        followers: [],
+        following: [],
+        isVerified: false,
       });
       user.save();
 
       // Setup account
       const stream = new Stream({
-        streamTitle: username + '\'s Stream!',
-        category: 'Just Chatting',
-        channelID: evt.data.id,
+        title: username + '\'s Stream!',
+        category: '65c0d5698a87935e4b444013',
+        clerkId: evt.data.id,
         timestamp: '0',
         tags: [],
       });

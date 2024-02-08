@@ -4,6 +4,9 @@ import { User } from '../../../model/user';
 import { Stream } from '../../../model/stream';
 import { env } from 'process';
 import { ClerkExpressRequireAuth, RequireAuthProp } from '@clerk/clerk-sdk-node';
+import { Category } from '../../../model/category';
+import { redis } from '../../../app';
+import { getOrSetCache } from '../../../util/cache';
 
 var fs = require('fs');
 var path = require('path');
@@ -21,6 +24,8 @@ router.get('/getAllStreams', async (req: Request, res: Response) => {
       return Stream.find().exec();
     };
 
+
+
     const channels = await getAllLiveChannels();
     const streams = await getAllLiveStreams();
 
@@ -31,7 +36,11 @@ router.get('/getAllStreams', async (req: Request, res: Response) => {
     }
 
     for (let i = 0; i < channels.length; i++) {
-      updatedStreams.push({ 'channel': channels[i], 'stream': streams.find(obj => obj.clerkId === channels[i].clerk_id) });
+      const channel = channels[i];
+      const stream: any = streams.find(obj => obj.clerkId === channels[i].clerk_id);
+      const viewers = await redis.lrange(`viewers_${channel.username}`, 0, -1);
+      stream.viewers = viewers.length.toString();
+      updatedStreams.push({ 'channel': channel, 'stream':  stream });
     }
 
     res.status(200).send(updatedStreams);
@@ -40,6 +49,64 @@ router.get('/getAllStreams', async (req: Request, res: Response) => {
     res.status(500).send(e?.toString());
   } 
 });
+
+router.get('/getAllStreamsByCategory', async (req: Request, res: Response) => {
+  try {
+    if (req.query?.category == null) {
+      res.status(400).send();
+      return;
+    }
+    const getAllLiveChannels = async () => {
+      return User.find({ isLive: true }).exec();
+    };
+
+    const getCategory = async () => {
+      return Category.findOne({ searchName: req.query.category });
+    };
+
+    const getAllLiveStreamsByCategory = async (category: string) => {
+      return Stream.find({ category: category }).exec();
+    };
+
+    const category = await getCategory();
+
+    if (!category) {
+      res.status(404).send();
+      return;
+    }
+
+    const channels = await getAllLiveChannels();
+    const streams = await getAllLiveStreamsByCategory(category._id.toString());
+
+    const updatedStreams = [];
+
+
+    if (streams.length == 0) {
+      res.status(204).send();
+      return;
+    }
+
+    for (let i = 0; i < channels.length; i++) {
+      
+      const channel = channels[i];
+      const stream: any = streams.find(obj => obj.clerkId === channel.clerk_id);
+
+      if (stream == undefined) {
+        continue;
+      }
+      const viewers = await redis.lrange(`viewers_${channel.username}`, 0, -1);
+      stream.viewers = viewers.length.toString();
+
+      updatedStreams.push({ 'channel': channels.find(obj => obj.clerk_id === stream.clerkId), 'stream': stream });
+    }
+
+    res.status(200).send(updatedStreams);
+    return;
+  } catch (e) {
+    res.status(500).send(e?.toString());
+  } 
+});
+
 
 router.get('/getStream', async (req: Request, res: Response) => {
   if (req.query?.channelID == null) {
@@ -51,19 +118,40 @@ router.get('/getStream', async (req: Request, res: Response) => {
     return Stream.findOne({ clerkId: req.query.channelID }).exec();
   };
 
-  const stream = await getStream();
+  const getCategoryById = async (stream: any) => {
+    return Category.findById(stream.category).exec();
+  };
 
-  if (stream == null) {
+  const stream = await getStream();
+  const category = await getCategoryById(stream);
+
+  const user = await getOrSetCache(req.query.channelID.toString(), async () => {
+    const data = await User.findOne({ clerk_id: req.query.channelID }).exec();
+    
+    return data;
+  }) as any;
+
+
+
+
+  if (stream == null || stream.category == null || category == null) {
     res.status(404).send();
     return;
   }
+  
+  const streamJSON: any = stream.toJSON();
+  streamJSON.category = category;
 
-  res.status(200).send(stream);
+  const viewers = await redis.lrange(`viewers_${user.username}`, 0, -1);
+  streamJSON.viewers = viewers.length.toString();
+  const response = streamJSON;
+
+
+  res.status(200).send(response);
   return;
 });
 
 router.get('/getThumbnail/:channel', async (req: Request, res: Response) => {
-  console.log(req.params.channel);
   const getChannel =  async () => {
     return User.findOne({ username: req.params.channel }).exec();
   };
@@ -71,7 +159,6 @@ router.get('/getThumbnail/:channel', async (req: Request, res: Response) => {
   const channel = await getChannel();
   if (channel != null) {
     const filePath = path.join(env.MEDIA_PATH + '/' + channel.stream_key + '/thumb.png');
-    console.log(filePath);
 
     fs.exists(filePath, (exists: boolean) => {
       if (!exists) {
@@ -107,6 +194,7 @@ router.post('/updateStreamInfo', ClerkExpressRequireAuth(), async (req: RequireA
   };
   
   const stream = await updateStream(req.body.title, req.body.tags, req.body.category);
+  await redis.del(req.auth.userId);
 
   if (stream) {
     res.status(200).send(stream);
@@ -160,7 +248,7 @@ router.get('/:channel/:filename', async (req: Request, res: Response) => {
                 res.end(contents, 'utf-8');
               }
             } else {
-              console.log('emptly playlist');
+              console.warn('emptly playlist');
               res.writeHead(500);
               res.end();
             }
@@ -174,7 +262,7 @@ router.get('/:channel/:filename', async (req: Request, res: Response) => {
           stream.pipe(res);
           break;
         default:
-          console.log('unknown file type: ' +
+          console.warn('unknown file type: ' +
 				    path.extname(uri));
           res.writeHead(500);
           res.end();

@@ -67,7 +67,7 @@ export const redis =  new Redis(6379, '88.99.60.186', { password: 'TokeiLive2022
 redis.flushall();
 
 database.on('error', (error) => {
-  console.log(error);
+  console.warn(error);
 });
 
 app.get('/', (req: Request, res: Response) => {
@@ -96,25 +96,26 @@ io.on('connection', (socket) => {
   let storedChat = '';
   socket.on('join', (chat) => {
     storedChat = chat.chat;
+    const address = socket.handshake.address;
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
 
       if (viewers) {
-        const viewer: string | number = viewers.indexOf(chat.username);
+        const viewer: string | number = viewers.indexOf(address);
         if (viewer == -1) {
-          await redis.lpush(`viewers_${chat.chat}`, chat.username);
+          await redis.lpush(`viewers_${chat.chat}`, address);
           return;
         }
         return;
       } else {
-        await redis.lset(`viewers_${chat.chat}`, chat.username, 0);
+        await redis.lset(`viewers_${chat.chat}`, address, 0);
       }
 
       const list: string[] = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
 
 
-      io.sockets.emit(`viewers_${chat.chat}`, list);
+      io.sockets.emit(`viewers_${chat.chat}`, list.length);
     };
 
     viewerFunc();
@@ -122,6 +123,7 @@ io.on('connection', (socket) => {
   
 
   socket.on('leave', (chat) => {
+    const address = socket.handshake.address;
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
@@ -129,14 +131,14 @@ io.on('connection', (socket) => {
       if (viewers) {
         const viewer: number = viewers.indexOf(chat.username);
         if (viewer != -1) {
-          await redis.lrem(`viewers_${chat.chat}`, 1, chat.username);
+          await redis.lrem(`viewers_${chat.chat}`, 1, address);
           return;
         }
       }
 
       const list: string[] = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
       
-      io.sockets.emit(`viewers_${chat.chat}`, list);
+      io.sockets.emit(`viewers_${chat.chat}`, list.length);
     };
 
     viewerFunc();
@@ -177,7 +179,7 @@ io.on('connection', (socket) => {
 
     io.sockets.emit(`message_${storedChat}`, { 'username': message.username, 'color': message.color, 'message': message.message, 'icons': icons });
     const viewerFunc = async () => {
-      io.sockets.emit(`viewers_${storedChat}`, await redis.lrange(`viewers_${storedChat}`, 0, -1));
+      io.sockets.emit(`viewers_${storedChat}`, (await redis.lrange(`viewers_${storedChat}`, 0, -1)).length);
     };
 
     viewerFunc();

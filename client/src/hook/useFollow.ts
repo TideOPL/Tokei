@@ -21,7 +21,7 @@ const useFollow = (getToken: () => Promise<string | null>, username: string, cha
       const token = await getToken()
       const following = await axios.get(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/amIFollowing?channel=${username}`, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {
         return res.status == 200
-      }).catch((err) => {console.log(err); return false})
+      }).catch((err) => {console.warn(err); return false})
 
       setFollowing(following);
     }
@@ -37,7 +37,7 @@ const useFollow = (getToken: () => Promise<string | null>, username: string, cha
           return res.data.timestamp;
         }
         return ""
-      }).catch((err) => {console.log(err); return false})
+      }).catch((err) => {console.warn(err); return false})
       setChatRoomFollowSince(value);
     }
 

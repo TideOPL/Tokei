@@ -9,7 +9,7 @@ export function getOrSetCache(key: string, cb: () => any) {
     // Try to get data from Redis using the provided key
     const data = await redis.get(key)
       .catch(error => {
-        console.log(error);
+        console.warn(error);
         return reject(error);
       });
 
@@ -29,7 +29,7 @@ export function getOrSetCache(key: string, cb: () => any) {
 
 // Function to clear the entire cache
 export async function clearCache() {
-  console.log('cache cleared');
+  console.warn('cache cleared');
   // Flush all keys from the Redis cache
   await redis.flushall();
 }
