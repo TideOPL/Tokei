@@ -27,6 +27,7 @@ import { addFollowingChannel } from "~/store/slice/followSlice";
 import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
+import Link from "next/link";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -177,9 +178,12 @@ const Channel = ({
                         {streamInfo?.streamInfo?.title}
                       </div>
                       <div className=" relative flex flex-row">
-                        <div className="category font-semibold text-primary_lighter dark:text-primary">
+                        <Link
+                          href={`/category/${streamInfo.streamInfo?.category.searchName}`}
+                          className="category font-semibold text-primary_lighter hover:underline dark:text-primary"
+                        >
                           {streamInfo?.streamInfo?.category.name}
-                        </div>
+                        </Link>
                         <div className="space-x-2 pl-2">
                           {streamInfo?.streamInfo?.tags.map((tag) => (
                             <Badge
