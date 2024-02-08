@@ -121,14 +121,11 @@ router.post('/follow/follow', ClerkExpressRequireAuth(), async (req: RequireAuth
       res.status(400).send();
     }
 
-    //Check with Obi
     let follow = await getFollow( req.auth.userId, channel.clerk_id );
 
     const channelFollowers: string[] = channel.followers;
     const userFollowing: string[] = user.following;
     
-    console.log(follow);
-
     if (follow) {
       const followId = follow._id.toString();
       const updatedChannelFollowers: string[] = channelFollowers.filter(follower => follower !== followId);
@@ -260,8 +257,6 @@ router.get('/follow/getFollowingList', ClerkExpressRequireAuth(), async (req: Re
         channels.push(channel.toJSON());
       }
     }
-
-    console.log(channels);
 
     res.status(200).send(channels);
     // return list of user models

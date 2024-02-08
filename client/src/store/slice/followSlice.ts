@@ -19,12 +19,17 @@ export const followingSlice = createSlice({
   initialState,
   reducers: {
     addFollowingChannel: (state, action: PayloadAction<ILiveFollowing>) => {
-      state.following.push(action.payload);
+      if (state.following.length == 0) {
+        state.following.push(action.payload);
+      }
     },
+    addNewFollowingChannel: (state, action: PayloadAction<ILiveFollowing>) => {
+      state.following.push(action.payload);
+    }
   }
 })
 
-export const { addFollowingChannel } = followingSlice.actions
+export const { addFollowingChannel, addNewFollowingChannel } = followingSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectChannel = (state: RootState) => state.following

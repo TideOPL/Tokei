@@ -1,14 +1,61 @@
 import { useAuth, useUser } from "@clerk/nextjs";
-import React from "react";
+import React, { useEffect } from "react";
 import Nav from "~/component/nav/Nav";
 import Browse from "../component/browse/Browse";
 import Head from "next/head";
-import Categories from "../component/browse/Browse";
 import Sidebar from "~/component/nav/Sidebar";
+import { addFollowingChannel } from "~/store/slice/followSlice";
+import axios from "axios";
+import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
+import { env } from "~/env.mjs";
+import { useAppDispatch } from "~/store/hooks";
 
 export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
-  const { signOut } = useAuth();
+  const { signOut, getToken } = useAuth();
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const getFollowingList = async () => {
+      const token = await getToken();
+      const { data } = await axios.get<Channel[]>(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const liveFollowing: ILiveFollowing[] = [];
+
+      for (let j = 0; j < data.length; j++) {
+        const channel = data[j];
+
+        if (!channel) {
+          continue;
+        }
+
+        if (channel.isLive) {
+          const { data } = await axios.get<Stream>(
+            `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
+          );
+          liveFollowing.push({
+            following: channel,
+            stream: data,
+          });
+          continue;
+        }
+
+        liveFollowing.push({
+          following: channel,
+        });
+      }
+
+      liveFollowing.map((following) =>
+        dispatch(addFollowingChannel(following)),
+      );
+    };
+
+    if (isSignedIn) {
+      getFollowingList();
+    }
+  }, [isSignedIn]);
 
   if (!isLoaded) {
     // Loading Screen?

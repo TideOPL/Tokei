@@ -13,13 +13,9 @@ import useChannel from "~/hook/useChannel";
 import Clock from "~/component/ui/clock";
 import { Avatar, AvatarFallback, AvatarImage } from "../component/ui/avatar";
 import { Badge } from "~/component/ui/badge";
-import { getRelativeTime } from "~/lib/utils";
 import Sidebar from "~/component/nav/Sidebar";
 import Chat from "~/component/chat/chat";
 import Viewers from "~/component/ui/viewers";
-import { Button } from "~/component/ui/button";
-import { UserRound } from "lucide-react";
-import { StarFilledIcon } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
 import TokeiPlayer from "~/component/video/tokei-player";
@@ -31,7 +27,6 @@ import { addFollowingChannel } from "~/store/slice/followSlice";
 import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
-import { setStreamInfo } from "~/store/slice/streamInfoSlice";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -76,7 +71,7 @@ const Channel = ({
     //@ts-ignore
     user,
   );
-  const [viewers, setViewers] = useState(1);
+  const [viewers, setViewers] = useState("1");
   const [disableControls, setDisableControls] = useState(false);
   const streamInfo = useAppSelector((state) => state.streamInfo);
 
@@ -125,13 +120,15 @@ const Channel = ({
       );
     };
 
-    getFollowingList();
+    if (isSignedIn) {
+      getFollowingList();
+    }
     fetch();
     dispatch(addChannel(channel));
-  }, []);
+  }, [isSignedIn]);
 
   return (
-    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-y-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
+    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
       <Head>
         <title>{"Tokei - " + channel.username}</title>
         <meta
@@ -145,7 +142,7 @@ const Channel = ({
 
       <div className="flex max-h-[calc(100%-64px)] flex-1">
         <Sidebar />
-        <div className="flex h-full max-h-full flex-grow overflow-y-scroll">
+        <div className="flex h-full max-h-full flex-grow overflow-x-hidden overflow-y-scroll">
           {channel.isLive && (
             <div className="h-full max-h-[60%] w-full max-w-[71.2vw]">
               <TokeiPlayer
@@ -181,7 +178,7 @@ const Channel = ({
                       </div>
                       <div className=" relative flex flex-row">
                         <div className="category font-semibold text-primary_lighter dark:text-primary">
-                          {streamInfo?.streamInfo?.category}
+                          {streamInfo?.streamInfo?.category.name}
                         </div>
                         <div className="space-x-2 pl-2">
                           {streamInfo?.streamInfo?.tags.map((tag) => (
@@ -216,8 +213,7 @@ const Channel = ({
                       <div className="flex flex-row">
                         {user && user.id != channel.clerk_id ? (
                           <FollowContainer
-                            follow={() => follow}
-                            getToken={() => getToken()}
+                            follow={() => follow(() => getToken())}
                             following={following}
                           />
                         ) : (
