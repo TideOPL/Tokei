@@ -1,77 +1,95 @@
-import { BadgeCheckIcon, GemIcon, Shield, SwordIcon, VideoIcon } from "lucide-react"
-import { Button } from "../ui/button"
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from "../ui/tooltip"
-import { CSSProperties } from "react"
-import { Popover, PopoverTrigger, PopoverContent } from "@radix-ui/react-popover"
-import UserPopUp from "./user-popup"
+import {
+  BadgeCheckIcon,
+  GemIcon,
+  Shield,
+  SwordIcon,
+  VideoIcon,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import {
+  TooltipProvider,
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "../ui/tooltip";
+import { CSSProperties } from "react";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@radix-ui/react-popover";
+import UserPopUp from "./user-popup";
+import { Channel } from "~/interface/Channel";
 
 interface Message {
-  username: string
-  message: string
-  color: string
-  icons: string[]
+  username: string;
+  message: string;
+  color: string;
+  icons: string[];
+  chatRoom: Channel;
 }
 
 export interface IconProp {
-  name: string
-  icon: JSX.Element
-  style: CSSProperties
+  name: string;
+  icon: JSX.Element;
+  style: CSSProperties;
 }
 
 const IconsList: IconProp[] = [
   {
-    "name": "Broadcaster",
-    "icon": <VideoIcon className="w-[24px] h-[24px] stroke-[1.75px] bg-red-500 px-0.5 rounded-md"/>,
-    "style": {}
+    name: "Broadcaster",
+    icon: (
+      <VideoIcon className="h-[24px] w-[24px] rounded-md bg-red-500 stroke-[1.75px] px-0.5" />
+    ),
+    style: {},
   },
   {
-    "name": "Moderator",
-    "icon": <SwordIcon  className="w-[24px] h-[24px] stroke-[1.75px] rotate-90 bg-[#B07ADF] rounded-md px-0.5 z-0"/>,
-    "style": {},
+    name: "Moderator",
+    icon: (
+      <SwordIcon className="h-[24px] w-[24px] rotate-90 rounded-md bg-[#B07ADF] stroke-[1.75px] px-0.5" />
+    ),
+    style: {},
   },
   {
-    "name": "Verified",
-    "icon": <BadgeCheckIcon  className="w-[24px] h-[24px] stroke-[1.75px] bg-primary rounded-md px-0.5"/>,
-    "style": {},
+    name: "Verified",
+    icon: (
+      <BadgeCheckIcon className="h-[24px] w-[24px] rounded-md bg-primary stroke-[1.75px] px-0.5" />
+    ),
+    style: {},
   },
-]
+];
 
-const Message = ({ icons, username, message, color }: Message) => {
-  
-
-  const userIcon = IconsList.filter(item => icons.includes(item.name));
+const Message = ({ icons, username, message, color, chatRoom }: Message) => {
+  const userIcon = IconsList.filter((item) => icons.includes(item.name));
 
   return (
-    <div className="flex flex-1 flex-row h-fit font-medium py-0.5">
+    <div className="h-fit whitespace-pre-line break-words py-0.5 pl-1 font-medium ">
       <Popover>
-          <PopoverTrigger  className="flex items-center justify-center hover:bg-[#eaeaea]/10 px-1 rounded-md transition-colors">
+        <PopoverTrigger className="inline-block h-[32px] min-h-[137.75] flex-row rounded-md px-1 transition-colors hover:bg-[#eaeaea]/10">
+          <div className="flex h-full flex-row items-baseline pb-2 pt-1">
             {userIcon.map((icon) => (
-              <div style={icon.style} className="pl-0.5">
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      {icon.icon}
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {icon.name}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+              <div style={icon.style} className="self-center pl-0.5 pt-1">
+                {icon.icon}
               </div>
             ))}
-            <div className="pl-1" style={{color: color}}>
-              {username}<span className="text-white">:&nbsp;</span>
-            </div>
-          </PopoverTrigger>
-        <PopoverContent className="absolute right-16 -bottom-16 dark:bg-[#292a2d] border-none w-80 h-fit rounded-sm flex flex-col p-0 pt-3 z-[99]">
-          <UserPopUp username={username} color={color} icons={userIcon} />
+            <span className="pl-2" style={{ color: color }}>
+              {username}
+              <span className="text-white">:&nbsp;</span>
+            </span>
+          </div>
+        </PopoverTrigger>
+        <PopoverContent className="absolute -bottom-16 right-16 z-[99] flex h-fit w-80 flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#292a2d]">
+          <UserPopUp
+            chatRoom={chatRoom}
+            username={username}
+            color={color}
+            icons={userIcon}
+          />
         </PopoverContent>
       </Popover>
-      <div className="break-all">
-        {message}
-      </div>
+      <span className="min-h-[42px]">{message}</span>
     </div>
-  )
-}
+  );
+};
 
-export default Message
+export default Message;

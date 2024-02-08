@@ -3,10 +3,10 @@
 import { useAuth, useUser } from "@clerk/nextjs";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "~/component/nav/Nav";
 import dynamic from "next/dynamic";
-import { Channel } from "~/interface/Channel";
+import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
 import axios from "axios";
 import { env } from "~/env.mjs";
 import useChannel from "~/hook/useChannel";
@@ -18,26 +18,20 @@ import Sidebar from "~/component/nav/Sidebar";
 import Chat from "~/component/chat/chat";
 import Viewers from "~/component/ui/viewers";
 import { Button } from "~/component/ui/button";
-import {
-  Github,
-  Instagram,
-  LucideInstagram,
-  Star,
-  Twitter,
-  UserRound,
-  X,
-  Youtube,
-} from "lucide-react";
-import {
-  DiscordLogoIcon,
-  InstagramLogoIcon,
-  StarFilledIcon,
-  TwitterLogoIcon,
-} from "@radix-ui/react-icons";
+import { UserRound } from "lucide-react";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 import About from "~/component/channel/about";
 import ChannelLink from "~/component/channel/channel-links";
-
-const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
+import TokeiPlayer from "~/component/video/tokei-player";
+import { useAppDispatch, useAppSelector } from "~/store/hooks";
+import { IEmote } from "~/interface/chat";
+import { addEmote } from "~/store/slice/emoteSlice";
+import { addChannel } from "~/store/slice/userSlice";
+import { addFollowingChannel } from "~/store/slice/followSlice";
+import OfflineChannel from "~/component/channel/offline-channel";
+import FollowContainer from "~/component/channel/follow-container";
+import EditStream from "~/component/channel/edit-stream";
+import { setStreamInfo } from "~/store/slice/streamInfoSlice";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -54,7 +48,9 @@ export const getServerSideProps = (async (context) => {
 
   const channelData = (await axios
     .get(
-      `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${channel_name.concat()}`,
+      `http://${env.NEXT_PUBLIC_URL}:${
+        env.NEXT_PUBLIC_EXPRESS_PORT
+      }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
     )
     .then((res) => res.data)
     .catch()) as Channel | null | undefined;
@@ -73,15 +69,66 @@ const Channel = ({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut, getToken } = useAuth();
-  const [hasWindow, setHasWindow] = useState(true);
-
+  const dispatch = useAppDispatch();
   const { channel, stream, follow, following, followers } = useChannel(
-    getToken,
+    () => getToken(),
     channelData,
     //@ts-ignore
     user,
   );
   const [viewers, setViewers] = useState(1);
+  const [disableControls, setDisableControls] = useState(false);
+  const streamInfo = useAppSelector((state) => state.streamInfo);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await axios.get<IEmote[]>(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/chat/getEmotes`,
+      );
+
+      data.map((emote) => dispatch(addEmote(emote)));
+    };
+
+    const getFollowingList = async () => {
+      const token = await getToken();
+      const { data } = await axios.get<Channel[]>(
+        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+      const liveFollowing: ILiveFollowing[] = [];
+
+      for (let j = 0; j < data.length; j++) {
+        const channel = data[j];
+
+        if (!channel) {
+          continue;
+        }
+
+        if (channel.isLive) {
+          const { data } = await axios.get<Stream>(
+            `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
+          );
+          liveFollowing.push({
+            following: channel,
+            stream: data,
+          });
+          continue;
+        }
+
+        liveFollowing.push({
+          following: channel,
+        });
+      }
+
+      liveFollowing.map((following) =>
+        dispatch(addFollowingChannel(following)),
+      );
+    };
+
+    getFollowingList();
+    fetch();
+    dispatch(addChannel(channel));
+  }, []);
 
   return (
     <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-y-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
@@ -101,19 +148,10 @@ const Channel = ({
         <div className="flex h-full max-h-full flex-grow overflow-y-scroll">
           {channel.isLive && (
             <div className="h-full max-h-[60%] w-full max-w-[71.2vw]">
-              {hasWindow && (
-                <div className="relative pt-[56.25%]">
-                  <ReactPlayer
-                    url={`http://${env.NEXT_PUBLIC_URL}:8001/api/v1/${channel.username}/index.m3u8`}
-                    style={{ position: "absolute", top: 0, left: 0 }}
-                    playing={true}
-                    muted={true}
-                    height={"100%"}
-                    width={"100%"}
-                    controls={true}
-                  />
-                </div>
-              )}
+              <TokeiPlayer
+                channel={channel.username}
+                disableControls={disableControls}
+              />
               <div className="flex flex-col justify-center">
                 <div className="flex flex-row space-x-3 px-5 py-2">
                   <div className="relative h-fit w-fit self-center rounded-full border-2 border-primary">
@@ -139,14 +177,14 @@ const Channel = ({
                         </div>
                       </button>
                       <div className="title font-semibold dark:text-white">
-                        {stream?.streamTitle}
+                        {streamInfo?.streamInfo?.title}
                       </div>
-                      <div className="flex flex-row">
+                      <div className=" relative flex flex-row">
                         <div className="category font-semibold text-primary_lighter dark:text-primary">
-                          {stream?.category}
+                          {streamInfo?.streamInfo?.category}
                         </div>
                         <div className="space-x-2 pl-2">
-                          {stream?.tags.map((tag) => (
+                          {streamInfo?.streamInfo?.tags.map((tag) => (
                             <Badge
                               key={tag}
                               variant="secondary"
@@ -163,35 +201,29 @@ const Channel = ({
                         <Viewers viewers={viewers} />
                         <Clock timestamp={stream?.timestamp || "0"} />
                       </div>
-                      {user && user.id != channel.clerk_id ? (
-                        <div className="flex flex-row items-center justify-end gap-x-2 py-2">
-                          {following ? (
-                            <Button
-                              className="min-w-fit px-3 font-semibold dark:bg-primary dark:text-white hover:dark:bg-primary_lighter"
-                              onClick={() => follow(() => getToken())}
-                            >
-                              {" "}
-                              <UserRound className="mt-[1px] h-4 w-4 self-center" />
-                            </Button>
-                          ) : (
-                            <Button
-                              className="min-w-[93.92px] font-semibold dark:bg-primary dark:text-white hover:dark:bg-primary_lighter"
-                              onClick={() => follow(() => getToken())}
-                            >
-                              {" "}
-                              <UserRound className="mr-1 mt-[1px] h-4 w-4 self-center" />{" "}
-                              Follow
-                            </Button>
-                          )}
-                          <Button className="min-w-[93.92px] font-semibold dark:bg-blue-500 dark:text-white hover:dark:bg-primary_lighter">
-                            {" "}
-                            <StarFilledIcon className="mr-1 mt-[1px] h-4 w-4 self-center" />{" "}
-                            {following ? "Subscribe" : "Subscribe"}
-                          </Button>
+
+                      {user && user.id == channel.clerk_id ? (
+                        <div className=" relative bottom-2 left-12">
+                          <EditStream
+                            setActive={setDisableControls}
+                            getToken={() => getToken()}
+                          />
                         </div>
                       ) : (
                         <></>
                       )}
+
+                      <div className="flex flex-row">
+                        {user && user.id != channel.clerk_id ? (
+                          <FollowContainer
+                            follow={() => follow}
+                            getToken={() => getToken()}
+                            following={following}
+                          />
+                        ) : (
+                          <></>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -201,63 +233,16 @@ const Channel = ({
             </div>
           )}
           {!channel.isLive && (
-            <div className="flex h-[60vh] min-h-fit w-full max-w-[100%] flex-col">
-              <div className="mb-4 flex h-full min-h-[52rem] w-full flex-col justify-center bg-[#212224]/75 dark:bg-zinc-800/50">
-                <div className="text-center text-4xl font-extrabold text-white md:text-8xl">
-                  {channel.username}
-                </div>
-                <div className="text-center text-2xl font-bold text-white md:text-4xl">
-                  Is currently offline
-                </div>
-                <div className="text-center text-2xl font-semibold text-white md:text-xl">
-                  they were last live{" "}
-                  {getRelativeTime(parseInt(stream?.timestamp || "0"))}
-                </div>
-              </div>
-              <div className="flex flex-row space-x-3 px-5 py-2">
-                <div className="relative h-fit w-fit self-center rounded-full border-2 border-none">
-                  <Avatar className="min-h-[52px] min-w-[52px] md:min-h-[64px] md:min-w-[64px]">
-                    <AvatarImage
-                      src={channel.pfp}
-                      alt="profile"
-                      className="object-cover"
-                    />
-                    <AvatarFallback>
-                      {channel.username.at(0)?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                <div className="flex w-full flex-row justify-between">
-                  <div className="flex flex-col">
-                    <button className="channel flex flex-row space-x-2 font-semibold transition-all dark:text-white">
-                      <div className="self-center text-xl font-bold">
-                        {channel.username}
-                      </div>
-                    </button>
-                    <div className="title font-semibold dark:text-white">
-                      {stream?.streamTitle}
-                    </div>
-                    <div className="flex flex-row">
-                      <div className="category font-semibold text-primary_lighter dark:text-primary">
-                        {stream?.category}
-                      </div>
-                      <div className="space-x-2 pl-2">
-                        {stream?.tags.map((tag) => (
-                          <Badge
-                            variant="secondary"
-                            className="w-fit rounded-xl"
-                          >
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <About channel={channel} followers={followers} />
-              <ChannelLink />
-            </div>
+            <OfflineChannel
+              signedIn={isSignedIn}
+              channel={channel}
+              stream={stream}
+              followers={followers}
+              userId={user?.id || ""}
+              follow={() => follow}
+              getToken={() => getToken()}
+              following={following}
+            />
           )}
         </div>
         <Chat

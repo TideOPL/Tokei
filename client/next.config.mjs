@@ -6,7 +6,7 @@ await import("./src/env.mjs");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  reactStrictMode: true,
+  reactStrictMode: false,
 
   /**
    * If you have `experimental: { appDir: true }` set, then you must comment the below `i18n` config
@@ -19,7 +19,7 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ['img.clerk.com', "images.clerk.dev"],
+    domains: ['img.clerk.com', "images.clerk.dev", "steamcdn-a.akamaihd.net", "localhost", "88.99.60.186"],
   },};
 
 export default config;
