@@ -32,9 +32,7 @@ export const getServerSideProps = (async (context) => {
 
   const response = (await axios
     .get(
-      `${env.NEXT_PUBLIC_URL}${
-        env.NEXT_PUBLIC_EXPRESS_PORT
-      }/api/v1/categories/getCategoryByName?category=${category.concat()}`,
+      `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategoryByName?category=${category.concat()}`,
     )
     .then((res) => res.data)
     .catch()) as ICategory[] | null | undefined;
