@@ -35,7 +35,7 @@ export const getServerSideProps = (async (context) => {
       `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategoryByName?category=${category.concat()}`,
     )
     .then((res) => res.data)
-    .catch()) as ICategory[] | null | undefined;
+    .catch((err) => console.log(err))) as ICategory[] | null | undefined;
 
   if (response == null && response == undefined) {
     return {
