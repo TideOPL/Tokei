@@ -10,12 +10,12 @@ import { useEffect, useState } from "react";
 import { Browse, Channel, ILiveFollowing, Stream } from "~/interface/Channel";
 import { useAppDispatch } from "~/store/hooks";
 import { addFollowingChannel } from "~/store/slice/followSlice";
-import Image from "next/image";
 import { Badge } from "~/component/ui/badge";
 import { Separator } from "~/component/ui/separator";
 import useCategory from "~/hook/useCategory";
 import BrowseListItem from "~/component/browse/BrowseListItem";
 import ImageWithFallback from "~/component/ui/fallback-image";
+import React from "react";
 
 export const getServerSideProps = (async (context) => {
   if (

@@ -17,10 +17,9 @@ const CategoryListItem = ({ category }: Props): JSX.Element => {
         <Image
           src={category.image}
           alt={"thumbnail"}
-          className="rounded-lg border-primary transition-all group-hover:border-4"
+          className="min-h-[221px] min-w-[150px] rounded-lg border-primary object-fill transition-all group-hover:border-4"
           width={150}
-          height={230}
-          objectFit={"contain"}
+          height={221}
         />
       </div>
       <div className="absolute bottom-0 flex w-full flex-row space-x-3.5">
