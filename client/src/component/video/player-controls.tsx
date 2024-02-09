@@ -77,7 +77,7 @@ const PlayerControls = ({
                   defaultValue={[volume]}
                   max={1}
                   step={0.01}
-                  onValueChange={(value: number) => {
+                  onValueChange={(value: any) => {
                     if (value == 0) {
                       setMuted(true);
                       setVolume(value);
