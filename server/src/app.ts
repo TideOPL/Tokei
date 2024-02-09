@@ -63,7 +63,7 @@ export const httpServer = createServer(app);
 const port = process.env.PORT;
 mongoose.connect('mongodb://localhost:27017');
 export const database = mongoose.connection;
-export const redis =  new Redis(6379, '88.99.60.186', { password: 'TokeiLive2022' });
+export const redis =  new Redis(6379, process.env.REDIS || '', { password: 'TokeiLive2022' });
 redis.flushall();
 
 database.on('error', (error) => {
