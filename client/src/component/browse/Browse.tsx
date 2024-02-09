@@ -48,7 +48,7 @@ const Browse = (): JSX.Element => {
               title={channel.stream.title}
               username={channel.channel.username}
               pfp={channel.channel.pfp}
-              thumbnail={`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
+              thumbnail={`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
               tags={channel.stream.tags}
               viewers={channel.stream.viewers}
             />

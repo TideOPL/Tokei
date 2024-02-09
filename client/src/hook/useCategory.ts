@@ -13,7 +13,7 @@ const useCategory = (category: string): useChannelType => {
 
   useEffect(() => {
     const fetchBrowse = async () => {
-      const { data } = await axios.get<Array<Browse>>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getAllStreamsByCategory?category=${category}`)
+      const { data } = await axios.get<Array<Browse>>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getAllStreamsByCategory?category=${category}`)
       setBrowseItems(data)
     }
   

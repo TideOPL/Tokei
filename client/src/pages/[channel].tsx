@@ -39,12 +39,12 @@ export const getServerSideProps = (async (context) => {
     };
   }
 
-  axios.defaults.url = `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}`;
+  axios.defaults.url = `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`;
   const channel_name = context.params.channel;
 
   const channelData = (await axios
     .get(
-      `http://${env.NEXT_PUBLIC_URL}:${
+      `${env.NEXT_PUBLIC_URL}${
         env.NEXT_PUBLIC_EXPRESS_PORT
       }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
     )
@@ -79,7 +79,7 @@ const Channel = ({
   useEffect(() => {
     const fetch = async () => {
       const { data } = await axios.get<IEmote[]>(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/chat/getEmotes`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/chat/getEmotes`,
       );
 
       data.map((emote) => dispatch(addEmote(emote)));
@@ -88,7 +88,7 @@ const Channel = ({
     const getFollowingList = async () => {
       const token = await getToken();
       const { data } = await axios.get<Channel[]>(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
       const liveFollowing: ILiveFollowing[] = [];
@@ -102,7 +102,7 @@ const Channel = ({
 
         if (channel.isLive) {
           const { data } = await axios.get<Stream>(
-            `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
+            `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
           );
           liveFollowing.push({
             following: channel,
