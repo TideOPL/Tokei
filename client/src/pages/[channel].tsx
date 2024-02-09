@@ -39,12 +39,11 @@ export const getServerSideProps = (async (context) => {
     };
   }
 
-  axios.defaults.url = `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`;
   const channel_name = context.params.channel;
 
   const channelData = (await axios
     .get(
-      `${env.NEXT_PUBLIC_URL}${
+      `${env.NEXT_PUBLIC_SSR_URL}${
         env.NEXT_PUBLIC_EXPRESS_PORT
       }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
     )
