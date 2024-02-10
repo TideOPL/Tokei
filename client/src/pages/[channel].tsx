@@ -245,6 +245,7 @@ const Channel = ({
           )}
         </div>
         <Chat
+          setDisableHotkey={setDisableControls}
           setViewers={setViewers}
           channel={channel}
           getToken={() => getToken()}

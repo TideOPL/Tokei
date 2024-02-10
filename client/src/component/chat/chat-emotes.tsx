@@ -9,9 +9,10 @@ import { useAppSelector } from "~/store/hooks";
 
 interface Props {
   setMessage: React.Dispatch<React.SetStateAction<string>>;
+  setDisableHotkey: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ChatEmotes = ({ setMessage }: Props) => {
+const ChatEmotes = ({ setMessage, setDisableHotkey }: Props) => {
   const [search, setSearch] = useState<string>("");
   const emotes = useAppSelector((state) => state.emotes);
 
@@ -41,6 +42,8 @@ const ChatEmotes = ({ setMessage }: Props) => {
                   </PopoverClose>
                 </div>
                 <Input
+                  onFocus={() => setDisableHotkey(true)}
+                  onBlur={() => setDisableHotkey(false)}
                   type="text"
                   className="mt-3 h-9 max-w-lg select-text break-all rounded-none border-none pl-10 focus:bg-none dark:bg-[#eaeaea]/5"
                   onChange={(event) => setSearch(event.currentTarget.value)}

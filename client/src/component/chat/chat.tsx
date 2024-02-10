@@ -1,5 +1,5 @@
 import { useUser } from "@clerk/nextjs";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io, { Socket } from "socket.io-client";
 import { env } from "~/env.mjs";
 import { Channel } from "~/interface/Channel";
@@ -21,6 +21,7 @@ import { UserResource } from "@clerk/types";
 interface Props {
   channel: Channel;
   setViewers: React.Dispatch<React.SetStateAction<string>>;
+  setDisableHotkey: React.Dispatch<React.SetStateAction<boolean>>;
   getToken: () => Promise<string | null>;
 }
 
@@ -29,10 +30,11 @@ interface FormProps {
   color: string;
   getToken: () => Promise<string | null>;
   setColor: React.Dispatch<React.SetStateAction<string>>;
+  setDisableHotkey: React.Dispatch<React.SetStateAction<boolean>>;
   socket: Socket;
 }
 
-const Chat = ({ setViewers, channel, getToken }: Props) => {
+const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   const divRef = useRef<null | HTMLDivElement>(null);
   const [messages, setMessages] = useState<
     Array<{ username: string; color: string; message: string }> | Array<any>
@@ -138,6 +140,7 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
               getToken={getToken}
               setColor={setColor}
               socket={socket}
+              setDisableHotkey={setDisableHotkey}
             />
           </div>
         ) : (
@@ -159,7 +162,14 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
   );
 };
 
-const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
+const Form = ({
+  user,
+  color,
+  getToken,
+  setColor,
+  socket,
+  setDisableHotkey,
+}: FormProps) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const submit = (
     message: string,
@@ -185,6 +195,8 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
     >
       <div className="relative">
         <Input
+          onFocus={() => setDisableHotkey(true)}
+          onBlur={() => setDisableHotkey(false)}
           type={"text"}
           placeholder="Type a message..."
           value={currentMessage}
@@ -203,7 +215,10 @@ const Form = ({ user, color, getToken, setColor, socket }: FormProps) => {
           />
         </div>
         <div className="absolute right-5 top-3">
-          <ChatEmotes setMessage={setCurrentMessage} />
+          <ChatEmotes
+            setDisableHotkey={setDisableHotkey}
+            setMessage={setCurrentMessage}
+          />
         </div>
       </div>
       <div className="my-2 flex self-end">

@@ -115,6 +115,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                 Title
               </Label>
               <Textarea
+                className="focus:text-white"
                 placeholder="Enter Stream Title"
                 id="title"
                 onChange={(event) => setTitle(event.currentTarget.value)}
@@ -142,7 +143,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                 >
                   <Input
                     id="tags"
-                    className="pl-8"
+                    className="pl-8 focus:text-white"
                     placeholder="Enter a Tag"
                     autoComplete="off"
                     value={newTag}
@@ -187,7 +188,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                 <>
                   <div className="relative" id="category">
                     <Input
-                      className="pl-8"
+                      className="pl-8 focus:text-white"
                       placeholder="Enter a Category"
                       onChange={async (event) => {
                         search(event.currentTarget.value);
