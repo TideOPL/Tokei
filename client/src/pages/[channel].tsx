@@ -54,7 +54,7 @@ export const getServerSideProps = (async (context) => {
     .get(
       `${env.NEXT_PUBLIC_SSR_URL}${
         env.NEXT_PUBLIC_EXPRESS_PORT
-      }/api/v1/getStreamTitle/=${channel_name.concat()}`,
+      }/api/v1/getStreamTitle/${channel_name.concat()}`,
     )
     .then((res) => res.data)
     .catch()) as string;
