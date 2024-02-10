@@ -21,7 +21,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string(),
     NEXT_PUBLIC_NMS_PORT: z.string(),
     NEXT_PUBLIC_EXPRESS_PORT: z.string(),
-    NEXT_PUBLIC_URL: z.string()
+    NEXT_PUBLIC_URL: z.string(),
+    NEXT_PUBLIC_SSR_URL: z.string()
   },
 
   /**
@@ -34,7 +35,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
     NEXT_PUBLIC_NMS_PORT: process.env.NEXT_PUBLIC_NMS_PORT,
     NEXT_PUBLIC_EXPRESS_PORT: process.env.NEXT_PUBLIC_EXPRESS_PORT,
-    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
+    NEXT_PUBLIC_SSR_URL: process.env.NEXT_PUBLIC_SSR_URL
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

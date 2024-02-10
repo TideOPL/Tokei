@@ -20,8 +20,8 @@ const Browse = (): JSX.Element => {
       <div className="relative w-full">
         <div className="flex justify-center">
           <Button
-            variant="ghost"
-            className="absolute -top-[10px] h-[20px] font-noto-sans font-semibold text-white transition-all dark:bg-zinc-600 hover:dark:bg-primary_lighter"
+            variant="link"
+            className="absolute -top-[10px] h-[20px] rounded-md font-noto-sans font-semibold transition-all hover:no-underline dark:bg-[#141516] dark:text-zinc-500 hover:dark:text-white"
             onClick={() => showMoreCategory()}
           >
             Show More
@@ -42,13 +42,13 @@ const Browse = (): JSX.Element => {
           </div>
         </div>
       ) : (
-        <div className="md: xl:px-15 grid h-full w-full justify-center gap-3 pb-5 pt-10 sm:grid-cols-1 sm:px-20 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-7">
+        <div className="grid h-full w-full justify-center pb-5 pl-3 pt-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1800px]:grid-cols-5 min-[2000px]:grid-cols-6">
           {browseItems.map((channel: Browse) => (
             <BrowseListItem
               title={channel.stream.title}
               username={channel.channel.username}
               pfp={channel.channel.pfp}
-              thumbnail={`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
+              thumbnail={`${env.NEXT_PUBLIC_SSR_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
               tags={channel.stream.tags}
               viewers={channel.stream.viewers}
             />

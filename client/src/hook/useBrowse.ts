@@ -18,11 +18,11 @@ const useBrowse = (): useChannelType => {
 
   useEffect(() => {
     const fetchBrowse = async () => {
-      const { data } = await axios.get<Array<Browse>>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getAllStreams`)
+      const { data } = await axios.get<Array<Browse>>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getAllStreams`)
       setBrowseItems(data)
     }
     const fetchCategories = async () => {
-      const { data } = await axios.get<Array<ICategory>>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategories?page=0`)
+      const { data } = await axios.get<Array<ICategory>>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategories?page=0`)
       setCategoryItems(data)
     }
   
@@ -32,7 +32,7 @@ const useBrowse = (): useChannelType => {
   }, [])
 
   const showMoreCategory = async () => {
-    const { data } = await axios.get<Array<ICategory>>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategories?page=${count}`)
+    const { data } = await axios.get<Array<ICategory>>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategories?page=${count}`)
     setCategoryItems(category => [...category, ...data])
     setCount(count + 1);
   }

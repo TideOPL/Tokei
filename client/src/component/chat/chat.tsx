@@ -47,9 +47,7 @@ const Chat = ({ setViewers, channel, getToken }: Props) => {
 
   useEffect(() => {
     // Create a socket connection
-    const socket = io(
-      `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}`,
-    );
+    const socket = io(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`);
     setSocket(socket);
 
     // Listen for incoming messages

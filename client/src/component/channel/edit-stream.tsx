@@ -46,7 +46,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
 
       if (streamInfo.streamInfo?.category) {
         const { data } = await axios.get<ICategory[]>(
-          `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${streamInfo.streamInfo.category.name}`,
+          `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${streamInfo.streamInfo.category.name}`,
         );
 
         if (data[0]) {
@@ -64,7 +64,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
     }
 
     const { data } = await axios.get<ICategory[]>(
-      `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${query}`,
+      `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/searchCategory?search=${query}`,
     );
     setResult(data);
   };
@@ -77,7 +77,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
     const token = await getToken();
     const status = await axios
       .post(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/updateStreamInfo`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/updateStreamInfo`,
         { title: title, tags: tags, category: category?._id },
         { headers: { Authorization: `Bearer ${token}` } },
       )

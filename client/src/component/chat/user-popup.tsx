@@ -57,7 +57,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   useEffect(() => {
     const fetch = async () => {
       const { data } = await axios.get<Channel>(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${username}`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${username}`,
       );
       setChannel(data);
     };

@@ -24,7 +24,7 @@ const TokeiPlayer = ({ channel, disableControls }: Props) => {
     hasWindow && (
       <div id="TokeiVideo" className="group relative pt-[56.25%]">
         <ReactPlayer
-          url={`http://${env.NEXT_PUBLIC_URL}:8001/api/v1/${channel}/index.m3u8`}
+          url={`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/${channel}/index.m3u8`}
           style={{ position: "absolute", top: 0, left: 0 }}
           playing={playing}
           muted={muted}

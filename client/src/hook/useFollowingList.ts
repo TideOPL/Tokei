@@ -14,12 +14,12 @@ const useFollowingList = (getToken: () => Promise<string | null>, dispatch: any)
   useEffect(() => {
     const fetch = async () => {
       const token = await getToken()
-      const { data } = await axios.get<Channel[]>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`, { headers: { 'Authorization': `Bearer ${token}`}})
+      const { data } = await axios.get<Channel[]>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`, { headers: { 'Authorization': `Bearer ${token}`}})
       const liveFollowing: ILiveFollowing[] = []
 
       data.map(async (channel) => {
         if (channel.isLive) {
-            const { data } = await axios.get<Stream>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`)
+            const { data } = await axios.get<Stream>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`)
             liveFollowing.push({
               following: channel,
               stream: data

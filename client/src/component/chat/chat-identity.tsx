@@ -56,7 +56,7 @@ const ChatIdentity = ({ user, initialColor, getToken, setColor }: Props) => {
     const token = await getToken();
     await axios
       .post(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/settings/setColor?color=${color}`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/settings/setColor?color=${color}`,
         {},
         { headers: { Authorization: `Bearer ${token}` } },
       )

@@ -10,12 +10,12 @@ import { useEffect, useState } from "react";
 import { Browse, Channel, ILiveFollowing, Stream } from "~/interface/Channel";
 import { useAppDispatch } from "~/store/hooks";
 import { addFollowingChannel } from "~/store/slice/followSlice";
-import Image from "next/image";
 import { Badge } from "~/component/ui/badge";
 import { Separator } from "~/component/ui/separator";
 import useCategory from "~/hook/useCategory";
 import BrowseListItem from "~/component/browse/BrowseListItem";
 import ImageWithFallback from "~/component/ui/fallback-image";
+import React from "react";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -27,14 +27,11 @@ export const getServerSideProps = (async (context) => {
     };
   }
 
-  axios.defaults.url = `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}`;
   const category = context.params.category;
 
   const response = (await axios
     .get(
-      `http://${env.NEXT_PUBLIC_URL}:${
-        env.NEXT_PUBLIC_EXPRESS_PORT
-      }/api/v1/categories/getCategoryByName?category=${category.concat()}`,
+      `${env.NEXT_PUBLIC_SSR_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/categories/getCategoryByName?category=${category.concat()}`,
     )
     .then((res) => res.data)
     .catch()) as ICategory[] | null | undefined;
@@ -73,7 +70,7 @@ const Category = ({
     const getFollowingList = async () => {
       const token = await getToken();
       const { data } = await axios.get<Channel[]>(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
       const liveFollowing: ILiveFollowing[] = [];
@@ -87,7 +84,7 @@ const Category = ({
 
         if (channel.isLive) {
           const { data } = await axios.get<Stream>(
-            `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
+            `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
           );
           liveFollowing.push({
             following: channel,
@@ -185,7 +182,7 @@ const Category = ({
                     title={channel.stream.title || ""}
                     username={channel.channel.username}
                     pfp={channel.channel.pfp}
-                    thumbnail={`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
+                    thumbnail={`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
                     tags={channel.stream.tags}
                     viewers={channel.stream.viewers}
                   />

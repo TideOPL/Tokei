@@ -63,7 +63,7 @@ export const httpServer = createServer(app);
 const port = process.env.PORT;
 mongoose.connect('mongodb://localhost:27017');
 export const database = mongoose.connection;
-export const redis =  new Redis(6379, '88.99.60.186', { password: 'TokeiLive2022' });
+export const redis =  new Redis(6379, process.env.REDIS || '', { password: 'TokeiLive2022' });
 redis.flushall();
 
 database.on('error', (error) => {
@@ -88,7 +88,7 @@ app.use(async (err: Error, req: Request, res: Response, next: () => void) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'http://83.104.242.112:3000', 'http://localhost:3001', 'http://83.104.242.112:3001'],
+    origin: ['http://localhost:3000', 'http://83.104.242.112:3000', 'http://localhost:3001', 'http://83.104.242.112:3001', 'https://www.tokei.live', 'https://tokei.live'],
   },
 });
 
@@ -96,20 +96,20 @@ io.on('connection', (socket) => {
   let storedChat = '';
   socket.on('join', (chat) => {
     storedChat = chat.chat;
-    const address = socket.handshake.address;
+    const address = socket.handshake.headers['x-forwarded-for']?.toString().split(',')[0] || '';
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
 
       if (viewers) {
-        const viewer: string | number = viewers.indexOf(address);
+        const viewer: string | number = viewers.indexOf(address.toString());
         if (viewer == -1) {
-          await redis.lpush(`viewers_${chat.chat}`, address);
+          await redis.lpush(`viewers_${chat.chat}`, address.toString());
           return;
         }
         return;
       } else {
-        await redis.lset(`viewers_${chat.chat}`, address, 0);
+        await redis.lset(`viewers_${chat.chat}`, address.toString(), 0);
       }
 
       const list: string[] = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
@@ -123,7 +123,7 @@ io.on('connection', (socket) => {
   
 
   socket.on('leave', (chat) => {
-    const address = socket.handshake.address;
+    const address = socket.handshake.headers['x-forwarded-for']?.toString().split(',')[0] || '';
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
@@ -131,7 +131,7 @@ io.on('connection', (socket) => {
       if (viewers) {
         const viewer: number = viewers.indexOf(chat.username);
         if (viewer != -1) {
-          await redis.lrem(`viewers_${chat.chat}`, 1, address);
+          await redis.lrem(`viewers_${chat.chat}`, 1, address.toString());
           return;
         }
       }
@@ -212,7 +212,7 @@ app.use('/api/v1/getStream', limiter);
 app.use('/api/v1',           streams);
 app.use('/api/v1',           webhook);
 
-httpServer.listen(8001, () => {
+httpServer.listen(8001, '0.0.0.0', () => {
   console.log(`[⚡️]: Server is running at http://localhost:${port}`);
 });
  
@@ -232,7 +232,7 @@ globalNMS.on('prePublish', (id: any, StreamPath: string) => {
     }
     redis.del(user.username.toString());
 
-    await Stream.findOneAndUpdate({ channelID: user.clerk_id }, { timestamp: Date.now() }).exec();
+    await Stream.findOneAndUpdate({ clerkId: user.clerk_id }, { timestamp: Date.now() }).exec();
     
     User.updateOne({ clerk_id: user.clerk_id }, { isLive: true }).exec();
   };

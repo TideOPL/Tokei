@@ -19,7 +19,7 @@ const useFollow = (getToken: () => Promise<string | null>, username: string, cha
     const fetch = async () => {
 
       const token = await getToken()
-      const following = await axios.get(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/amIFollowing?channel=${username}`, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {
+      const following = await axios.get(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/amIFollowing?channel=${username}`, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {
         return res.status == 200
       }).catch((err) => {console.warn(err); return false})
 
@@ -27,12 +27,12 @@ const useFollow = (getToken: () => Promise<string | null>, username: string, cha
     }
 
     const getFollowers = async () => {
-      const { data } = await axios.get<string>(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowerCount?channel=${username}`)
+      const { data } = await axios.get<string>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowerCount?channel=${username}`)
       setFollowers(data)
     }
 
     const getFollowSince = async () => {
-       const value = await axios.get(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/followCheck?channel=${chatRoom}&user=${username}`).then((res) => {
+       const value = await axios.get(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/followCheck?channel=${chatRoom}&user=${username}`).then((res) => {
         if (res.status == 200) {
           return res.data.timestamp;
         }
@@ -52,7 +52,7 @@ const useFollow = (getToken: () => Promise<string | null>, username: string, cha
   const follow = async (genToken: () => string | null) => {
     const fetch = async () => {
       const token = await genToken()
-      return await axios.post(`http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/follow?channel=${username}`, {}, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {
+      return await axios.post(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/follow?channel=${username}`, {}, { headers: { 'Authorization': `Bearer ${token}`}}).then((res) => {
         return res.status == 200
       }).catch(() => false)
     }

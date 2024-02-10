@@ -19,7 +19,7 @@ export default function Home() {
     const getFollowingList = async () => {
       const token = await getToken();
       const { data } = await axios.get<Channel[]>(
-        `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
         { headers: { Authorization: `Bearer ${token}` } },
       );
       const liveFollowing: ILiveFollowing[] = [];
@@ -33,7 +33,7 @@ export default function Home() {
 
         if (channel.isLive) {
           const { data } = await axios.get<Stream>(
-            `http://${env.NEXT_PUBLIC_URL}:${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
+            `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
           );
           liveFollowing.push({
             following: channel,
