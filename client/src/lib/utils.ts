@@ -21,3 +21,23 @@ export const getRelativeTime = (timestamp: number): string => {
 
   return formatTime(31536000, 'year');
 }
+
+
+export const changeImageSize = (originalUrl: string, newSize: string): string => {
+    // Split the URL into parts
+    const parts = originalUrl.split('/');
+
+    // Find and replace the part that contains the size information
+   for (let i = 0; i < parts.length; i++) {
+        if (parts[i]?.includes('library_')) {
+            parts[i] = parts[i]?.replace(/(\d+)x(\d+)/, newSize) || "";
+            break;
+        }
+    }
+
+    // Join the parts back together to form the new URL
+    const newUrl = parts.join('/');
+
+    return newUrl;
+}
+
