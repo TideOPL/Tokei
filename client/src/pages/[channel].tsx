@@ -50,17 +50,27 @@ export const getServerSideProps = (async (context) => {
     .then((res) => res.data)
     .catch()) as Channel | null | undefined;
 
+  const title = (await axios
+    .get(
+      `${env.NEXT_PUBLIC_SSR_URL}${
+        env.NEXT_PUBLIC_EXPRESS_PORT
+      }/api/v1/getStreamTitle/=${channel_name.concat()}`,
+    )
+    .then((res) => res.data)
+    .catch()) as string;
+
   if (!channelData) {
     return {
       notFound: true,
     };
   }
 
-  return { props: { channelData } };
-}) satisfies GetServerSideProps<{ channelData: Channel }>;
+  return { props: { channelData, title } };
+}) satisfies GetServerSideProps<{ channelData: Channel; title: string }>;
 
 const Channel = ({
   channelData,
+  title,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut, getToken } = useAuth();
@@ -142,12 +152,7 @@ const Channel = ({
         <meta property="og:url" content="https://tokei.live/" />
         <meta property="og:type" content="website" />
         <meta property="og:title" content={"Tokei - " + channel.username} />
-        <meta
-          property="og:description"
-          content={
-            "https://api.tokei.live/api/v1/getStreamTitle/" + channel.username
-          }
-        />
+        <meta property="og:description" content={title} />
         <meta
           property="og:image"
           content={
@@ -159,12 +164,7 @@ const Channel = ({
         <meta property="twitter:domain" content="tokei.live" />
         <meta property="twitter:url" content="https://tokei.live/" />
         <meta name="twitter:title" content={"Tokei - " + channel.username} />
-        <meta
-          name="twitter:description"
-          content={
-            "https://api.tokei.live/api/v1/getStreamTitle/" + channel.username
-          }
-        />
+        <meta name="twitter:description" content={title} />
         <meta
           name="twitter:image"
           content={
