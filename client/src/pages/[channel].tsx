@@ -170,6 +170,14 @@ const Channel = ({
             "https://api.tokei.live/api/v1/getThumbnail/" + channel.username
           }
         />
+
+        <meta
+          property="og:video"
+          content="https://api.tokei.live/api/v1/tide/index.m3u8"
+        />
+        <meta property="og:video:type" content="application/x-mpegURL" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:video:height" content="720" />
       </Head>
 
       {/*@ts-ignore -- Bug with Clerk types.*/}
