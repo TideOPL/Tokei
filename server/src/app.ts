@@ -125,7 +125,7 @@ io.on('connection', (socket) => {
 
   socket.on('leave', (chat) => {
     //@ts-ignore
-    const address = socket.handshake.headers['x-forwarded-for'].split(',')[0] || '';
+    const address = socket.handshake.headers['x-forwarded-for'] || '';
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
@@ -133,7 +133,7 @@ io.on('connection', (socket) => {
       if (viewers) {
         const viewer: number = viewers.indexOf(chat.username);
         if (viewer != -1) {
-          await redis.lrem(`viewers_${chat.chat}`, 1, address);
+          await redis.lrem(`viewers_${chat.chat}`, 1, address.toString());
           return;
         }
       }
