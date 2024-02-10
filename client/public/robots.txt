@@ -1,7 +1,11 @@
-# Block all crawlers for /accounts
-User-agent: *
-Disallow: /dashboard
-
-# Allow all crawlers
-User-agent: *
+User-Agent: *
 Allow: /
+Allow: /category
+Allow: /category/all
+Allow: /category/*
+Disallow: /dashboard/*
+Disallow: /settings/*
+Disallow: /login
+Disallow: /signup
+
+Sitemap: https://tokei.live/sitemap.xml
