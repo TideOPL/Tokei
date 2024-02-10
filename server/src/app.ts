@@ -97,20 +97,20 @@ io.on('connection', (socket) => {
   socket.on('join', (chat) => {
     storedChat = chat.chat;
     //@ts-ignore
-    const address = socket.handshake.headers['x-forwarded-for'].split(',')[0] || '';
+    const address = socket.handshake.headers['x-forwarded-for'] || '';
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
 
       if (viewers) {
-        const viewer: string | number = viewers.indexOf(address);
+        const viewer: string | number = viewers.indexOf(address.toString());
         if (viewer == -1) {
-          await redis.lpush(`viewers_${chat.chat}`, address);
+          await redis.lpush(`viewers_${chat.chat}`, address.toString());
           return;
         }
         return;
       } else {
-        await redis.lset(`viewers_${chat.chat}`, address, 0);
+        await redis.lset(`viewers_${chat.chat}`, address.toString(), 0);
       }
 
       const list: string[] = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
