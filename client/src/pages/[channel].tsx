@@ -135,6 +135,49 @@ const Channel = ({
           content="width=device-width, initial-scale=1, viewport-fit=cover"
           name="viewport"
         />
+
+        <meta name="description" content={streamInfo?.streamInfo?.title} />
+
+        <meta property="og:url" content="https://tokei.live/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={"Tokei - " + channel.username} />
+        <meta
+          property="og:description"
+          content={
+            "https://api.tokei.live/api/v1/getStreamTitle/" + channel.username
+          }
+        />
+        <meta
+          property="og:image"
+          content={
+            "https://api.tokei.live/api/v1/getThumbnail/" + channel.username
+          }
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="tokei.live" />
+        <meta property="twitter:url" content="https://tokei.live/" />
+        <meta name="twitter:title" content={"Tokei - " + channel.username} />
+        <meta
+          name="twitter:description"
+          content={
+            "https://api.tokei.live/api/v1/getStreamTitle/" + channel.username
+          }
+        />
+        <meta
+          name="twitter:image"
+          content={
+            "https://api.tokei.live/api/v1/getThumbnail/" + channel.username
+          }
+        />
+
+        <meta
+          property="og:video"
+          content="https://api.tokei.live/api/v1/tide/index.m3u8"
+        />
+        <meta property="og:video:type" content="application/x-mpegURL" />
+        <meta property="og:video:width" content="1280" />
+        <meta property="og:video:height" content="720" />
       </Head>
 
       {/*@ts-ignore -- Bug with Clerk types.*/}
