@@ -118,6 +118,7 @@ const Category = ({
         />
 
         <meta name="description" content={categoryData.description} />
+        <meta name="theme-color" content="#d926a9" />
 
         <meta
           property="og:url"
@@ -126,7 +127,7 @@ const Category = ({
         <meta property="og:type" content="website" />
         <meta property="og:title" content={categoryData.name + " - Tokei"} />
         <meta property="og:description" content={categoryData.description} />
-        <meta property="og:image" content={categoryData.image} />
+        <meta property="og:image" content={categoryData.image + "?w=227"} />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="tokei.live" />
@@ -136,7 +137,7 @@ const Category = ({
         />
         <meta name="twitter:title" content={categoryData.name + " - Tokei"} />
         <meta name="twitter:description" content={categoryData.description} />
-        <meta name="twitter:image" content={categoryData.image} />
+        <meta name="twitter:image" content={categoryData.image + "?w=227"} />
       </Head>
       {/**@ts-ignore**/}
       <Nav user={user} signOut={() => signOut()} />

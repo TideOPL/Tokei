@@ -135,6 +135,7 @@ const Channel = ({
           content="width=device-width, initial-scale=1, viewport-fit=cover"
           name="viewport"
         />
+        <meta name="theme-color" content="#d926a9" />
 
         <meta name="description" content={streamInfo?.streamInfo?.title} />
 
