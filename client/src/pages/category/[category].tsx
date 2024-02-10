@@ -16,6 +16,7 @@ import useCategory from "~/hook/useCategory";
 import BrowseListItem from "~/component/browse/BrowseListItem";
 import ImageWithFallback from "~/component/ui/fallback-image";
 import React from "react";
+import { changeImageSize } from "~/lib/utils";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -118,6 +119,7 @@ const Category = ({
         />
 
         <meta name="description" content={categoryData.description} />
+        <meta name="theme-color" content="#d926a9" />
 
         <meta
           property="og:url"
@@ -126,7 +128,10 @@ const Category = ({
         <meta property="og:type" content="website" />
         <meta property="og:title" content={categoryData.name + " - Tokei"} />
         <meta property="og:description" content={categoryData.description} />
-        <meta property="og:image" content={categoryData.image} />
+        <meta
+          property="og:image"
+          content={changeImageSize(categoryData.image, "272x300")}
+        />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="tokei.live" />
@@ -136,7 +141,10 @@ const Category = ({
         />
         <meta name="twitter:title" content={categoryData.name + " - Tokei"} />
         <meta name="twitter:description" content={categoryData.description} />
-        <meta name="twitter:image" content={categoryData.image} />
+        <meta
+          name="twitter:image"
+          content={changeImageSize(categoryData.image, "272x300")}
+        />
       </Head>
       {/**@ts-ignore**/}
       <Nav user={user} signOut={() => signOut()} />
