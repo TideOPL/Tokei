@@ -97,6 +97,7 @@ io.on('connection', (socket) => {
   socket.on('join', (chat) => {
     storedChat = chat.chat;
     //@ts-ignore
+    console.log(socket.handshake.headers);
     const address = socket.handshake.headers['x-forwarded-for'] || '';
 
     const viewerFunc = async () => {
