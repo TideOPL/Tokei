@@ -282,7 +282,7 @@ const Channel = ({
               followers={followers}
               userId={user?.id || ""}
               follow={() => follow}
-              getToken={() => getToken()}
+              getToken={getToken}
               following={following}
             />
           )}
