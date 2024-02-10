@@ -18,7 +18,6 @@ jobs:
           cd /var/www/tokei-web/
           echo ${{ secrets.PASSWORD }} | sudo -S git pull
           cd client
-          sudo yarn build
           echo ${{ secrets.PASSWORD }} | sudo -S yarn build
           cd ..
           echo ${{ secrets.PASSWORD }} | sudo -S pm2 restart 0
