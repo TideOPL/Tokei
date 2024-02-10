@@ -96,7 +96,8 @@ io.on('connection', (socket) => {
   let storedChat = '';
   socket.on('join', (chat) => {
     storedChat = chat.chat;
-    const address = socket.handshake.address;
+    //@ts-ignore
+    const address = socket.handshake.headers['x-forwarded-for'].split(',')[0] || '';
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
@@ -123,7 +124,8 @@ io.on('connection', (socket) => {
   
 
   socket.on('leave', (chat) => {
-    const address = socket.handshake.address;
+    //@ts-ignore
+    const address = socket.handshake.headers['x-forwarded-for'].split(',')[0] || '';
 
     const viewerFunc = async () => {
       const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
