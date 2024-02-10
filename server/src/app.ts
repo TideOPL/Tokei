@@ -88,7 +88,7 @@ app.use(async (err: Error, req: Request, res: Response, next: () => void) => {
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['http://localhost:3000', 'http://83.104.242.112:3000', 'http://localhost:3001', 'http://83.104.242.112:3001'],
+    origin: ['http://localhost:3000', 'http://83.104.242.112:3000', 'http://localhost:3001', 'http://83.104.242.112:3001', 'https://www.tokei.live', 'https://tokei.live'],
   },
 });
 
