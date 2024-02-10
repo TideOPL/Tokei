@@ -143,7 +143,9 @@ const Channel = ({
         <meta property="og:title" content={"Tokei - " + channel.username} />
         <meta
           property="og:description"
-          content={streamInfo?.streamInfo?.title}
+          content={
+            "https://api.tokei.live/api/v1/getStreamTitle/" + channel.username
+          }
         />
         <meta
           property="og:image"
@@ -158,7 +160,9 @@ const Channel = ({
         <meta name="twitter:title" content={"Tokei - " + channel.username} />
         <meta
           name="twitter:description"
-          content={streamInfo?.streamInfo?.title}
+          content={
+            "https://api.tokei.live/api/v1/getStreamTitle/" + channel.username
+          }
         />
         <meta
           name="twitter:image"
