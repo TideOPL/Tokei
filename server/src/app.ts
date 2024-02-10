@@ -232,7 +232,7 @@ globalNMS.on('prePublish', (id: any, StreamPath: string) => {
     }
     redis.del(user.username.toString());
 
-    await Stream.findOneAndUpdate({ channelID: user.clerk_id }, { timestamp: Date.now() }).exec();
+    await Stream.findOneAndUpdate({ clerkId: user.clerk_id }, { timestamp: Date.now() }).exec();
     
     User.updateOne({ clerk_id: user.clerk_id }, { isLive: true }).exec();
   };
