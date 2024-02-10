@@ -1,0 +1,25 @@
+name: deploy staging
+on:
+  push:
+    branches: "staging"
+jobs:
+  deploy:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        password: ${{ secrets.PASSWORD }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /var/www/tokei-web/
+          echo ${{ secrets.PASSWORD }} | sudo -S git pull
+          cd client
+          sudo yarn build
+          echo ${{ secrets.PASSWORD }} | sudo -S yarn build
+          cd ..
+          echo ${{ secrets.PASSWORD }} | sudo -S pm2 restart 0
+          echo ${{ secrets.PASSWORD }} | sudo -S pm2 restart 1
