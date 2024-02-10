@@ -212,7 +212,7 @@ app.use('/api/v1/getStream', limiter);
 app.use('/api/v1',           streams);
 app.use('/api/v1',           webhook);
 
-httpServer.listen(8001, () => {
+httpServer.listen(8001, '0.0.0.0', () => {
   console.log(`[⚡️]: Server is running at http://localhost:${port}`);
 });
  
