@@ -70,6 +70,36 @@ export default function Home() {
           content="width=device-width, initial-scale=1, viewport-fit=cover"
           name="viewport"
         />
+
+        <meta
+          name="description"
+          content="Tokei features categories, Palworld, Fortnite, Counter-Strike, Grand Theft Auto V, and plenty more."
+        />
+
+        <meta property="og:url" content="https://tokei.live" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Categories - Tokei" />
+        <meta
+          property="og:description"
+          content="Tokei features categories, Palworld, Fortnite, Counter-Strike, Grand Theft Auto V, and plenty more."
+        />
+        <meta
+          property="og:image"
+          content="https://www.tokei.live/android-chrome-512x512.png"
+        />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="tokei.live" />
+        <meta property="twitter:url" content="https://tokei.live" />
+        <meta name="twitter:title" content="Categories - Tokei" />
+        <meta
+          name="twitter:description"
+          content="Tokei features categories, Palworld, Fortnite, Counter-Strike, Grand Theft Auto V, and plenty more."
+        />
+        <meta
+          name="twitter:image"
+          content="https://www.tokei.live/android-chrome-512x512.png"
+        />
       </Head>
       {/**@ts-ignore**/}
       <Nav user={user} signOut={() => signOut()} />
