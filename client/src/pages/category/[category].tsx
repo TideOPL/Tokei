@@ -116,6 +116,27 @@ const Category = ({
           content="width=device-width, initial-scale=1, viewport-fit=cover"
           name="viewport"
         />
+
+        <meta name="description" content={categoryData.description} />
+
+        <meta
+          property="og:url"
+          content={"https://tokei.live/category/" + categoryData.searchName}
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={categoryData.name + " - Tokei"} />
+        <meta property="og:description" content={categoryData.description} />
+        <meta property="og:image" content={categoryData.image} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="tokei.live" />
+        <meta
+          property="twitter:url"
+          content={"https://tokei.live/category/" + categoryData.searchName}
+        />
+        <meta name="twitter:title" content={categoryData.name + " - Tokei"} />
+        <meta name="twitter:description" content={categoryData.description} />
+        <meta name="twitter:image" content={categoryData.image} />
       </Head>
       {/**@ts-ignore**/}
       <Nav user={user} signOut={() => signOut()} />
