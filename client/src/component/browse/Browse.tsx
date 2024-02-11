@@ -12,6 +12,9 @@ const Browse = (): JSX.Element => {
   const { browseItems, categoryItems, showMoreCategory } = useBrowse();
   return (
     <div className="w-full overflow-x-hidden">
+      <div className="flex pl-16 font-noto-sans text-2xl font-semibold text-white">
+        Categories
+      </div>
       <div className="grid h-fit w-full grid-cols-5 justify-center px-10 pb-5 2xl:grid-cols-10">
         {categoryItems.map((category: ICategory) => (
           <CategoryListItem category={category} />
@@ -32,6 +35,11 @@ const Browse = (): JSX.Element => {
             orientation="horizontal"
             className="h-[2px] dark:bg-zinc-600"
           />
+        </div>
+        <div className="relative bottom-2 pt-5">
+          <div className="absolute flex pb-3 pl-16 font-noto-sans text-2xl font-semibold text-primary">
+            Live Channels
+          </div>
         </div>
       </div>
       {browseItems.length == 0 ? (
