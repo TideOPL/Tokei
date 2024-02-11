@@ -3,6 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { ICategory } from "~/interface/Category";
 import Link from "next/link";
 import { Badge } from "../ui/badge";
+import ImageWithFallback from "../ui/fallback-image";
 
 interface Props {
   category: ICategory;
@@ -17,12 +18,13 @@ const CategoryListItem = ({ category }: Props): JSX.Element => {
       <div
         className={"h-52 w-fit justify-start rounded-xl md:h-32 2xl:h-[15vh]"}
       >
-        <Image
+        <ImageWithFallback
           src={category.image}
           alt={"thumbnail"}
           className="h-full max-h-[200px] w-full max-w-[145px] rounded-lg border-primary object-fill transition-all group-hover:border-4 lg:h-[225px] lg:min-w-[150px]"
           width={145}
           height={200}
+          fallback={"/placeholder-category.png"}
         />
       </div>
       <div className="absolute bottom-0 flex w-full flex-row space-x-3.5">
