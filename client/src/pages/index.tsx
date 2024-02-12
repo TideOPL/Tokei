@@ -9,6 +9,7 @@ import axios from "axios";
 import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
 import { env } from "~/env.mjs";
 import { useAppDispatch } from "~/store/hooks";
+import Footer from "~/component/nav/Footer";
 
 export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -107,7 +108,7 @@ export default function Home() {
 
       <div className="flex max-h-[calc(100%-64px)] flex-1 overflow-hidden">
         <Sidebar />
-        <div className="flex h-full max-h-full flex-grow ">
+        <div className="flex h-full max-h-full flex-grow flex-col ">
           <Browse />
         </div>
       </div>
