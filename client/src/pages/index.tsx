@@ -87,7 +87,7 @@ export default function Home() {
         />
         <meta
           property="og:image"
-          content="https://www.tokei.live/android-chrome-512x512.png"
+          content="https://tokei.live/android-chrome-512x512.png"
         />
         <meta property="og:image:width" content="250" />
         <meta property="og:image:height" content="250" />
@@ -102,7 +102,7 @@ export default function Home() {
         />
         <meta
           name="twitter:image"
-          content="https://www.tokei.live/android-chrome-512x512.png"
+          content="https://tokei.live/android-chrome-512x512.png"
         />
       </Head>
       {/**@ts-ignore**/}
