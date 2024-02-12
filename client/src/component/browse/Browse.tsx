@@ -45,7 +45,7 @@ const Browse = (): JSX.Element => {
           </div>
         </div>
       ) : (
-        <div className="h-[50vh]">
+        <div className="min-h-[50%]">
           <h2 className="flex pl-16 pt-5 font-noto-sans text-2xl font-semibold text-primary">
             Live Channels
           </h2>

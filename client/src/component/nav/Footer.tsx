@@ -5,8 +5,8 @@ import Socials from "./Socials";
 
 const Footer = (): JSX.Element => {
   return (
-    <div className=" absolute bottom-0 flex min-h-[400px] w-full flex-col items-center justify-items-end px-3 py-16">
-      <div>ABC</div>
+    <div className="flex min-h-[400px] w-full flex-col items-center justify-items-end px-3 py-16">
+      <div className="font-noto-sans text-6xl font-bold text-white">TOKEI</div>
       <div>
         <div className="space-y-1.5">
           <Socials
