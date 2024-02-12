@@ -85,7 +85,7 @@ export default function Home() {
           content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
         />
         <meta
-          property="og:image"
+          property="og:image:secure"
           content="https://www.tokei.live/android-chrome-512x512.png"
         />
 
@@ -98,7 +98,7 @@ export default function Home() {
           content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
         />
         <meta
-          name="twitter:image"
+          name="twitter:image:secure"
           content="https://www.tokei.live/android-chrome-512x512.png"
         />
       </Head>
