@@ -11,7 +11,7 @@ import Footer from "../nav/Footer";
 const Browse = (): JSX.Element => {
   const { browseItems, categoryItems, showMoreCategory } = useBrowse();
   return (
-    <div className="relative flex h-full min-h-full w-full flex-grow flex-col overflow-x-hidden">
+    <div className="relative flex w-full flex-grow flex-col overflow-x-hidden">
       <h2 className="flex pl-10 pt-3 font-noto-sans text-2xl font-semibold text-white">
         Categories
       </h2>
@@ -45,7 +45,7 @@ const Browse = (): JSX.Element => {
           </div>
         </div>
       ) : (
-        <div>
+        <div className="h-[50vh]">
           <h2 className="flex pl-16 pt-5 font-noto-sans text-2xl font-semibold text-primary">
             Live Channels
           </h2>
