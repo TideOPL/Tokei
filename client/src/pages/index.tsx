@@ -57,10 +57,10 @@ export default function Home() {
     }
   }, [isSignedIn]);
 
-  if (!isLoaded) {
-    // Loading Screen?
-    return <div />;
-  }
+  // if (!isLoaded) {
+  //   // Loading Screen?
+  //   return <div />;
+  // }
 
   return (
     <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
