@@ -1,20 +1,19 @@
 import BrowseListItem from "~/component/browse/BrowseListItem";
+import { env } from "~/env.mjs";
 import useBrowse from "~/hook/useBrowse";
 import { ICategory } from "~/interface/Category";
 import { Browse } from "~/interface/Channel";
-import CategoryListItem from "./CategoryListItem";
-import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
-import { env } from "~/env.mjs";
-
+import { Separator } from "../ui/separator";
+import CategoryListItem from "./CategoryListItem";
 // TODO: https://steamcdn-a.akamaihd.net/steam/apps/271590/library_600x900_2x.jpg
 const Browse = (): JSX.Element => {
   const { browseItems, categoryItems, showMoreCategory } = useBrowse();
   return (
     <div className="w-full overflow-x-hidden">
-      <div className="flex pl-16 font-noto-sans text-2xl font-semibold text-white">
+      <h2 className="flex pl-10 pt-3 font-noto-sans text-2xl font-semibold text-white">
         Categories
-      </div>
+      </h2>
       <div className="grid h-fit w-full grid-cols-5 justify-center px-10 pb-5 2xl:grid-cols-10">
         {categoryItems.map((category: ICategory) => (
           <CategoryListItem category={category} />
@@ -46,9 +45,9 @@ const Browse = (): JSX.Element => {
         </div>
       ) : (
         <div>
-          <div className="flex pl-16 pt-5 font-noto-sans text-2xl font-semibold text-primary">
+          <h2 className="flex pl-16 pt-5 font-noto-sans text-2xl font-semibold text-primary">
             Live Channels
-          </div>
+          </h2>
           <div className="grid h-full w-full justify-center pb-5 pl-12 pt-7 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1800px]:grid-cols-5 min-[2000px]:grid-cols-6">
             {browseItems.map((channel: Browse) => (
               <BrowseListItem

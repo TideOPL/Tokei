@@ -43,19 +43,24 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
   const router = useRouter();
   return (
     <div className="flex h-16 max-h-16 w-full flex-row items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
-      <div className="space-x-6 sm:space-x-12">
-        <Link
-          href={"/"}
-          className="font-noto-sans font-bold text-black transition-all hover:text-primary dark:text-white sm:text-xl "
-        >
-          TOKEI
-        </Link>
-        <Link
-          href={"/"}
-          className="font-noto-sans text-sm font-semibold text-black transition-all hover:text-primary dark:text-white sm:text-lg "
-        >
-          Browse
-        </Link>
+      <div className="flex flex-row space-x-6 sm:space-x-12">
+        <h1 className="group">
+          <Link
+            href={"/"}
+            className="font-noto-sans font-bold text-black transition-all group-hover:text-primary dark:text-white sm:text-xl"
+          >
+            TOKEI
+          </Link>
+        </h1>
+
+        <h1 className="group">
+          <Link
+            href={"/"}
+            className="font-noto-sans font-bold text-black transition-all group-hover:text-primary dark:text-white sm:text-xl"
+          >
+            Browse
+          </Link>
+        </h1>
       </div>
       <div className="space-x-5">
         {!user && (
