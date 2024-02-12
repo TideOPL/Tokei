@@ -87,7 +87,7 @@ export default function Home() {
         />
         <meta
           property="og:image:secure_url"
-          content="https://tokei.live/android-chrome-512x512.png"
+          content="https://tokei.live/android-chrome-192x192.png"
         />
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="250" />
