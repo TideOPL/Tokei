@@ -43,6 +43,7 @@ export default function Document() {
           rel="stylesheet"
         />
         <link rel="manifest" href="/site.webmanifest" />
+        <link rel="canonical" href="https://tokei.live/" />
       </Head>
       <body>
         <Main />
