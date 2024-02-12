@@ -84,6 +84,10 @@ export default function Home() {
           property="og:description"
           content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
         />
+        <meta
+          property="og:image"
+          content="https://www.tokei.live/android-chrome-512x512.png"
+        />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="tokei.live" />
@@ -92,6 +96,10 @@ export default function Home() {
         <meta
           name="twitter:description"
           content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
+        />
+        <meta
+          name="twitter:image"
+          content="https://www.tokei.live/android-chrome-512x512.png"
         />
       </Head>
       {/**@ts-ignore**/}
