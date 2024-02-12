@@ -5,7 +5,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import Nav from "~/component/nav/Nav";
-import dynamic from "next/dynamic";
 import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
 import axios from "axios";
 import { env } from "~/env.mjs";
@@ -195,7 +194,10 @@ const Channel = ({
               />
               <div className="flex flex-col justify-center">
                 <div className="flex flex-row space-x-3 px-5 py-2">
-                  <div className="relative h-fit w-fit self-center rounded-full border-2 border-primary">
+                  <div
+                    className="relative h-fit w-fit self-center rounded-full border-2 border-primary"
+                    contentEditable={"true"}
+                  >
                     <div className="md:text-md absolute left-[8px] top-10 z-10 justify-self-end rounded-lg bg-primary px-1 text-sm  font-bold text-white md:left-3.5 md:top-12 md:font-semibold">
                       LIVE
                     </div>
@@ -204,6 +206,8 @@ const Channel = ({
                         src={channel.pfp}
                         alt="profile"
                         className="object-cover"
+                        width={64}
+                        height={64}
                       />
                       <AvatarFallback>
                         {channel.username.at(0)?.toUpperCase()}

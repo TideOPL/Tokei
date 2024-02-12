@@ -74,7 +74,7 @@ export default function Home() {
 
         <meta
           name="description"
-          content="Tokei features categories, Palworld, Fortnite, Counter-Strike, Grand Theft Auto V, and plenty more."
+          content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
         />
 
         <meta property="og:url" content="https://tokei.live" />
@@ -82,7 +82,7 @@ export default function Home() {
         <meta property="og:title" content="Categories - Tokei" />
         <meta
           property="og:description"
-          content="Tokei features categories, Palworld, Fortnite, Counter-Strike, Grand Theft Auto V, and plenty more."
+          content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
         />
         <meta
           property="og:image"
@@ -95,7 +95,7 @@ export default function Home() {
         <meta name="twitter:title" content="Categories - Tokei" />
         <meta
           name="twitter:description"
-          content="Tokei features categories, Palworld, Fortnite, Counter-Strike, Grand Theft Auto V, and plenty more."
+          content="Discover Tokei 時計, a groundbreaking open-source initiative revolutionizing live streaming. Dive into a community of innovators, developers, and creators shaping the future of real-time content delivery. Explore cutting-edge technology and unleash your creativity with Tokei 時計."
         />
         <meta
           name="twitter:image"

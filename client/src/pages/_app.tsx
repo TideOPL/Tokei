@@ -8,7 +8,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <ClerkProvider {...pageProps}>
       <Provider store={store}>
-        <Component {...pageProps} />
+        <div className="dark">
+          <Component {...pageProps} />
+        </div>
       </Provider>
     </ClerkProvider>
   );
