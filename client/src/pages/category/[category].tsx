@@ -128,6 +128,8 @@ const Category = ({
         <meta property="og:title" content={categoryData.name + " - Tokei"} />
         <meta property="og:description" content={categoryData.description} />
         <meta property="og:image" content={categoryData.image + "?w=227"} />
+        <meta property="og:image:width" content="250" />
+        <meta property="og:image:height" content="250" />
 
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="tokei.live" />
