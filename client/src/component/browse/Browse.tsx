@@ -36,11 +36,6 @@ const Browse = (): JSX.Element => {
             className="h-[2px] dark:bg-zinc-600"
           />
         </div>
-        <div className="relative bottom-2 pt-5">
-          <div className="absolute flex pb-3 pl-16 font-noto-sans text-2xl font-semibold text-primary">
-            Live Channels
-          </div>
-        </div>
       </div>
       {browseItems.length == 0 ? (
         <div className="w-full pt-10 text-center font-noto-sans dark:text-white">
@@ -50,17 +45,22 @@ const Browse = (): JSX.Element => {
           </div>
         </div>
       ) : (
-        <div className="grid h-full w-full justify-center pb-5 pl-3 pt-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1800px]:grid-cols-5 min-[2000px]:grid-cols-6">
-          {browseItems.map((channel: Browse) => (
-            <BrowseListItem
-              title={channel.stream.title}
-              username={channel.channel.username}
-              pfp={channel.channel.pfp}
-              thumbnail={`${env.NEXT_PUBLIC_SSR_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
-              tags={channel.stream.tags}
-              viewers={channel.stream.viewers}
-            />
-          ))}
+        <div>
+          <div className="flex pl-16 pt-5 font-noto-sans text-2xl font-semibold text-primary">
+            Live Channels
+          </div>
+          <div className="grid h-full w-full justify-center pb-5 pl-12 pt-7 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1800px]:grid-cols-5 min-[2000px]:grid-cols-6">
+            {browseItems.map((channel: Browse) => (
+              <BrowseListItem
+                title={channel.stream.title}
+                username={channel.channel.username}
+                pfp={channel.channel.pfp}
+                thumbnail={`${env.NEXT_PUBLIC_SSR_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
+                tags={channel.stream.tags}
+                viewers={channel.stream.viewers}
+              />
+            ))}
+          </div>
         </div>
       )}
     </div>
