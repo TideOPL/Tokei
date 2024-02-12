@@ -53,14 +53,14 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
           </Link>
         </h1>
 
-        <h1 className="group">
+        <h2 className="group">
           <Link
             href={"/"}
             className="font-noto-sans font-bold text-black transition-all group-hover:text-primary dark:text-white sm:text-xl"
           >
             Browse
           </Link>
-        </h1>
+        </h2>
       </div>
       <div className="space-x-5">
         {!user && (
