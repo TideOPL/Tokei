@@ -12,7 +12,10 @@ const Browse = (): JSX.Element => {
   const { browseItems, categoryItems, showMoreCategory } = useBrowse();
   return (
     <div className="w-full overflow-x-hidden">
-      <div className="flex pl-16 font-noto-sans text-2xl font-semibold text-white">
+      <div
+        className="flex pl-16 font-noto-sans text-2xl font-semibold text-white"
+        data-testid="cypress-1"
+      >
         Categories
       </div>
       <div className="grid h-fit w-full grid-cols-5 justify-center px-10 pb-5 2xl:grid-cols-10">
