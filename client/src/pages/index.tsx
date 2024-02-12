@@ -86,9 +86,10 @@ export default function Home() {
           content="Tokei 時計: Redefining live streaming with cutting-edge tech. Join our vibrant community of creators shaping the future of real-time content delivery."
         />
         <meta
-          property="og:image"
+          property="og:image:secure_url"
           content="https://tokei.live/android-chrome-512x512.png"
         />
+        <meta property="og:image:type" content="image/png"></meta>
         <meta property="og:image:width" content="250" />
         <meta property="og:image:height" content="250" />
 
