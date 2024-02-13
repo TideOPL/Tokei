@@ -85,7 +85,7 @@ export default function Home() {
 
         <meta property="og:url" content="https://tokei.live" />
         <meta property="og:type" content="website" />
-        <meta property="og:title" content="Categories - Tokei" />
+        <meta property="og:title" content={title} />
         <meta
           property="og:description"
           content="Tokei 時計: Redefining live streaming with cutting-edge tech. Join our vibrant community of creators shaping the future of real-time content delivery."
@@ -101,7 +101,7 @@ export default function Home() {
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="tokei.live" />
         <meta property="twitter:url" content="https://tokei.live" />
-        <meta name="twitter:title" content="Categories - Tokei" />
+        <meta name="twitter:title" content={title} />
         <meta
           name="twitter:description"
           content="Tokei 時計: Redefining live streaming with cutting-edge tech. Join our vibrant community of creators shaping the future of real-time content delivery."
