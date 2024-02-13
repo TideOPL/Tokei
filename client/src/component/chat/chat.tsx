@@ -188,7 +188,10 @@ const Form = ({
       className="flex flex-col"
       onSubmit={(evt) => {
         evt.preventDefault();
-        if (user) {
+        if (user != null) {
+          if (currentMessage.length > 500) {
+            return;
+          }
           submit(currentMessage, setCurrentMessage);
           return;
         }
@@ -240,8 +243,11 @@ const Form = ({
           onChange={(value) => setCurrentMessage(value.currentTarget.value)}
           onSubmit={(evt) => {
             if (user != null) {
+              if (currentMessage.length > 500) {
+                return;
+              }
+              console.log(currentMessage.length);
               submit(currentMessage, setCurrentMessage);
-              console.log(user);
               return;
             }
             clerk.openSignUp({
@@ -301,6 +307,15 @@ const Form = ({
             setMessage={setCurrentMessage}
           />
         </div>
+        <div
+          className={`absolute -bottom-8 left-3  ${currentMessage.length >= 500 ? "text-red-500" : "text-yellow-400"}`}
+        >
+          {currentMessage.length > 475 && (
+            <div>
+              <span>{500 - currentMessage.length}</span>
+            </div>
+          )}
+        </div>
       </div>
       <div className="my-2 flex self-end">
         <Button
@@ -314,7 +329,13 @@ const Form = ({
           type="submit"
           className="font-semibold dark:bg-primary dark:text-black hover:dark:bg-primary_lighter"
           onClick={() => {
-            submit(currentMessage, setCurrentMessage);
+            if (user != null) {
+              if (currentMessage.length > 500) {
+                return;
+              }
+              submit(currentMessage, setCurrentMessage);
+              return;
+            }
           }}
         >
           Send
