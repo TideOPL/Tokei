@@ -28,6 +28,23 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "shake3": {
+          "0%": {
+            transform: "rotate(0deg)",
+          },
+          "25%": {
+            transform: "rotate(2deg)",
+          },
+          "50%": {
+            transform: "rotate(0deg)",
+          },
+          "75%": {
+            transform: "rotate(-2deg)",
+          },
+          "100%": {
+            transform: "rotate(0deg)",
+          },
+        },
       },
       textColor: {
         primary: '#F3A5DE',
@@ -44,6 +61,7 @@ const config = {
           'dark': '#bfbfbf'
         }
       },
+      
       colors: {
         primary: '#C97BB7',
         primary_lighter: '#CC94BE',
@@ -51,10 +69,18 @@ const config = {
       },
       fontFamily: {
         'noto-sans': ['Noto Sans', 'sans-serif']
-      }
+      },
+      animation: {
+        "shake": "shake3 0.2s",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        "scroll": "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+        "meteor-effect": "meteor 5s linear infinite",
+        "shimmer": "shimmer 2s linear infinite",
+
+      },
     },
   },
-  plugins: [iOSHeight, require("tailwindcss-animate")],
+  plugins: [iOSHeight, require('tailwindcss-animate')],
 } satisfies Config
 
 export default config

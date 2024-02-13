@@ -167,6 +167,7 @@ const Form = ({
   setDisableHotkey,
 }: FormProps) => {
   const [currentMessage, setCurrentMessage] = useState("");
+  const [error, setError] = useState(false);
   const clerk = useClerk();
 
   const submit = (
@@ -190,6 +191,9 @@ const Form = ({
         evt.preventDefault();
         if (user != null) {
           if (currentMessage.length > 500) {
+            console.log("hello");
+            setError(true);
+            setTimeout(() => setError(false), 1000);
             return;
           }
           submit(currentMessage, setCurrentMessage);
@@ -233,7 +237,7 @@ const Form = ({
         });
       }}
     >
-      <div className="relative">
+      <div className={`relative ${error && "animate-shake"}`}>
         <Input
           onFocus={() => setDisableHotkey(true)}
           onBlur={() => setDisableHotkey(false)}
@@ -288,7 +292,7 @@ const Form = ({
               },
             });
           }}
-          className="h-12 max-w-lg select-text break-all rounded-none border-none pl-10 pr-12 focus:bg-none dark:bg-[#eaeaea]/5"
+          className={`h-12 max-w-lg select-text break-all rounded-none border-none pl-10 pr-12 focus:bg-none dark:bg-[#eaeaea]/5`}
         />
         {user && (
           <div className="absolute left-2 top-3">
