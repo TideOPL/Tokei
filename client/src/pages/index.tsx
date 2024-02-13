@@ -1,5 +1,5 @@
 import { useAuth, useUser } from "@clerk/nextjs";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Nav from "~/component/nav/Nav";
 import Browse from "../component/browse/Browse";
 import Head from "next/head";
@@ -15,6 +15,7 @@ export default function Home() {
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut, getToken } = useAuth();
   const dispatch = useAppDispatch();
+  const [title, setTitle] = useState("Tokei | Stream, Chat, and Vibe");
 
   useEffect(() => {
     const getFollowingList = async () => {
@@ -58,6 +59,10 @@ export default function Home() {
     }
   }, [isSignedIn]);
 
+  useEffect(() => {
+    setTitle("Tokei | Browse");
+  }, []);
+
   // if (!isLoaded) {
   //   // Loading Screen?
   //   return <div />;
@@ -66,7 +71,7 @@ export default function Home() {
   return (
     <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
       <Head>
-        <title>Tokei - Browse</title>
+        <title>{title}</title>
         <meta
           content="width=device-width, initial-scale=1, viewport-fit=cover"
           name="viewport"
