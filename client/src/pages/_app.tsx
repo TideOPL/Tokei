@@ -3,11 +3,10 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Provider } from "react-redux";
 import store from "~/store/store";
 import "~/styles/globals.css";
-import Head from "next/head";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
-    <div>
+    <div className="dark">
       <ClerkProvider {...pageProps}>
         <Provider store={store}>
           <div className="dark">

@@ -3,6 +3,7 @@ import {
   GemIcon,
   Shield,
   SwordIcon,
+  Video,
   VideoIcon,
 } from "lucide-react";
 import { Button } from "../ui/button";
@@ -39,21 +40,21 @@ const IconsList: IconProp[] = [
   {
     name: "Broadcaster",
     icon: (
-      <VideoIcon className="h-[24px] w-[24px] rounded-md bg-red-500 stroke-[1.75px] px-0.5" />
+      <Video className="h-[22px] w-[22px] rounded-md fill-red-500 stroke-red-500 stroke-[1.75px]" />
     ),
     style: {},
   },
   {
     name: "Moderator",
     icon: (
-      <SwordIcon className="h-[24px] w-[24px] rotate-90 rounded-md bg-[#B07ADF] stroke-[1.75px] px-0.5" />
+      <SwordIcon className="h-[22px] w-[22px] rotate-90 rounded-md bg-[#B07ADF] stroke-white stroke-[1.75px]" />
     ),
     style: {},
   },
   {
     name: "Verified",
     icon: (
-      <BadgeCheckIcon className="h-[24px] w-[24px] rounded-md bg-primary stroke-[1.75px] px-0.5" />
+      <BadgeCheckIcon className="h-[22px] w-[22px] rounded-md fill-primary stroke-[#141516] stroke-[1.75px]" />
     ),
     style: {},
   },
@@ -72,9 +73,9 @@ const Message = ({ icons, username, message, color, chatRoom }: Message) => {
                 {icon.icon}
               </div>
             ))}
-            <span className="pl-2" style={{ color: color }}>
+            <span className="pl-0.5 text-sm font-bold" style={{ color: color }}>
               {username}
-              <span className="text-white">:&nbsp;</span>
+              <span className="text-white">:</span>
             </span>
           </div>
         </PopoverTrigger>

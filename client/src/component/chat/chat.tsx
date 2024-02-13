@@ -1,4 +1,4 @@
-import { useUser } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import React, { useState, useEffect, useRef } from "react";
 import io, { Socket } from "socket.io-client";
 import { env } from "~/env.mjs";
@@ -16,7 +16,7 @@ import {
 import ChatIdentity from "./chat-identity";
 import ChatEmotes from "./chat-emotes";
 
-import { UserResource } from "@clerk/types";
+import { LoadedClerk, UserResource } from "@clerk/types";
 
 interface Props {
   channel: Channel;
@@ -26,7 +26,7 @@ interface Props {
 }
 
 interface FormProps {
-  user: UserResource;
+  user: UserResource | null;
   color: string;
   getToken: () => Promise<string | null>;
   setColor: React.Dispatch<React.SetStateAction<string>>;
@@ -131,21 +131,17 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
           </div>
         </div>
 
-        {isSignedIn != null && user != null && socket != null ? (
-          <div className="mx-0 flex h-40 flex-initial flex-col px-2 pt-3 dark:bg-[#1f2023]">
-            <Form
-              //@ts-ignore
-              user={user}
-              color={color}
-              getToken={getToken}
-              setColor={setColor}
-              socket={socket}
-              setDisableHotkey={setDisableHotkey}
-            />
-          </div>
-        ) : (
-          <></>
-        )}
+        <div className="mx-0 flex h-40 flex-initial flex-col px-2 pt-3 dark:bg-[#1f2023]">
+          <Form
+            //@ts-ignore
+            user={user}
+            color={color}
+            getToken={getToken}
+            setColor={setColor}
+            socket={socket}
+            setDisableHotkey={setDisableHotkey}
+          />
+        </div>
       </div>
       <div
         className={`${!visible ? "w-[2.5%]" : "w-[0%] max-w-[0vw]"} overflow-hidden transition-all duration-300 delay-150`}
@@ -171,6 +167,8 @@ const Form = ({
   setDisableHotkey,
 }: FormProps) => {
   const [currentMessage, setCurrentMessage] = useState("");
+  const clerk = useClerk();
+
   const submit = (
     message: string,
     setMessage: React.Dispatch<React.SetStateAction<string>>,
@@ -190,7 +188,46 @@ const Form = ({
       className="flex flex-col"
       onSubmit={(evt) => {
         evt.preventDefault();
-        submit(currentMessage, setCurrentMessage);
+        if (user) {
+          submit(currentMessage, setCurrentMessage);
+          return;
+        }
+        clerk.openSignUp({
+          appearance: {
+            elements: {
+              modalCloseButton: "text-white",
+              card: "dark bg-[#282c34] font-noto-sans",
+              headerTitle: "text-black dark:text-white",
+              headerSubtitle: "text-black dark:text-white",
+              socialButtonsBlockButton: "dark:border-white",
+              socialButtonsBlockButtonArrow: "dark:text-white",
+              socialButtonsBlockButtonText: "text-black dark:text-white p-0.5",
+              dividerLine: "dark:bg-white",
+              dividerText: "text-black dark:text-white",
+              formFieldInput:
+                "dark:bg-[#393d45]/80 focus:outline-none dark:caret-white focus:border-2 focus:border-white dark:text-white",
+              formFieldLabel: "text-black dark:text-white",
+              formFieldSuccessText: "dark:text-white",
+              formFieldErrorText: "dark:text-white",
+              formFieldInputShowPasswordIcon: "dark:text-white",
+              formButtonPrimary:
+                "bg-dark-primary-pink hover:bg-dark-primary-pink/80 text-sm normal-case",
+              footerAction: "flex w-full items-center justify-center",
+              footerActionText: "text-black dark:text-white",
+              footerActionLink: "text-secondary hover:text-secondary/80",
+              formFieldInfoText: "text-black dark:text-white",
+              identityPreview:
+                "text-black dark:text-white border-black dark:border-white",
+              identityPreviewText: "text-black dark:text-white",
+              formHeaderTitle: "text-black dark:text-white",
+              formHeaderSubtitle: "text-black dark:text-white",
+              otpCodeFieldInput: "dark:border-white/20 dark:text-white ",
+              formResendCodeLink: "text-primary_lighter dark:text-primary",
+              identityPreviewEditButton:
+                "text-primary_lighter dark:text-primary",
+            },
+          },
+        });
       }}
     >
       <div className="relative">
@@ -202,18 +239,62 @@ const Form = ({
           value={currentMessage}
           onChange={(value) => setCurrentMessage(value.currentTarget.value)}
           onSubmit={(evt) => {
-            submit(currentMessage, setCurrentMessage);
+            if (user != null) {
+              submit(currentMessage, setCurrentMessage);
+              console.log(user);
+              return;
+            }
+            clerk.openSignUp({
+              appearance: {
+                elements: {
+                  modalCloseButton: "text-white",
+                  card: "dark bg-[#282c34] font-noto-sans",
+                  headerTitle: "text-black dark:text-white",
+                  headerSubtitle: "text-black dark:text-white",
+                  socialButtonsBlockButton: "dark:border-white",
+                  socialButtonsBlockButtonArrow: "dark:text-white",
+                  socialButtonsBlockButtonText:
+                    "text-black dark:text-white p-0.5",
+                  dividerLine: "dark:bg-white",
+                  dividerText: "text-black dark:text-white",
+                  formFieldInput:
+                    "dark:bg-[#393d45]/80 focus:outline-none dark:caret-white focus:border-2 focus:border-white dark:text-white",
+                  formFieldLabel: "text-black dark:text-white",
+                  formFieldSuccessText: "dark:text-white",
+                  formFieldErrorText: "dark:text-white",
+                  formFieldInputShowPasswordIcon: "dark:text-white",
+                  formButtonPrimary:
+                    "bg-dark-primary-pink hover:bg-dark-primary-pink/80 text-sm normal-case",
+                  footerAction: "flex w-full items-center justify-center",
+                  footerActionText: "text-black dark:text-white",
+                  footerActionLink: "text-secondary hover:text-secondary/80",
+                  formFieldInfoText: "text-black dark:text-white",
+                  identityPreview:
+                    "text-black dark:text-white border-black dark:border-white",
+                  identityPreviewText: "text-black dark:text-white",
+                  formHeaderTitle: "text-black dark:text-white",
+                  formHeaderSubtitle: "text-black dark:text-white",
+                  otpCodeFieldInput: "dark:border-white/20 dark:text-white ",
+                  formResendCodeLink: "text-primary_lighter dark:text-primary",
+                  identityPreviewEditButton:
+                    "text-primary_lighter dark:text-primary",
+                },
+              },
+            });
           }}
           className="h-12 max-w-lg select-text break-all rounded-none border-none pl-10 pr-12 focus:bg-none dark:bg-[#eaeaea]/5"
         />
-        <div className="absolute left-2 top-3">
-          <ChatIdentity
-            user={user}
-            initialColor={color}
-            getToken={getToken}
-            setColor={setColor}
-          />
-        </div>
+        {user && (
+          <div className="absolute left-2 top-3">
+            <ChatIdentity
+              user={user}
+              initialColor={color}
+              getToken={getToken}
+              setColor={setColor}
+            />
+          </div>
+        )}
+
         <div className="absolute right-5 top-3">
           <ChatEmotes
             setDisableHotkey={setDisableHotkey}
