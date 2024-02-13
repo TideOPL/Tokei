@@ -90,10 +90,7 @@ export default function Home() {
           property="og:description"
           content="Tokei 時計: Redefining live streaming with cutting-edge tech. Join our vibrant community of creators shaping the future of real-time content delivery."
         />
-        <meta
-          property="og:image:secure_url"
-          content="https://tokei.live/android-chrome-64x64.webp"
-        />
+
         <meta property="og:image:type" content="image/png" />
         <meta property="og:image:width" content="250" />
         <meta property="og:image:height" content="250" />
@@ -106,10 +103,7 @@ export default function Home() {
           name="twitter:description"
           content="Tokei 時計: Redefining live streaming with cutting-edge tech. Join our vibrant community of creators shaping the future of real-time content delivery."
         />
-        <meta
-          name="twitter:image"
-          content="https://tokei.live/android-chrome-64x64.webp"
-        />
+
         <link
           type="application/json+oembed"
           href="https://tokei.live/oembed.json"
