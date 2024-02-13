@@ -200,7 +200,10 @@ export const limiter = rateLimit({
 });
 
 
-app.use(bodyParser.json());
+app.use('/api/v1/user/', bodyParser.json());
+app.use('/api/v1/categories/', bodyParser.json());
+app.use('/api/v1/chat/', bodyParser.json());
+app.use('/api/v1/settings/', bodyParser.json());
 app.use(cors());
 app.use('/api/v1/user/',     limiter);
 app.use('/api/v1/categories/', categories);
