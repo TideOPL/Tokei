@@ -103,7 +103,7 @@ export default function Home() {
         />
         <meta
           name="twitter:image"
-          content="https://tokei.live/android-chrome-512x512.png"
+          content="https://tokei.live/android-chrome-192x192.png"
         />
       </Head>
       {/**@ts-ignore**/}
