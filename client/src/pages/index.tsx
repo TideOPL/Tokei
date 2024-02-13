@@ -110,6 +110,10 @@ export default function Home() {
           name="twitter:image"
           content="https://tokei.live/android-chrome-64x64.webp"
         />
+        <link
+          type="application/json+oembed"
+          href="https://tokei.live/oembed.json"
+        />
       </Head>
       {/**@ts-ignore**/}
       <Nav user={user} signOut={() => signOut()} />
