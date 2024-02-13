@@ -1,18 +1,4 @@
-import {
-  BadgeCheckIcon,
-  GemIcon,
-  Shield,
-  SwordIcon,
-  Video,
-  VideoIcon,
-} from "lucide-react";
-import { Button } from "../ui/button";
-import {
-  TooltipProvider,
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "../ui/tooltip";
+import { BadgeCheckIcon, SwordIcon, Video } from "lucide-react";
 import { CSSProperties } from "react";
 import {
   Popover,
@@ -47,7 +33,7 @@ const IconsList: IconProp[] = [
   {
     name: "Moderator",
     icon: (
-      <SwordIcon className="h-[22px] w-[22px] rotate-90 rounded-md bg-[#B07ADF] stroke-white stroke-[1.75px]" />
+      <SwordIcon className="h-[22px] w-[22px] rotate-90 rounded-md fill-[#B07ADF] stroke-white stroke-[1.75px]" />
     ),
     style: {},
   },
