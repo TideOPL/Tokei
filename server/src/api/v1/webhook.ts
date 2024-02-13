@@ -8,6 +8,12 @@ import { User } from '../../model/user';
 import { Stream } from '../../model/stream';
 import getColor from '../../util/getColor';
 
+export const config = {
+  api: {
+    bodyParser: false,
+  }
+}
+
 const router: Router = express.Router();
 // POST /signup
 router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req: Request, res: Response) => {
