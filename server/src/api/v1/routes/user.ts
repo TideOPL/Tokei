@@ -5,6 +5,7 @@ import makeKey from '../../../util/makeKey';
 import { User } from '../../../model/user';
 import { getOrSetCache } from '../../../util/cache';
 import { Follower } from '../../../model/follower';
+import { Moderator } from '../../../model/moderator';
 
 const router: Router = express.Router();
 // POST /signup
@@ -36,6 +37,10 @@ const getFollow = async ( clerk_id: string, channelId: string ) => {
 const getFollowByObjectID = async (objectId: string) => {
   return Follower.findById(objectId).exec();
 };
+
+const getModerate = async ( clerk_id: string, channelId: string) => {
+  return Moderator.findById({ user_id: clerk_id, channel_id: channelId }).exec();
+}
 
 // GET api/v1/user/getChannel
 router.get('/getChannel', async (req: Request, res: Response) => {
@@ -264,6 +269,72 @@ router.get('/follow/getFollowingList', ClerkExpressRequireAuth(), async (req: Re
     res.status(500).send(err);
   }
 });
+
+router.post('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    if (req.query.channel == null) {
+      res.status(400).send();
+      return;
+    }
+
+    const channel = await getChannel(req.query.channel.toString());
+    const user = await getUserById(req.auth.userId);
+
+    if (user == null  || channel == null) {
+      res.status(404).send();
+      return;
+    }
+
+    if (user.clerk_id == undefined || channel.clerk_id == undefined) {
+      res.status(500).send();
+      return;
+    }
+
+    if (user.username != channel.username) {
+      res.status(400).send();
+      return;
+    }
+
+    let moderate = await getModerate( req.auth.userId, channel.clerk_id );
+
+    const channelMods = user.channelMods
+
+    
+    if (moderate) {
+      const moderateId = moderate._id.toString();
+      const updatedUserMod: string[] = channelMods.filter(moderator => moderator !== moderateId);
+  
+      
+      user.updateOne({ channelMods: updatedUserMod }).exec();
+
+      moderate.deleteOne().exec();
+
+      res.status(200).send();
+      return;
+
+    }
+    moderate = await new Moderator({
+      user_id: user.clerk_id,
+      channel_id: channel.clerk_id,
+    }).save();
+
+    const moderatorId = moderate._id.toString();
+
+   
+    channelMods.push(moderatorId);
+
+    user.updateOne({ channelMods: channelMods }).exec();
+
+    res.status(200).send();
+    return;
+
+  } catch (e) {
+    res.status(500).send(e?.toString());
+  }
+});
+
+
+
 
 export default router;
 
