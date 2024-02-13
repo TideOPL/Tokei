@@ -1,10 +1,6 @@
 {
-  "version": "1.0",
-	"type": "photo",
-	"width": 192,
-	"height": 192,
-	"title": "Tokei | Stream, Chat, and Vibe",
-	"url": "https://tokei.live/android-chrome-192x192.png",
-	"author_name": "Tokei",
-	"author_url": "https://tokei.live"
+  "author_name": "Tokei",
+  "author_url": "https://tokei.live",
+  "provider_name": "Find out more here",
+  "provider_url": "https://tokei.live/about"
 }
