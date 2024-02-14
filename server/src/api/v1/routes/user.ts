@@ -6,6 +6,7 @@ import { User } from '../../../model/user';
 import { getOrSetCache } from '../../../util/cache';
 import { Follower } from '../../../model/follower';
 import { Moderator } from '../../../model/moderator';
+import { redis } from '../../../app';
 
 const router: Router = express.Router();
 // POST /signup
@@ -38,8 +39,8 @@ const getFollowByObjectID = async (objectId: string) => {
   return Follower.findById(objectId).exec();
 };
 
-const getModerate = async ( clerk_id: string, channelId: string) => {
-  return Moderator.findById({ user_id: clerk_id, channel_id: channelId }).exec();
+const getModerate = async ( channel_id: string, moderator_id: string) => {
+  return Moderator.findById({ channel: channel_id, user: moderator_id }).exec();
 };
 
 // GET api/v1/user/getChannel
@@ -277,35 +278,35 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
       return;
     }
 
-    const channel = await getChannel(req.query.channel.toString());
-    const user = await getUserById(req.auth.userId);
+    const moderator = await getChannel(req.query.channel.toString());
+    const authUser = await getUserById(req.auth.userId);
 
-    if (user == null  || channel == null) {
+    if (authUser == null  || moderator == null) {
       res.status(404).send();
       return;
     }
 
-    if (user.clerk_id == undefined || channel.clerk_id == undefined) {
+    if (authUser.clerk_id == undefined || moderator.clerk_id == undefined) {
       res.status(500).send();
       return;
     }
 
-    if (user.username != channel.username) {
+    if (authUser.username != moderator.username) {
       res.status(400).send();
       return;
     }
 
-    let moderate = await getModerate( req.auth.userId, channel.clerk_id );
+    let moderate = await getModerate( req.auth.userId, moderator.clerk_id );
 
-    const channelMods = user.channelMods;
+    const channelMods = authUser.channelMods;
 
     
     if (moderate) {
       const moderateId = moderate._id.toString();
-      const updatedUserMod: string[] = channelMods.filter(moderator => moderator !== moderateId);
+      const updatedUserMod: string[] = channelMods.filter(_moderator => _moderator !== moderateId);
   
       
-      user.updateOne({ channelMods: updatedUserMod }).exec();
+      authUser.updateOne({ channelMods: updatedUserMod }).exec();
 
       moderate.deleteOne().exec();
 
@@ -314,8 +315,8 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
 
     }
     moderate = await new Moderator({
-      user_id: user.clerk_id,
-      channel_id: channel.clerk_id,
+      channel: authUser.clerk_id,
+      user: moderator.clerk_id,
     }).save();
 
     const moderatorId = moderate._id.toString();
@@ -323,13 +324,47 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
    
     channelMods.push(moderatorId);
 
-    user.updateOne({ channelMods: channelMods }).exec();
+    authUser.updateOne({ channelMods: channelMods }).exec();
+    await redis.del(req.auth.userId);
 
     res.status(200).send();
     return;
 
   } catch (e) {
     res.status(500).send(e?.toString());
+  }
+});
+
+// Get api/v1/user/moderation/amIMod
+router.get('/moderation/amIMod', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    if (req.query.channel == null || req.auth.userId == null) {
+      res.status(400).send();
+      return;
+    }
+    const channel = await getChannel(req.auth.userId.toString());
+    const moderator = await getUserByUsername(req.query.channel.toString());
+
+    if (channel == null || moderator == null) {
+      res.status(404).send();
+      return;
+    }
+
+    if (channel.clerk_id == null || moderator.clerk_id == null) {
+      res.status(500).send();
+      return;
+    }
+
+    const moderatorObject = await getModerate(channel.clerk_id, moderator.clerk_id.toString());
+
+    if (moderatorObject) {
+      res.status(200).send(moderatorObject.toJSON());
+      return;
+    }
+
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).send(err);
   }
 });
 
