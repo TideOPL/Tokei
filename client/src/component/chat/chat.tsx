@@ -55,7 +55,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     setSocket(socket);
 
     socket.on(`stream_${channel.username}`, (status) => {
-      router.reload();
+      setTimeout(() => router.reload(), 5000);
     });
 
     // Listen for incoming messages
