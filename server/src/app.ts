@@ -169,7 +169,7 @@ io.on('connection', (socket) => {
       icons.push('Broadcaster');
     }
 
-    const moderatorObject = await getOrSetCache('mods_' + message.username, async () => {
+    const moderatorObject = await getOrSetCache('mods_' + channel[0].username, async () => {
       const data = await Moderator.findOne({ channel: channel[0].clerk_id, user: userClerk });
 
       return data;
