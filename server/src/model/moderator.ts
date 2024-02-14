@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
 const moderator = new mongoose.Schema({
-  user_id: {
+  channel: {
     require: true,
     type: String,
   },
-  channel_id: {
+  user: {
     require: true,
     type: String,
   },
