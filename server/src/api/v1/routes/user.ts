@@ -23,6 +23,10 @@ const getChannel = async (username: string) => {
   return User.findOne({ username: username }).exec();
 };
 
+const getChannelById = async (clerk_id: string) => {
+  return User.findOne({ clerk_id: clerk_id }).exec();
+};
+
 const getUserById = async (clerk_id: string) => {
   return User.findOne({ clerk_id: clerk_id }).exec();
 };
@@ -375,7 +379,7 @@ router.get('/moderation/modCheck', ClerkExpressRequireAuth(), async (req: Requir
       return;
     }
   
-    const channel = await getChannel(req.auth.userId.toString());
+    const channel = await getChannelById(req.auth.userId.toString());
     const moderator = await getUserByUsername(req.query.channel.toString());
 
     if (channel == null || moderator == null) {
