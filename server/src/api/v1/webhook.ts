@@ -85,7 +85,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
       // Setup account
       const stream = new Stream({
         title: username + '\'s Stream!',
-        category: '65c0d5698a87935e4b444013',
+        category: '65c4e17d05e9b2652b0e6d2b',
         clerkId: evt.data.id,
         timestamp: '0',
         tags: [],
