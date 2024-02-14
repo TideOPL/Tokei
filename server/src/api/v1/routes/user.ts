@@ -291,7 +291,7 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
       return;
     }
 
-    if (authUser.username != moderator.username) {
+    if (authUser.username == moderator.username) {
       res.status(400).send();
       return;
     }
