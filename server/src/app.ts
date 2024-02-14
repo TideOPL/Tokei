@@ -21,6 +21,7 @@ import { Stream } from './model/stream';
 import Redis from 'ioredis';
 import { getOrSetCache } from './util/cache';
 import bodyParser from 'body-parser';
+import { Moderator } from './model/moderator';
 
 const NodeMediaServer = require('tokei-media-server');
 
@@ -168,10 +169,18 @@ io.on('connection', (socket) => {
       icons.push('Broadcaster');
     }
 
+    const moderatorObject = await getOrSetCache('mods_' + message.username, async () => {
+      const data = await Moderator.findOne({ channel: channel[0].clerk_id, user: userClerk });
 
-    if (channelMods.includes(userClerk)) {
-      icons.push('Moderator');
+      return data;
+    }) as any;
+
+    if (moderatorObject) {
+      if (channelMods.includes(moderatorObject._id)) {
+        icons.push('Moderator');
+      }  
     }
+    
 
     if (isVerified) {
       icons.push('Verified');

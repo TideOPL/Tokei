@@ -6,6 +6,7 @@ import { User } from '../../../model/user';
 import { getOrSetCache } from '../../../util/cache';
 import { Follower } from '../../../model/follower';
 import { Moderator } from '../../../model/moderator';
+import { redis } from '../../../app';
 
 const router: Router = express.Router();
 // POST /signup
@@ -324,6 +325,7 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
     channelMods.push(moderatorId);
 
     authUser.updateOne({ channelMods: channelMods }).exec();
+    await redis.del(req.auth.userId);
 
     res.status(200).send();
     return;
