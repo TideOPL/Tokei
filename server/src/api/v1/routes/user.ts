@@ -315,7 +315,7 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
     }
     moderate = await new Moderator({
       channel: authUser.clerk_id,
-      moderator: moderator.clerk_id,
+      user: moderator.clerk_id,
     }).save();
 
     const moderatorId = moderate._id.toString();
