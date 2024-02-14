@@ -17,6 +17,7 @@ import ChatIdentity from "./chat-identity";
 import ChatEmotes from "./chat-emotes";
 
 import { LoadedClerk, UserResource } from "@clerk/types";
+import { useRouter } from "next/router";
 
 interface Props {
   channel: Channel;
@@ -44,6 +45,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   const [visible, setVisible] = useState(true);
   const [openChat, setOpenChat] = useState(false);
   const [color, setColor] = useState("#FFFFFF");
+  const router = useRouter();
 
   let count = 0;
 
@@ -51,6 +53,10 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     // Create a socket connection
     const socket = io(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`);
     setSocket(socket);
+
+    socket.on(`stream_${channel.username}`, (status) => {
+      router.reload();
+    });
 
     // Listen for incoming messages
     socket.on(`message_${channel.username}`, (message) => {

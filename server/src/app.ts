@@ -215,15 +215,15 @@ app.use('/api/v1/chat/', bodyParser.json());
 app.use('/api/v1/settings/', bodyParser.json());
 app.use('/api/v1/updateStreamInfo', bodyParser.json());
 app.use(cors());
-app.use('/api/v1/user/',     limiter);
+app.use('/api/v1/user/',       limiter);
 app.use('/api/v1/categories/', categories);
-app.use('/api/v1/user/',     signup);
-app.use('/api/v1/chat',      chats);
-app.use('/api/v1/settings/', settings);
-app.use('/api/v1/settings/', limiter);
-app.use('/api/v1/getStream', limiter);
-app.use('/api/v1',           streams);
-app.use('/api/v1',           webhook);
+app.use('/api/v1/user/',       signup);
+app.use('/api/v1/chat',        chats);
+app.use('/api/v1/settings/',   settings);
+app.use('/api/v1/settings/',   limiter);
+app.use('/api/v1/getStream',   limiter);
+app.use('/api/v1',             streams);
+app.use('/api/v1',             webhook);
 
 httpServer.listen(8001, '0.0.0.0', () => {
   console.log(`[⚡️]: Server is running at http://localhost:${port}`);
@@ -243,11 +243,12 @@ globalNMS.on('prePublish', (id: any, StreamPath: string) => {
       session.reject();
       return;
     }
-    redis.del(user.username.toString());
 
     await Stream.findOneAndUpdate({ clerkId: user.clerk_id }, { timestamp: Date.now() }).exec();
     
     User.updateOne({ clerk_id: user.clerk_id }, { isLive: true }).exec();
+    await redis.del(user.username.toString());
+    io.emit(`stream_${user.username}`, 'live');
   };
 
   findUserFromKey(key, id);
@@ -260,11 +261,13 @@ globalNMS.on('donePublish', (id: any, StreamPath: string) => {
     const user = await User.findOne({ stream_key: _key }).exec();
   
 
-    if (user == null) {
+    if (user == null || user.username == null) {
       return;
     }
 
     User.updateOne({ clerk_id: user.clerk_id }, { isLive: false, _nmsId: id }).exec();
+    await redis.del(user.username.toString());
+    io.emit(`stream_${user.username}`, 'ended');
   };
 
   findUserFromKey(key);
