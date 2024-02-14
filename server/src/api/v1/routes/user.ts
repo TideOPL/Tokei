@@ -40,7 +40,7 @@ const getFollowByObjectID = async (objectId: string) => {
 };
 
 const getModerate = async ( channel_id: string, moderator_id: string) => {
-  return Moderator.findById({ channel: channel_id, user: moderator_id }).exec();
+  return Moderator.findOne({ channel: channel_id, user: moderator_id }).exec();
 };
 
 // GET api/v1/user/getChannel
