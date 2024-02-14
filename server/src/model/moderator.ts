@@ -11,10 +11,10 @@ const moderator = new mongoose.Schema({
   },
 });
 
-moderator.set('toJSON', {
-  versionKey: false,
-  transform: function (doc, ret) { delete ret.user_id; delete ret.channel_id; },
-});
+// moderator.set('toJSON', {
+//   versionKey: false,
+//   transform: function (doc, ret) { delete ret.user_id; delete ret.channel_id; },
+// });
 
 
 export const Moderator = mongoose.model('Moderator', moderator);
