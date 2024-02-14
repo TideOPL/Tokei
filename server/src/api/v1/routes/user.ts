@@ -313,7 +313,8 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
       authUser.updateOne({ channelMods: updatedUserMod }).exec();
 
       moderate.deleteOne().exec();
-
+      await redis.del(req.auth.userId);
+      await redis.del('mods_' + authUser.username);
       res.status(200).send();
       return;
 
@@ -330,6 +331,7 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
 
     authUser.updateOne({ channelMods: channelMods }).exec();
     await redis.del(req.auth.userId);
+    await redis.del('mods_' + authUser.username);
 
     res.status(200).send();
     return;
