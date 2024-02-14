@@ -39,6 +39,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   const { isSignedIn, user } = useUser();
   const { getToken } = useAuth();
   const [channel, setChannel] = useState<Channel | null>(null);
+  const [isMod, setIsMod] = useState<boolean>(false);
   const { follow, following, followers, chatRoomFollowSince } = useFollow(
     getToken,
     username,
@@ -56,10 +57,19 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
 
   useEffect(() => {
     const fetch = async () => {
+      const token = await getToken();
       const { data } = await axios.get<Channel>(
         `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${username}`,
       );
+      const modStatus = await axios
+        .get<boolean>(
+          `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/modCheck?channel=${username}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        )
+        .then((res) => res.status === 200)
+        .catch(() => false);
       setChannel(data);
+      setIsMod(modStatus);
     };
 
     const channel: Channel[] = channels.channels.filter(
@@ -150,12 +160,20 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
       <Separator className="my-4 dark:bg-zinc-600" />
       {user?.username == chatRoom.username && (
         <div>
-          {chatRoom.channelMods.includes(channel?.clerk_id || "") ? (
+          {isMod ? (
             <div>
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger onClick={() => () => getToken()}>
-                    <ShieldMinus className="mr-1 h-4 w-4 self-center" />
+                  <TooltipTrigger
+                    onClick={async () => {
+                      const token = await getToken();
+                      await axios.get(
+                        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
+                        { headers: { Authorization: `Bearer ${token}` } },
+                      );
+                    }}
+                  >
+                    <ShieldMinus className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                   </TooltipTrigger>
                   <TooltipContent>Remove Moderator</TooltipContent>
                 </Tooltip>
@@ -165,7 +183,15 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
             <div className="relative">
               <TooltipProvider>
                 <Tooltip>
-                  <TooltipTrigger onClick={() => console.log("Mod Added")}>
+                  <TooltipTrigger
+                    onClick={async () => {
+                      const token = await getToken();
+                      await axios.get(
+                        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
+                        { headers: { Authorization: `Bearer ${token}` } },
+                      );
+                    }}
+                  >
                     <GoShieldCheck className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-primary" />
                   </TooltipTrigger>
                   <TooltipContent
