@@ -40,7 +40,7 @@ const getFollowByObjectID = async (objectId: string) => {
 
 const getModerate = async ( clerk_id: string, channelId: string) => {
   return Moderator.findById({ user_id: clerk_id, channel_id: channelId }).exec();
-}
+};
 
 // GET api/v1/user/getChannel
 router.get('/getChannel', async (req: Request, res: Response) => {
@@ -270,7 +270,7 @@ router.get('/follow/getFollowingList', ClerkExpressRequireAuth(), async (req: Re
   }
 });
 
-router.post('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
   try {
     if (req.query.channel == null) {
       res.status(400).send();
@@ -297,7 +297,7 @@ router.post('/moderation/addMod', ClerkExpressRequireAuth(), async (req: Require
 
     let moderate = await getModerate( req.auth.userId, channel.clerk_id );
 
-    const channelMods = user.channelMods
+    const channelMods = user.channelMods;
 
     
     if (moderate) {
