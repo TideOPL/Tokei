@@ -342,8 +342,8 @@ router.get('/moderation/amIMod', ClerkExpressRequireAuth(), async (req: RequireA
       res.status(400).send();
       return;
     }
-    const channel = await getChannel(req.auth.userId.toString());
-    const moderator = await getUserByUsername(req.query.channel.toString());
+    const moderator = await getChannel(req.auth.userId.toString());
+    const channel = await getUserByUsername(req.query.channel.toString());
 
     if (channel == null || moderator == null) {
       res.status(404).send();
@@ -368,6 +368,40 @@ router.get('/moderation/amIMod', ClerkExpressRequireAuth(), async (req: RequireA
   }
 });
 
+router.get('/moderation/modCheck', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+  try {
+    if (req.query.channel == null) {
+      res.status(400).send();
+      return;
+    }
+  
+    const channel = await getChannel(req.auth.userId.toString());
+    const moderator = await getUserByUsername(req.query.channel.toString());
+
+    if (channel == null || moderator == null) {
+      res.status(404).send();
+      return;
+    }
+
+    if (channel.clerk_id == null || moderator.clerk_id == null) {
+      res.status(500).send();
+      return;
+    }
+
+    const moderatorObject = await getModerate(channel.clerk_id, moderator.clerk_id.toString());
+
+    if (moderatorObject) {
+      res.status(200).send(moderatorObject.toJSON());
+      return;
+    }
+
+    res.status(204).send();
+
+
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
 
 
 
