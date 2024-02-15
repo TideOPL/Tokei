@@ -14,6 +14,7 @@ import webhook from './api/v1/webhook';
 import streams from './api/v1/routes/streams';
 import chats from './api/v1/routes/chat';
 import categories from './api/v1/routes/categories';
+import moderate from './api/v1/routes/moderation';
 import { User } from './model/user';
 import mongoose from 'mongoose';
 import cors from 'cors';
@@ -87,7 +88,7 @@ app.use(async (err: Error, req: Request, res: Response, next: () => void) => {
 });
 
 
-const io = new Server(httpServer, {
+export const io = new Server(httpServer, {
   cors: {
     origin: ['http://localhost:3000', 'http://83.104.242.112:3000', 'http://localhost:3001', 'http://83.104.242.112:3001', 'https://www.tokei.live', 'https://tokei.live'],
   },
@@ -216,10 +217,12 @@ app.use('/api/v1/categories/', bodyParser.json());
 app.use('/api/v1/chat/', bodyParser.json());
 app.use('/api/v1/settings/', bodyParser.json());
 app.use('/api/v1/updateStreamInfo', bodyParser.json());
+app.use('/api/v1/moderate/', bodyParser.json());
 app.use(cors());
 app.use('/api/v1/user/',       limiter);
 app.use('/api/v1/categories/', categories);
 app.use('/api/v1/user/',       signup);
+app.use('/api/v1/moderate/',   moderate);
 app.use('/api/v1/chat',        chats);
 app.use('/api/v1/settings/',   settings);
 app.use('/api/v1/settings/',   limiter);
