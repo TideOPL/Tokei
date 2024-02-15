@@ -206,7 +206,7 @@ router.post('/updateStreamInfo', ClerkExpressRequireAuth(), async (req: RequireA
 
 
 router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
-  const getChannel = () => {
+  const getChannel = async () => {
     return User.findOne({ username: req.params.channel }).exec();
   };
   const channel = await getOrSetCache(req.params.channel.toString(), async () => {
@@ -216,6 +216,7 @@ router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
   }) as any;
 
   // const channel = await getChannel();
+  console.log(channel);
 
   if (!channel || channel.clerk_id == null) {
     res.status(404).send();
