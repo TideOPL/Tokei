@@ -57,7 +57,7 @@ router.get('/getChannel', async (req: Request, res: Response) => {
     }
     
     const channel = await getOrSetCache(req.query.channel.toString(), async () => {
-      const data = await User.find({ username: req.query.channel }).exec();
+      const data = await User.findOne({ username: req.query.channel }).exec();
 
       return data;
     }) as Array<any>;
