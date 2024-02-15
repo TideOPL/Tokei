@@ -96,6 +96,11 @@ const Channel = ({
       data.map((emote) => dispatch(addEmote(emote)));
     };
 
+    fetch();
+    dispatch(addChannel(channel));
+  }, []);
+
+  useEffect(() => {
     const getFollowingList = async () => {
       const token = await getToken();
       const { data } = await axios.get<Channel[]>(
@@ -135,8 +140,6 @@ const Channel = ({
     if (isSignedIn) {
       getFollowingList();
     }
-    fetch();
-    dispatch(addChannel(channel));
   }, [isSignedIn]);
 
   return (
