@@ -217,7 +217,14 @@ router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
 
   // const channel = await getChannel();
 
-  if (!channel || channel[0].clerk_id == null) {
+  if (!channel || channel[0] == null) {
+    res.status(404).send();
+    return;
+  }
+
+  const channelObj = channel[0] || channel;
+
+  if (channelObj.clerk_id == null) {
     res.status(404).send();
     return;
   }
