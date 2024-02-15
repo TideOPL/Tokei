@@ -47,7 +47,7 @@ export const getServerSideProps = (async (context) => {
       }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
     )
     .then((res) => res.data)
-    .catch((err) => console.log(err))) as Channel | null | undefined;
+    .catch(() => null)) as Channel | null | undefined;
 
   const title = (await axios
     .get(
@@ -56,16 +56,19 @@ export const getServerSideProps = (async (context) => {
       }/api/v1/getStreamTitle/${channel_name.concat()}`,
     )
     .then((res) => res.data)
-    .catch(() => "")) as string;
+    .catch((err) => err.body)) as string | null;
 
-  if (!channelData || title == "") {
+  console.log(title);
+  console.log(channelData);
+
+  if (!channelData || !title) {
     return {
       notFound: true,
     };
   }
 
   return { props: { channelData, title } };
-}) satisfies GetServerSideProps<{ channelData: Channel; title: string }>;
+}) satisfies GetServerSideProps;
 
 const Channel = ({
   channelData,
