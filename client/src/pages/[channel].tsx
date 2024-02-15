@@ -27,6 +27,8 @@ import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
 import Link from "next/link";
+import useModerate from "~/hook/useModerate";
+import { time } from "console";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -86,6 +88,7 @@ const Channel = ({
   const [viewers, setViewers] = useState("1");
   const [disableControls, setDisableControls] = useState(false);
   const streamInfo = useAppSelector((state) => state.streamInfo);
+  const { timeoutUser } = useModerate(getToken);
 
   useEffect(() => {
     const fetch = async () => {
@@ -102,6 +105,12 @@ const Channel = ({
 
   useEffect(() => {
     const getFollowingList = async () => {
+      await timeoutUser(
+        "user_2cN8LYqnqqUHdTxqDbE0dTXc9ZN",
+        channel.clerk_id,
+        Date.now().toString(),
+        "test mute",
+      );
       const token = await getToken();
       const { data } = await axios.get<Channel[]>(
         `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
