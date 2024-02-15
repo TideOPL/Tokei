@@ -8,6 +8,7 @@ import { User } from '../../model/user';
 import { Stream } from '../../model/stream';
 import getColor from '../../util/getColor';
 import Filter from 'bad-words';
+import { redis } from '../../app';
 const router: Router = express.Router();
 // POST /signup
 router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req: Request, res: Response) => {
@@ -122,7 +123,13 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
 
   if (eventType == 'user.updated') {
     try {
-      await User.findOneAndUpdate({ clerk_id: evt.data.id }, { pfp: evt.data.image_url }).exec();
+      const user = await User.findOne({ clerk_id: evt.data.id }).exec();
+
+      if (user) {
+        await redis.del(user.username?.toString() || '');
+        await redis.del(evt.data.id.toString());
+        await user?.updateOne({ pfp: evt.data.image_url, username: evt.data.username });  
+      }
     } catch (e) {
       console.warn('[⚠] Caught error whilst trying to update user via webhook.');
 
