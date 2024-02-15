@@ -221,7 +221,11 @@ router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
     return Stream.findOne({ clerkId: clerkId });
   };
 
-  const stream = await getStream(channel[0].clerk_id);
+  console.log(channel);
+
+  const stream = await getStream(channel.clerk_id);
+
+  console.log(stream);
 
   res.status(200).send(stream?.title);
 
