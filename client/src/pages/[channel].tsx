@@ -37,28 +37,33 @@ export const getServerSideProps = (async (context) => {
       notFound: true,
     };
   }
+  try {
+    const channel_name = context.params.channel;
 
-  const channel_name = context.params.channel;
+    const channelData = (await axios
+      .get(
+        `${env.NEXT_PUBLIC_SSR_URL}${
+          env.NEXT_PUBLIC_EXPRESS_PORT
+        }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
+      )
+      .then((res) => res.data)
+      .catch((err) => console.log(err))) as Channel | null | undefined;
 
-  const channelData = (await axios
-    .get(
-      `${env.NEXT_PUBLIC_SSR_URL}${
-        env.NEXT_PUBLIC_EXPRESS_PORT
-      }/api/v1/user/getChannel?channel=${channel_name.concat()}`,
-    )
-    .then((res) => res.data)
-    .catch(() => null)) as Channel | null | undefined;
+    const title = (await axios
+      .get(
+        `${env.NEXT_PUBLIC_SSR_URL}${
+          env.NEXT_PUBLIC_EXPRESS_PORT
+        }/api/v1/getStreamTitle/${channel_name.concat()}`,
+      )
+      .then((res) => res.data)
+      .catch(() => "")) as string;
 
-  const title = (await axios
-    .get(
-      `${env.NEXT_PUBLIC_SSR_URL}${
-        env.NEXT_PUBLIC_EXPRESS_PORT
-      }/api/v1/getStreamTitle/${channel_name.concat()}`,
-    )
-    .then((res) => res.data)
-    .catch()) as string;
-
-  if (!channelData) {
+    if (!channelData || title == "") {
+      return {
+        notFound: true,
+      };
+    }
+  } catch (error) {
     return {
       notFound: true,
     };
