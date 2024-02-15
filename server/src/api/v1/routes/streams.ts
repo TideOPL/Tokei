@@ -218,10 +218,10 @@ router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
   }
 
   const getStream = async (clerkId: string) => {
-    return Stream.findOne({ clerkId: clerkId })
-  }
+    return Stream.findOne({ clerkId: clerkId });
+  };
 
-  const stream = await getStream(channel.clerk_id)
+  const stream = await getStream(channel[0].clerk_id);
 
   res.status(200).send(stream?.title);
 
