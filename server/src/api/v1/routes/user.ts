@@ -62,13 +62,13 @@ router.get('/getChannel', async (req: Request, res: Response) => {
       return data;
     }) as Array<any>;
 
-    if (channel[0] == null) {
+    if (channel == null) {
       res.status(404).send();
       return;
     }
 
 
-    res.status(200).send(channel[0]);
+    res.status(200).send(channel);
   } catch (e) {
     res.status(500).send(e?.toString());
   }
