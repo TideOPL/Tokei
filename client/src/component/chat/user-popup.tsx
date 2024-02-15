@@ -177,6 +177,37 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                   </TooltipTrigger>
                   <TooltipContent>Remove Moderator</TooltipContent>
                 </Tooltip>
+
+                <Tooltip>
+                  <TooltipTrigger
+                    onClick={() => console.log("Ban ", { username })}
+                  >
+                    <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    style={{
+                      color: "#FF6347",
+                    }}
+                  >
+                    Ban {username}
+                  </TooltipContent>
+                </Tooltip>
+                <div className="absolute bottom-0 right-0">
+                  <Tooltip>
+                    <TooltipTrigger
+                      onClick={() => console.log("Report ", { username })}
+                    >
+                      <GoAlert className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                    </TooltipTrigger>
+                    <TooltipContent
+                      style={{
+                        color: "#FF6347",
+                      }}
+                    >
+                      Report {username}
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
               </TooltipProvider>
             </div>
           ) : (
