@@ -7,7 +7,7 @@ import makeKey from '../../util/makeKey';
 import { User } from '../../model/user';
 import { Stream } from '../../model/stream';
 import getColor from '../../util/getColor';
-
+import Filter from 'bad-words';
 const router: Router = express.Router();
 // POST /signup
 router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req: Request, res: Response) => {
@@ -16,7 +16,10 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
   if (!WEBHOOK_SECRET) {
     throw new Error('You need a WEBHOOK_SECRET in your .env');
   }
+
  
+  const filter = new Filter();
+
   // Grab the headers and body
   const headers = req.headers;
   const payload = req.body;
@@ -67,7 +70,12 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
       await clerkClient.users.updateUserMetadata(evt.data.id, { privateMetadata: { streamKey: key } });
       await clerkClient.users.updateUserMetadata(evt.data.id, { publicMetadata: { color: getColor() } });
 
-      const username = evt.data.username == null ? evt.data.first_name : evt.data.username;
+      let username = evt.data.username == null ? evt.data.first_name : evt.data.username;
+
+      if (filter.isProfane(username)) {
+        await clerkClient.users.updateUser(evt.data.id, { username: evt.data.id });
+        username = evt.data.id;
+      }
 
       const user = new User({
         clerk_id: evt.data.id,
@@ -101,7 +109,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
   if (eventType == 'user.deleted') {
     try {
       const user = await User.findOne({ clerk_id: evt.data.id }).exec();
-
+      
       if (user == null) {
         return;
       }
