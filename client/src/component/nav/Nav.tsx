@@ -33,7 +33,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { dark } from "@clerk/themes";
 
 interface Props {
   user: UserResource | null | undefined;
@@ -46,7 +45,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
   return (
     <div className="flex h-16 max-h-16 w-full flex-row items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
       <div className="flex flex-row space-x-6 sm:space-x-12">
-        <h1 className="animate-shake group">
+        <h1 className="group animate-shake">
           <Link
             href={"/"}
             className=" font-noto-sans font-bold text-black transition-all repeat-infinite group-hover:text-primary dark:text-white sm:text-xl"
