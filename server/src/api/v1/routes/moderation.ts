@@ -119,11 +119,11 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
     const timeout = getTimeOutByUserId(user.clerk_id, channel.clerk_id);
 
     if (timeout != null) {
-      res.status(302).send();
+      res.status(302).send(timeout);
       return;
     }
 
-    res.status(200).send();
+    res.status(200).send(timeout);
     return;
   } catch (e) {
     res.status(500).send(e?.toString());
