@@ -69,7 +69,7 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
     const modObj = await getModerator(moderator.clerk_id, req.body.channel.toString());
 
     if (modObj) {
-      const timeout = new Timeout({
+      const timeout = await new Timeout({
         channel_id: req.body.channel,
         user_id: user.clerk_id,
         mod_id: moderator.clerk_id,
@@ -79,7 +79,7 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
       }).save();
 
       res.status(200).send(timeout);
-      io.sockets.emit(`chat_${channel.username}`, timeout);
+      io.sockets.emit(`chat_${channel.username}`, `@ban-${user.username}-reason-${timeout.reason}-end-${timeout.timestamp_mutedEnd}-moderator-${timeout.mod_id}`);
     }
     res.status(401).send();
   } catch (e) {
