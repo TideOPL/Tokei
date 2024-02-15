@@ -165,7 +165,7 @@ io.on('connection', (socket) => {
     const userClerk = user.clerk_id as string;
     const isVerified = user.isVerified as boolean;
 
-    console.log(channelMods);
+    console.log(channel);
 
     if (message.username == storedChat) {
       icons.push('Broadcaster');
