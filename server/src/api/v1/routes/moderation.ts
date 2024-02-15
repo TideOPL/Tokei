@@ -24,7 +24,7 @@ const router: Router = express.Router();
 
 router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async (req: RequireAuthProp<Request>, res: Response) => {
   try {
-    if (req.body.user == null || req.body.channel == null || req.body.timestampEnd || req.body.reason == null) {
+    if (req.body.user == null || req.body.channel == null || req.body.timestampEnd == null || req.body.reason == null) {
       console.log(req.body);
       res.status(400).send();
       return;
