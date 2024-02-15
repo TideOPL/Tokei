@@ -217,7 +217,7 @@ router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
 
   // const channel = await getChannel();
 
-  if (!channel || channel.clerk_id == null) {
+  if (!channel || channel[0].clerk_id == null) {
     res.status(404).send();
     return;
   }
@@ -226,7 +226,6 @@ router.get('/getStreamTitle/:channel', async (req: Request, res: Response) => {
     return Stream.findOne({ clerkId: clerkId });
   };
 
-  console.log(channel[0].clerk_id);
 
   const stream = await getStream(channel[0].clerk_id);
 
