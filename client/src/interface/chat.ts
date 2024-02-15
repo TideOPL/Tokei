@@ -3,3 +3,9 @@ export interface IEmote {
   friendly_name: string
   emote: string
 }
+
+export interface ITimeout {
+  reason: string
+  timestamp_mutedEnd: number
+  moderator: string
+}

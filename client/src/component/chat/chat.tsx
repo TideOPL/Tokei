@@ -18,6 +18,8 @@ import ChatEmotes from "./chat-emotes";
 
 import { LoadedClerk, UserResource } from "@clerk/types";
 import { useRouter } from "next/router";
+import { ITimeout } from "~/interface/chat";
+import useModerate from "~/hook/useModerate";
 
 interface Props {
   channel: Channel;
@@ -27,6 +29,7 @@ interface Props {
 }
 
 interface FormProps {
+  timeOut: ITimeout | null;
   user: UserResource | null;
   color: string;
   getToken: () => Promise<string | null>;
@@ -45,7 +48,9 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   const [visible, setVisible] = useState(true);
   const [openChat, setOpenChat] = useState(false);
   const [color, setColor] = useState("#FFFFFF");
+  const [timeOut, setTimeOut] = useState<ITimeout | null>(null);
   const router = useRouter();
+  const { amITimedOut } = useModerate(getToken);
 
   let count = 0;
 
@@ -54,8 +59,43 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     const socket = io(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`);
     setSocket(socket);
 
+    const fetch = async () => {
+      const data = await amITimedOut(channel.clerk_id);
+      if (!data) {
+        return;
+      }
+      if (data.timestamp_mutedEnd > Date.now()) {
+        setTimeOut(data);
+      }
+    };
+
+    fetch();
+
     socket.on(`stream_${channel.username}`, (status) => {
       setTimeout(() => router.reload(), 5000);
+    });
+
+    socket.on(`chat_${channel.username}`, (message: string) => {
+      console.log(message);
+      if (message.includes(`@ban-${user?.username}`)) {
+        const regexPattern = /@ban-(.*?)-reason-(.*?)-end-(.*?)-moderator-(.*)/;
+
+        // Match the string against the regular expression
+        const matchResult = message.match(regexPattern);
+
+        // Extract the captured groups
+        if (matchResult && matchResult.length >= 4) {
+          const reason = matchResult[2];
+          const timestampEnd = matchResult[3];
+          const moderator = matchResult[4];
+
+          setTimeOut({
+            reason: reason || "",
+            timestamp_mutedEnd: parseInt(timestampEnd || "0"),
+            moderator: moderator || "",
+          });
+        }
+      }
     });
 
     // Listen for incoming messages
@@ -146,6 +186,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
             setColor={setColor}
             socket={socket}
             setDisableHotkey={setDisableHotkey}
+            timeOut={timeOut}
           />
         </div>
       </div>
@@ -171,6 +212,7 @@ const Form = ({
   setColor,
   socket,
   setDisableHotkey,
+  timeOut,
 }: FormProps) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [error, setError] = useState(false);
@@ -245,6 +287,7 @@ const Form = ({
     >
       <div className={`relative ${error && "animate-shake"}`}>
         <Input
+          disabled={timeOut != null}
           onFocus={() => setDisableHotkey(true)}
           onBlur={() => setDisableHotkey(false)}
           type={"text"}
