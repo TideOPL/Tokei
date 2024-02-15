@@ -51,6 +51,19 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), async (req: RequireAuthPr
       return;
     }
 
+    // check if user that is being muted is the channel owner
+    if (user.clerk_id == channel.clerk_id) {
+      res.status(403).send();
+      return;
+    }
+    
+    // check if user that is being muted is a moderator
+    const isUserMod = await getModerator(user.clerk_id, req.body.channel.toString());
+    if (isUserMod) {
+      res.status(403).send();
+      return;
+    }
+
     const modObj = await getModerator(moderator.clerk_id, req.body.channel.toString());
 
     if (modObj) {
