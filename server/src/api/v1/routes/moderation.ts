@@ -69,7 +69,7 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
     const modObj = await getModerator(moderator.clerk_id, req.body.channel.toString());
 
     if (modObj) {
-      const timeout = new Timeout({
+      const timeout = await new Timeout({
         channel_id: req.body.channel,
         user_id: user.clerk_id,
         mod_id: moderator.clerk_id,
@@ -79,7 +79,7 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
       }).save();
 
       res.status(200).send(timeout);
-      io.sockets.emit(`chat_${channel.username}`, timeout);
+      io.sockets.emit(`chat_${channel.username}`, `@ban-${user.username}-reason-${timeout.reason}-end-${timeout.timestamp_mutedEnd}-moderator-${timeout.mod_id}`);
     }
     res.status(401).send();
   } catch (e) {
@@ -95,7 +95,7 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
     }
 
     const user = await getOrSetCache(req.auth.userId, async () => {
-      const data = getUserById(req.auth.userId);
+      const data = await getUserById(req.auth.userId);
       
       return data;
     }) as any;
@@ -106,7 +106,7 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
         return null;
       }
 
-      const data = getUserById(req.query.channel.toString());
+      const data = await getUserById(req.query.channel.toString());
       
       return data;
     }) as any;
@@ -116,14 +116,14 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
       return;
     }
 
-    const timeout = getTimeOutByUserId(user.clerk_id, channel.clerk_id);
+    const timeout = await getTimeOutByUserId(user.clerk_id, channel.clerk_id);
 
     if (timeout != null) {
-      res.status(302).send();
+      res.status(302).send(timeout);
       return;
     }
 
-    res.status(200).send();
+    res.status(200).send(timeout);
     return;
   } catch (e) {
     res.status(500).send(e?.toString());
