@@ -150,20 +150,20 @@ io.on('connection', (socket) => {
     const icons = [];
 
     const channel = await getOrSetCache(storedChat, async () => {
-      const data = await User.find({ username: storedChat }).exec();
+      const data = await User.findOne({ username: storedChat }).exec();
 
       return data;
-    }) as Array<any>; 
+    }) as any; 
 
     const user = await getOrSetCache(message.username, async () => {
-      const data = await User.find({ username: message.username }).exec();
+      const data = await User.findOne({ username: message.username }).exec();
       
       return data;
-    }) as Array<any>;
+    }) as any;
 
-    const channelMods = channel[0].channelMods as string[];
-    const userClerk = user[0].clerk_id as string;
-    const isVerified = user[0].isVerified as boolean;
+    const channelMods = channel.channelMods as string[];
+    const userClerk = user.clerk_id as string;
+    const isVerified = user.isVerified as boolean;
 
     if (message.username == storedChat) {
       icons.push('Broadcaster');

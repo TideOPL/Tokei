@@ -304,7 +304,7 @@ router.get('/moderation/addMod', ClerkExpressRequireAuth(), async (req: RequireA
 
     const channelMods = authUser.channelMods;
 
-    
+  
     if (moderate) {
       const moderateId = moderate._id.toString();
       const updatedUserMod: string[] = channelMods.filter(_moderator => _moderator !== moderateId);
