@@ -95,7 +95,7 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
     }
 
     const user = await getOrSetCache(req.auth.userId, async () => {
-      const data = getUserById(req.auth.userId);
+      const data = await getUserById(req.auth.userId);
       
       return data;
     }) as any;
@@ -106,7 +106,7 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
         return null;
       }
 
-      const data = getUserById(req.query.channel.toString());
+      const data = await getUserById(req.query.channel.toString());
       
       return data;
     }) as any;
@@ -116,7 +116,7 @@ router.get('/amITimedOut', ClerkExpressRequireAuth(), async (req: RequireAuthPro
       return;
     }
 
-    const timeout = getTimeOutByUserId(user.clerk_id, channel.clerk_id);
+    const timeout = await getTimeOutByUserId(user.clerk_id, channel.clerk_id);
 
     if (timeout != null) {
       res.status(302).send(timeout);
