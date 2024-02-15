@@ -6,6 +6,7 @@ import { Moderator } from '../../../model/moderator';
 import { Timeout } from '../../../model/timeout';
 import { getOrSetCache } from '../../../util/cache';
 import { io } from '../../../app';
+import bodyParser from 'body-parser';
 
 const getModerator = async (moderator_id: string, channel_id: string) => {
   return Moderator.findOne({ channel: channel_id, user: moderator_id }).exec();
@@ -21,7 +22,7 @@ const getTimeOutByUserId = async (clerk_id: string, channel_id: string) => {
 
 const router: Router = express.Router();
 
-router.post('/timeoutUser', ClerkExpressRequireAuth(), async (req: RequireAuthProp<Request>, res: Response) => {
+router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async (req: RequireAuthProp<Request>, res: Response) => {
   try {
     if (req.body.user == null || req.body.channel == null || req.body.timestampEnd || req.body.reason) {
       console.log(req.body);
