@@ -24,6 +24,9 @@ router.get('/getAllStreams', async (req: Request, res: Response) => {
       return Stream.find().exec();
     };
 
+    const getCategory = async (categoryId: string) => {
+      return Category.findById(categoryId).exec();
+    };
 
 
     const channels = await getAllLiveChannels();
@@ -33,6 +36,15 @@ router.get('/getAllStreams', async (req: Request, res: Response) => {
 
     if (streams.length == 0) {
       res.status(204).send();
+    }
+
+    for (let j = 0; j < streams.length; j++) {
+      const stream = streams[j];
+
+      if (stream.category) {
+        const category = await getCategory(stream.category);
+        streams[j].category = JSON.stringify(category);  
+      }
     }
 
     for (let i = 0; i < channels.length; i++) {
