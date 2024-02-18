@@ -211,6 +211,7 @@ const Category = ({
                       thumbnail={`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
                       tags={channel.stream.tags}
                       viewers={channel.stream.viewers}
+                      category={channel.stream.category}
                     />
                   ))}
                 </div>
