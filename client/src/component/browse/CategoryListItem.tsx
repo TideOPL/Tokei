@@ -17,7 +17,7 @@ const CategoryListItem = ({ category }: Props): JSX.Element => {
     >
       <div
         className={
-          "min-[1900]:min-h-[70%] min-[2000px]:min-h-[80%] relative flex min-h-[65%] w-full items-center justify-items-center rounded-xl"
+          "1080:min-h-[70%] 1440:min-h-[80%] relative flex min-h-[65%] w-full items-center justify-items-center rounded-xl"
         }
       >
         <ImageWithFallback

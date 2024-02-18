@@ -46,6 +46,10 @@ const config = {
           },
         },
       },
+      screens: {
+        "1080": '1000px',
+        "1440": "2000px",
+      },
       textColor: {
         primary: '#F3A5DE',
         secondary: '#1fb2a6'

@@ -17,7 +17,7 @@ const Browse = (): JSX.Element => {
       </h2>
       <div className="grid h-fit w-full grid-cols-5 justify-center gap-x-2 px-10 pb-5 2xl:grid-cols-10">
         {categoryItems.map((category: ICategory) => (
-          <div className="min-h-[250px] min-[1000px]:min-h-[300px] min-[2500px]:min-h-[400px] ">
+          <div className="1080:min-h-[400px] 1440:min-h-[400px] min-h-[250px] ">
             <CategoryListItem category={category} />
           </div>
         ))}
