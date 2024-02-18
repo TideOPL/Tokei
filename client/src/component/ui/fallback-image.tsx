@@ -3,10 +3,11 @@ import Image from "next/image";
 
 interface Props {
   className: string;
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
   alt: string;
   src: string;
+  fill?: boolean;
   fallback: string;
 }
 
@@ -16,6 +17,7 @@ const ImageWithFallback = ({
   height,
   alt,
   src,
+  fill = false,
   fallback,
 }: Props) => {
   const [imgSrc, setImgSrc] = useState(src);
@@ -27,6 +29,7 @@ const ImageWithFallback = ({
       width={width}
       height={height}
       alt={alt}
+      fill={fill}
       onError={() => {
         setImgSrc(fallback);
       }}

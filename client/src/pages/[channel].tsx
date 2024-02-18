@@ -202,7 +202,7 @@ const Channel = ({
         <Sidebar />
         <div className="flex h-full max-h-full flex-grow overflow-x-hidden overflow-y-scroll">
           {channel.isLive && (
-            <div className="h-full max-h-[60%] w-full max-w-[71.2vw]">
+            <div className="h-full max-h-[60%] w-full max-w-[78.2vw]">
               <TokeiPlayer
                 channel={channel.username}
                 disableControls={disableControls}

@@ -13,7 +13,7 @@ const Sidebar = (): JSX.Element => {
   const [hide, setHide] = useState(false);
 
   return (
-    <div className="sticky min-h-full w-72 flex-col space-y-5 border-r border-zinc-500 bg-[#fefefe] px-2 py-8 font-noto-sans text-white dark:bg-[#1f2023]">
+    <div className="sticky min-h-full min-w-[223px] flex-col space-y-5 border-r border-zinc-500 bg-[#fefefe] px-2 py-8 font-noto-sans text-white dark:bg-[#1f2023]">
       <div className="text-sm font-semibold uppercase">Followed Channels</div>
       {followingList.following.map((following) => (
         <User followingUser={following} />

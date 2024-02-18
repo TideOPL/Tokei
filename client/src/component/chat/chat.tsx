@@ -145,7 +145,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   return (
     <>
       <div
-        className={`relative flex max-h-[calc(100vh-64px)] flex-col justify-between border-l border-zinc-500 bg-[#fefefe]  font-noto-sans text-white  dark:bg-[#141516] ${visible ? "w-[18%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
+        className={`relative flex max-h-[calc(100vh-64px)] max-w-[350px] flex-col justify-between border-l border-zinc-500 bg-[#fefefe]  font-noto-sans text-white  dark:bg-[#141516] ${visible ? "w-[18%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
       >
         <div className="relative flex h-full max-h-[80px] flex-initial items-center justify-between overflow-hidden border-b-2 border-b-zinc-700 shadow-md">
           <div className="w-full">
@@ -179,7 +179,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
 
         <div className="mx-0 flex h-40 flex-initial flex-col px-2 pt-3 dark:bg-[#1f2023]">
           <Form
-            //@ts-ignore
+            //@ts-expect-error
             user={user}
             color={color}
             getToken={getToken}
@@ -380,7 +380,7 @@ const Form = ({
         </Button>
         <Button
           type="submit"
-          className="font-semibold dark:bg-primary dark:text-black hover:dark:bg-primary_lighter"
+          className={`font-semibold transition-opacity ${currentMessage.length == 0 && "cursor-default opacity-50"} dark:bg-primary dark:text-black hover:dark:bg-primary_lighter`}
           onClick={() => {
             if (user != null) {
               if (currentMessage.length > 500) {

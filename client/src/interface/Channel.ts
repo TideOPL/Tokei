@@ -9,6 +9,15 @@ export interface Stream {
   tags: string[]
 }
 
+export interface BrowseStream {
+  title: string
+  category: string
+  clerkId: string
+  viewers: string  
+  timestamp: string
+  tags: string[]
+}
+
 export interface Channel {
   clerk_id: string
   username: string
@@ -24,7 +33,7 @@ export interface Follow {
 
 export interface Browse {
   channel: Channel
-  stream: Stream
+  stream: BrowseStream
 }
 
 export interface ILiveFollowing {

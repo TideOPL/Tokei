@@ -15,9 +15,11 @@ const Browse = (): JSX.Element => {
       <h2 className="flex pl-10 pt-3 font-noto-sans text-2xl font-semibold text-white">
         Categories
       </h2>
-      <div className="grid h-fit w-full grid-cols-5 justify-center px-10 pb-5 2xl:grid-cols-10">
+      <div className="grid h-fit w-full grid-cols-5 justify-center gap-x-2 px-10 pb-5 2xl:grid-cols-10">
         {categoryItems.map((category: ICategory) => (
-          <CategoryListItem category={category} />
+          <div className="min-h-[250px] min-[1000px]:min-h-[300px] min-[2500px]:min-h-[400px] ">
+            <CategoryListItem category={category} />
+          </div>
         ))}
       </div>
       <div className="relative w-full">
@@ -58,6 +60,7 @@ const Browse = (): JSX.Element => {
                 thumbnail={`${env.NEXT_PUBLIC_SSR_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
                 tags={channel.stream.tags}
                 viewers={channel.stream.viewers}
+                category={channel.stream.category}
               />
             ))}
           </div>

@@ -69,11 +69,12 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
         {!user && (
           <>
             <button
-              className="font-font w-fit rounded-lg bg-dark-primary-pink bg-none px-4 py-2 font-noto-sans text-sm font-semibold uppercase text-white hover:bg-[#1a1b1e]/40 sm:text-base"
+              className="font-font w-fit rounded-lg bg-none px-4 py-2 font-noto-sans text-sm font-semibold text-white  dark:bg-primary dark:text-black hover:dark:bg-primary_lighter sm:text-base"
               onClick={() =>
                 clerk.openSignUp({
                   appearance: {
                     elements: {
+                      logoBox: "w-[48px]",
                       modalCloseButton: "text-white",
                       card: "dark bg-[#282c34] font-noto-sans",
                       headerTitle: "text-black dark:text-white",
@@ -91,7 +92,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                       formFieldErrorText: "dark:text-white",
                       formFieldInputShowPasswordIcon: "dark:text-white",
                       formButtonPrimary:
-                        "bg-dark-primary-pink hover:bg-dark-primary-pink/80 text-sm normal-case",
+                        "bg-primary hover:bg-dark-primary-pink/80 text-sm normal-case",
                       footerAction: "flex w-full items-center justify-center",
                       footerActionText: "text-black dark:text-white",
                       footerActionLink:
@@ -113,12 +114,12 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                 })
               }
             >
-              SIGN UP
+              Sign Up
             </button>
           </>
         )}
         {user && (
-          <>
+          <div className="flex flex-row space-x-2">
             <div>
               <Popover>
                 <PopoverTrigger
@@ -139,7 +140,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                     variant="ghost"
                     className="h-[42px] w-[42px] rounded-full font-noto-sans dark:text-white"
                   >
-                    <div className="flex h-16 max-h-16 w-[42px] max-w-[42px] flex-row items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
+                    <div className="flex h-16 max-h-16 w-[42px] max-w-[42px] flex-row items-center justify-between bg-[#fefefe] py-8 dark:bg-[#292a2d]">
                       {/* <div className="right-32 space-x-4 sm:space-x-12 ">
                       <div className="font-noto-sans font-bold text-white transition-all sm:text-xl">
                         <span className="hover:text-primary hover:underline">
@@ -226,7 +227,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

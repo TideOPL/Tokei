@@ -16,6 +16,7 @@ import useCategory from "~/hook/useCategory";
 import BrowseListItem from "~/component/browse/BrowseListItem";
 import ImageWithFallback from "~/component/ui/fallback-image";
 import React from "react";
+import Footer from "~/component/nav/Footer";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -191,28 +192,31 @@ const Category = ({
                 className="h-[2px] dark:bg-zinc-600"
               />
             </div>
-            {browseItems.length <= 0 || browseItems[0]?.channel == null ? (
-              <div className="w-full pt-10 text-center font-noto-sans dark:text-white">
-                <div className="text-3xl font-semibold">Uh Oh!</div>
-                <div className="text-xl font-semibold">
-                  It look's like there's no broadcasts at the moment!
+            <div className="min-h-[50%]">
+              {browseItems.length <= 0 || browseItems[0]?.channel == null ? (
+                <div className="w-full pt-10 text-center font-noto-sans dark:text-white">
+                  <div className="text-3xl font-semibold">Uh Oh!</div>
+                  <div className="text-xl font-semibold">
+                    It look's like there's no broadcasts at the moment!
+                  </div>
                 </div>
-              </div>
-            ) : (
-              <div className="grid h-full w-full justify-center pb-5 pt-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1800px]:grid-cols-5 min-[2000px]:grid-cols-6">
-                {browseItems.map((channel: Browse) => (
-                  <BrowseListItem
-                    key={channel.channel.username}
-                    title={channel.stream.title || ""}
-                    username={channel.channel.username}
-                    pfp={channel.channel.pfp}
-                    thumbnail={`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
-                    tags={channel.stream.tags}
-                    viewers={channel.stream.viewers}
-                  />
-                ))}
-              </div>
-            )}
+              ) : (
+                <div className="grid h-full w-full justify-center pb-5 pt-10 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-[1800px]:grid-cols-5 min-[2000px]:grid-cols-6">
+                  {browseItems.map((channel: Browse) => (
+                    <BrowseListItem
+                      key={channel.channel.username}
+                      title={channel.stream.title || ""}
+                      username={channel.channel.username}
+                      pfp={channel.channel.pfp}
+                      thumbnail={`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getThumbnail/${channel.channel.username}`}
+                      tags={channel.stream.tags}
+                      viewers={channel.stream.viewers}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+            <Footer />
           </div>
         </div>
       </div>
