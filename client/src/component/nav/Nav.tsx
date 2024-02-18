@@ -33,6 +33,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { FaInbox, FaRegFaceGrin } from "react-icons/fa6";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 interface Props {
   user: UserResource | null | undefined;
@@ -67,7 +69,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
         {!user && (
           <>
             <button
-              className="font-font w-fit rounded-lg bg-dark-primary-pink bg-none px-4 py-2 font-noto-sans text-sm font-semibold uppercase text-white hover:bg-[#1a1b1e]/40 hover:bg-dark-primary-pink/70 sm:text-base"
+              className="font-font w-fit rounded-lg bg-dark-primary-pink bg-none px-4 py-2 font-noto-sans text-sm font-semibold uppercase text-white hover:bg-[#1a1b1e]/40 sm:text-base"
               onClick={() =>
                 clerk.openSignUp({
                   appearance: {
@@ -116,96 +118,115 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
           </>
         )}
         {user && (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-[46px] w-[46px] rounded-full font-noto-sans dark:text-white"
-              >
-                <div className="flex h-16 max-h-16 w-full flex-row-reverse items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
-                  <div className=" absolute right-32 space-x-4 sm:space-x-12 ">
-                    <div className="font-noto-sans font-bold text-white transition-all sm:text-xl">
-                      <span className="hover:text-primary hover:underline">
-                        {user.username}
-                      </span>
-                      &nbsp;-
+          <>
+            <div>
+              <Popover>
+                <PopoverTrigger
+                  asChild
+                  className="flex  items-center justify-center rounded-md p-1 transition-colors hover:bg-[#eaeaea]/10 "
+                >
+                  <Button variant="link">
+                    <FaInbox className="h-5 w-5" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="mb-5 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#141516] "></PopoverContent>
+              </Popover>
+            </div>
+            <div className="relative flex flex-row">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-[42px] w-[42px] rounded-full font-noto-sans dark:text-white"
+                  >
+                    <div className="flex h-16 max-h-16 w-[42px] max-w-[42px] flex-row items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
+                      {/* <div className="right-32 space-x-4 sm:space-x-12 ">
+                      <div className="font-noto-sans font-bold text-white transition-all sm:text-xl">
+                        <span className="hover:text-primary hover:underline">
+                          {user.username}
+                        </span>
+                        &nbsp;-
+                      </div>
+                    </div> */}
+
+                      <Avatar className=" min-h-[32px] min-w-[32px] md:min-h-[42px] md:min-w-[42px]">
+                        <AvatarImage
+                          src={user.profileImageUrl}
+                          alt="profile"
+                          className="object-cover"
+                        />
+                        <AvatarFallback>
+                          {user.username?.at(0)?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
                     </div>
-                  </div>
-                  <Avatar className=" min-h-[32px] min-w-[32px] md:min-h-[42px] md:min-w-[42px]">
-                    <AvatarImage
-                      src={user.profileImageUrl}
-                      alt="profile"
-                      className="object-cover"
-                    />
-                    <AvatarFallback>
-                      {user.username?.at(0)?.toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-                {/* <Image src={user.profileImageUrl} height={42} width={42} alt="profile" className="rounded-full object-cover min-w-[32px] min-h-[32px] md:min-w-[42px] md:min-h-[42px]"/> */}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem
-                  onClick={() => router.push("/" + user.username)}
-                >
-                  <Video className="mr-2 h-4 w-4" />
-                  <span>Channel</span>
-                  <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => router.push("/dashboard")}>
-                  <KanbanSquare className="mr-2 h-4 w-4" />
-                  <span>Dashboard</span>
-                  <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => router.push("/dashboard/profile")}
-                >
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem disabled>
-                  <CreditCard className="mr-2 h-4 w-4" />
-                  <span>Billing</span>
-                  <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => router.push("/dashboard/settings")}
-                >
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                  <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() =>
-                  window.open("https://github.com/TideOPL/Tokei", "_blank")
-                }
-              >
-                <Github className="mr-2 h-4 w-4" />
-                <span>GitHub</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled>
-                <LifeBuoy className="mr-2 h-4 w-4" />
-                <span>Support</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem disabled>
-                <Cloud className="mr-2 h-4 w-4" />
-                <span>API</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Log Out</span>
-                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+
+                    {/* <Image src={user.profileImageUrl} height={42} width={42} alt="profile" className="rounded-full object-cover min-w-[32px] min-h-[32px] md:min-w-[42px] md:min-h-[42px]"/> */}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem
+                      onClick={() => router.push("/" + user.username)}
+                    >
+                      <Video className="mr-2 h-4 w-4" />
+                      <span>Channel</span>
+                      <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+                      <KanbanSquare className="mr-2 h-4 w-4" />
+                      <span>Dashboard</span>
+                      <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => router.push("/dashboard/profile")}
+                    >
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Profile</span>
+                      <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem disabled>
+                      <CreditCard className="mr-2 h-4 w-4" />
+                      <span>Billing</span>
+                      <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => router.push("/dashboard/settings")}
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      <span>Settings</span>
+                      <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() =>
+                      window.open("https://github.com/TideOPL/Tokei", "_blank")
+                    }
+                  >
+                    <Github className="mr-2 h-4 w-4" />
+                    <span>GitHub</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled>
+                    <LifeBuoy className="mr-2 h-4 w-4" />
+                    <span>Support</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem disabled>
+                    <Cloud className="mr-2 h-4 w-4" />
+                    <span>API</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log Out</span>
+                    <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </>
         )}
       </div>
     </div>
