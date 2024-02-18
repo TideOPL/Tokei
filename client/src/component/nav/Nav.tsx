@@ -33,8 +33,9 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/router";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { FaInbox, FaRegFaceGrin } from "react-icons/fa6";
+import { FaInbox } from "react-icons/fa6";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "@radix-ui/react-separator";
 
 interface Props {
   user: UserResource | null | undefined;
@@ -119,18 +120,25 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
           </>
         )}
         {user && (
-          <div className="flex flex-row space-x-2">
+          <div className="flex w-full flex-row items-center gap-x-5">
             <div>
               <Popover>
                 <PopoverTrigger
                   asChild
-                  className="flex  items-center justify-center rounded-md p-1 transition-colors hover:bg-[#eaeaea]/10 "
+                  className="tems-center flex justify-center rounded-md p-1 transition-colors hover:bg-[#eaeaea]/10 "
                 >
-                  <Button variant="link">
+                  <Button variant="link" className="px-2">
                     <FaInbox className="h-5 w-5" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="mb-5 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#141516] "></PopoverContent>
+                <PopoverContent className="absolute -right-40 mb-5 flex h-[20vh] w-[20vw] flex-col rounded-md border-none p-0 pt-3 dark:bg-[#141516] ">
+                  <div className="title dark:bg-[#141516]e relative top-0 z-10 flex h-fit w-full flex-col border-b-[1px] border-b-zinc-700 pb-4 font-noto-sans">
+                    <div className="text-center font-noto-sans text-lg font-semibold uppercase">
+                      Notifications
+                    </div>
+                  </div>
+                  <div>abc</div>
+                </PopoverContent>
               </Popover>
             </div>
             <div className="relative flex flex-row">
@@ -138,18 +146,13 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="ghost"
-                    className="h-[42px] w-[42px] rounded-full font-noto-sans dark:text-white"
+                    className="h-[42px] w-[92px] rounded-full font-noto-sans dark:text-white"
                   >
-                    <div className="flex h-16 max-h-16 w-[42px] max-w-[42px] flex-row items-center justify-between bg-[#fefefe] py-8 dark:bg-[#292a2d]">
-                      {/* <div className="right-32 space-x-4 sm:space-x-12 ">
-                      <div className="font-noto-sans font-bold text-white transition-all sm:text-xl">
-                        <span className="hover:text-primary hover:underline">
-                          {user.username}
-                        </span>
-                        &nbsp;-
-                      </div>
-                    </div> */}
-
+                    <div className="flex h-16 max-h-16 w-fit flex-row items-center space-x-1 bg-[#fefefe] py-8 dark:bg-[#292a2d]">
+                      <span className="font-noto-sans text-xl font-semibold text-white hover:text-primary hover:underline">
+                        {user.username}
+                      </span>
+                      &nbsp;
                       <Avatar className=" min-h-[32px] min-w-[32px] md:min-h-[42px] md:min-w-[42px]">
                         <AvatarImage
                           src={user.profileImageUrl}
