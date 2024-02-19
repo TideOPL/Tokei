@@ -1,10 +1,9 @@
 import { Clock1, Clock5Icon } from "lucide-react";
+import React from "react";
 import { useState } from "react";
 
-const Clock = ({timestamp}: {timestamp: string}) => {
-  const date = new Date();
+const Clock = ({ timestamp }: { timestamp: string }) => {
   const [time, setTime] = useState("00:00:00");
-  
 
   setTimeout(() => {
     const currentTimestamp = Date.now();
@@ -16,17 +15,21 @@ const Clock = ({timestamp}: {timestamp: string}) => {
     const minutes = totalMinutes % 60;
     const hours = Math.floor(totalMinutes / 60);
 
-    
-    setTime(`${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`)
-  }, 1000)
+    setTime(
+      `${hours}:${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
+    );
+  }, 1000);
 
   return (
-    <div className="time flex flex-row dark:text-white font-semibold transition-all min-w-[81.11px]">
-      <Clock5Icon className="mr-1 h-4 w-4 mt-[1px] self-center" />
+    <div
+      className={
+        "time flex min-w-[81.11px] flex-row font-semibold transition-all dark:text-white"
+      }
+    >
+      <Clock5Icon className="mr-1 mt-[1px] h-4 w-4 self-center" />
       {time}
-      {/* 23:59:59 */}
     </div>
-  )
-}
+  );
+};
 
 export default Clock;

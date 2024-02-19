@@ -20,6 +20,9 @@ import { LoadedClerk, UserResource } from "@clerk/types";
 import { useRouter } from "next/router";
 import { ITimeout } from "~/interface/chat";
 import useModerate from "~/hook/useModerate";
+import { time } from "console";
+import Clock from "../ui/clock";
+import TimeoutClock from "../ui/timeout-clock";
 
 interface Props {
   channel: Channel;
@@ -30,6 +33,7 @@ interface Props {
 
 interface FormProps {
   timeOut: ITimeout | null;
+  setTimeOut: React.Dispatch<React.SetStateAction<ITimeout | null>>;
   user: UserResource | null;
   color: string;
   getToken: () => Promise<string | null>;
@@ -64,7 +68,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
       if (!data) {
         return;
       }
-      if (data.timestamp_mutedEnd > Date.now()) {
+      if (parseInt(data.timestamp_mutedEnd) > Date.now()) {
         setTimeOut(data);
       }
     };
@@ -76,7 +80,6 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     });
 
     socket.on(`chat_${channel.username}`, (message: string) => {
-      console.log(message);
       if (message.includes(`@ban-${user?.username}`)) {
         const regexPattern = /@ban-(.*?)-reason-(.*?)-end-(.*?)-moderator-(.*)/;
 
@@ -91,7 +94,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
 
           setTimeOut({
             reason: reason || "",
-            timestamp_mutedEnd: parseInt(timestampEnd || "0"),
+            timestamp_mutedEnd: timestampEnd?.toString() || "",
             moderator: moderator || "",
           });
         }
@@ -187,6 +190,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
             socket={socket}
             setDisableHotkey={setDisableHotkey}
             timeOut={timeOut}
+            setTimeOut={setTimeOut}
           />
         </div>
       </div>
@@ -213,6 +217,7 @@ const Form = ({
   socket,
   setDisableHotkey,
   timeOut,
+  setTimeOut,
 }: FormProps) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [error, setError] = useState(false);
@@ -222,6 +227,9 @@ const Form = ({
     message: string,
     setMessage: React.Dispatch<React.SetStateAction<string>>,
   ) => {
+    if (timeOut != null) {
+      return;
+    }
     if (message.length > 0) {
       socket.emit("message", {
         username: user?.username,
@@ -239,7 +247,6 @@ const Form = ({
         evt.preventDefault();
         if (user != null) {
           if (currentMessage.length > 500) {
-            console.log("hello");
             setError(true);
             setTimeout(() => setError(false), 1000);
             return;
@@ -291,7 +298,7 @@ const Form = ({
           onFocus={() => setDisableHotkey(true)}
           onBlur={() => setDisableHotkey(false)}
           type={"text"}
-          placeholder="Type a message..."
+          placeholder={timeOut == null ? "Type a message..." : ""}
           value={currentMessage}
           onChange={(value) => setCurrentMessage(value.currentTarget.value)}
           onSubmit={(evt) => {
@@ -299,7 +306,6 @@ const Form = ({
               if (currentMessage.length > 500) {
                 return;
               }
-              console.log(currentMessage.length);
               submit(currentMessage, setCurrentMessage);
               return;
             }
@@ -343,6 +349,15 @@ const Form = ({
           }}
           className={`h-12 max-w-lg select-text break-all rounded-none border-none pl-10 pr-12 focus:bg-none dark:bg-[#eaeaea]/5`}
         />
+        {timeOut && (
+          <div className="absolute left-12 top-1 flex flex-col items-center text-center  ">
+            <div className="text-sm">You are currently timed out!</div>
+            <TimeoutClock
+              changeState={setTimeOut}
+              timestamp={timeOut.timestamp_mutedEnd}
+            />
+          </div>
+        )}
         {user && (
           <div className="absolute left-2 top-3">
             <ChatIdentity

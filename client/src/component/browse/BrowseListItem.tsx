@@ -4,7 +4,6 @@ import { Eye } from "lucide-react";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
 import ImageWithFallback from "../ui/fallback-image";
-import { ICategory } from "~/interface/Category";
 
 interface Props {
   title: string;
@@ -26,7 +25,6 @@ const BrowseListItem = ({
   category,
 }: Props): JSX.Element => {
   const categoryData = JSON.parse(category);
-  console.log(tags);
   return (
     <Link
       className="group flex h-fit w-80 flex-col rounded-lg px-5 py-1 transition-all hover:cursor-pointer hover:bg-light-primary-dark dark:hover:bg-dark-primary-light/50"

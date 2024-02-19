@@ -6,6 +6,6 @@ export interface IEmote {
 
 export interface ITimeout {
   reason: string
-  timestamp_mutedEnd: number
+  timestamp_mutedEnd: string
   moderator: string
 }

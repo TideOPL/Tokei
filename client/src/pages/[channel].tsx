@@ -60,9 +60,6 @@ export const getServerSideProps = (async (context) => {
     .then((res) => res.data)
     .catch((err) => err.body)) as string | null;
 
-  console.log(title);
-  console.log(channelData);
-
   if (!channelData || !title) {
     return {
       notFound: true,
@@ -106,9 +103,9 @@ const Channel = ({
   useEffect(() => {
     const getFollowingList = async () => {
       await timeoutUser(
-        "user_2cN8LYqnqqUHdTxqDbE0dTXc9ZN",
+        "user_2ca04NxB1rzXzbxZbooGbpDbcm4",
         channel.clerk_id,
-        Date.now().toString(),
+        "1709078400000",
         "test mute",
       );
       const token = await getToken();
