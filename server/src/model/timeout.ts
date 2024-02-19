@@ -25,6 +25,10 @@ const timeout = new mongoose.Schema({
     require: false,
     type: String,
   },
+  active: {
+    require: true,
+    type: String,
+  },
 });
 
 export const Timeout = mongoose.model('Timeout', timeout);

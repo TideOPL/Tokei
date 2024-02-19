@@ -23,6 +23,8 @@ import Redis from 'ioredis';
 import { getOrSetCache } from './util/cache';
 import bodyParser from 'body-parser';
 import { Moderator } from './model/moderator';
+import cron from 'node-cron';
+import { Timeout } from './model/timeout';
 
 const NodeMediaServer = require('tokei-media-server');
 
@@ -71,15 +73,6 @@ redis.flushall();
 database.on('error', (error) => {
   console.warn(error);
 });
-
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TypeScript Server');
-});
-
-// app.use(compression());
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(expressValidator());
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use(async (err: Error, req: Request, res: Response, next: () => void) => {
@@ -166,7 +159,7 @@ io.on('connection', (socket) => {
     const userClerk = user.clerk_id as string;
     const isVerified = user.isVerified as boolean;
 
-    console.log(channel);
+    //TODO: Check on the backend if the message sender is timed out on this channel.
 
     if (message.username == storedChat) {
       icons.push('Broadcaster');
@@ -234,6 +227,22 @@ httpServer.listen(8001, '0.0.0.0', () => {
   console.log(`[⚡️]: Server is running at http://localhost:${port}`);
 });
  
+
+cron.schedule('* * 1 * * *', async () => {
+  const getTimeouts = async () => {
+    return Timeout.find().exec();
+  };
+
+  const timeouts = await getTimeouts();
+  const time = Date.now();
+
+  for (let i = 0; i < timeouts.length; i++) {
+    if (parseInt(timeouts[i].timestamp_mutedEnd || '') < time) {
+      timeouts[i].updateOne({ active: false });
+    }
+  }
+});
+
 export const globalNMS = new NodeMediaServer(config);
 globalNMS.run();
 

@@ -17,7 +17,7 @@ const getUserById = async (clerk_id: string) => {
 };
 
 const getTimeOutByUserId = async (clerk_id: string, channel_id: string) => {
-  return Timeout.findOne({ channel_id: channel_id, user_id: clerk_id });
+  return Timeout.findOne({ active: true, channel_id: channel_id, user_id: clerk_id });
 };
 
 const router: Router = express.Router();
@@ -68,14 +68,15 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
 
     const modObj = await getModerator(moderator.clerk_id, req.body.channel.toString());
 
-    if (modObj) {
+    if (modObj || channel.clerk_id == req.auth.userId) {
       const timeout = await new Timeout({
         channel_id: req.body.channel,
         user_id: user.clerk_id,
-        mod_id: moderator.clerk_id,
+        mod_id: moderator.clerk_id || req.auth.userId,
         timestamp_mutedStart: Date.now(),
         timestamp_mutedEnd: req.body.timestampEnd,
         reason: req.body.reason,
+        active: true,
       }).save();
 
       res.status(200).send(timeout);
