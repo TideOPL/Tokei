@@ -80,6 +80,10 @@ router.get('/getAllStreamsByCategory', async (req: Request, res: Response) => {
       return Stream.find({ category: category }).exec();
     };
 
+    const getCategoryById = async (categoryId: string) => {
+      return Category.findById(categoryId).exec();
+    };
+
     const category = await getCategory();
 
     if (!category) {
@@ -96,6 +100,15 @@ router.get('/getAllStreamsByCategory', async (req: Request, res: Response) => {
     if (streams.length == 0) {
       res.status(204).send();
       return;
+    }
+
+    for (let j = 0; j < streams.length; j++) {
+      const stream = streams[j];
+
+      if (stream.category) {
+        const categoryObj = await getCategoryById(stream.category);
+        streams[j].category = JSON.stringify(categoryObj);  
+      }
     }
 
     for (let i = 0; i < channels.length; i++) {
