@@ -237,12 +237,13 @@ cron.schedule('* 1 * * * *', async () => {
   const time = Date.now();
 
   for (let i = 0; i < timeouts.length; i++) {
-    if (parseInt(timeouts[i].timestamp_mutedEnd || '') < time) {
+    console.log([timeouts[i]]);
+    if (parseInt(timeouts[i].timestamp_mutedEnd || '') > time) {
       await timeouts[i].updateOne({ active: false }).exec();
       console.log(timeouts[i]);
     }
   }
-});
+}).start();
 
 export const globalNMS = new NodeMediaServer(config);
 globalNMS.run();
