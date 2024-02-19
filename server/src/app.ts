@@ -238,7 +238,7 @@ cron.schedule('* * 1 * * *', async () => {
 
   for (let i = 0; i < timeouts.length; i++) {
     if (parseInt(timeouts[i].timestamp_mutedEnd || '') < time) {
-      timeouts[i].updateOne({ active: false });
+      await timeouts[i].updateOne({ active: false }).exec();
     }
   }
 });
