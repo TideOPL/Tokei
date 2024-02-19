@@ -228,7 +228,7 @@ httpServer.listen(8001, '0.0.0.0', () => {
 });
  
 
-cron.schedule('* * 1 * * *', async () => {
+cron.schedule('* 1 * * * *', async () => {
   const getTimeouts = async () => {
     return Timeout.find().exec();
   };
@@ -239,6 +239,7 @@ cron.schedule('* * 1 * * *', async () => {
   for (let i = 0; i < timeouts.length; i++) {
     if (parseInt(timeouts[i].timestamp_mutedEnd || '') < time) {
       await timeouts[i].updateOne({ active: false }).exec();
+      console.log(timeouts[i]);
     }
   }
 });
