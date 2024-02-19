@@ -228,14 +228,14 @@ httpServer.listen(8001, '0.0.0.0', () => {
 });
  
 
-cron.schedule('* 1 * * * *', async () => {
+cron.schedule('* * * * *', async () => {
   const getTimeouts = async () => {
     return Timeout.find().exec();
   };
 
   const timeouts = await getTimeouts();
   const time = Date.now();
-
+  console.log(timeouts);
   for (let i = 0; i < timeouts.length; i++) {
     console.log([timeouts[i]]);
     if (parseInt(timeouts[i].timestamp_mutedEnd || '') > time) {
