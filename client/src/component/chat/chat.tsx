@@ -395,7 +395,7 @@ const Form = ({
         </Button>
         <Button
           type="submit"
-          className={`font-semibold transition-opacity ${currentMessage.length == 0 && "cursor-default opacity-50"} dark:bg-primary dark:text-black hover:dark:bg-primary_lighter`}
+          className={`font-semibold transition-opacity dark:bg-primary dark:text-black hover:dark:bg-primary_lighter ${currentMessage.length == 0 && "cursor-default opacity-50 hover:dark:bg-primary"}`}
           onClick={() => {
             if (user != null) {
               if (currentMessage.length > 500) {
