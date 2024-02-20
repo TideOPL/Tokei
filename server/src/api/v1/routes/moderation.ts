@@ -225,8 +225,8 @@ router.get('/checkTimeout', ClerkExpressRequireAuth(), async (req: RequireAuthPr
 
     }) as any;
 
-    if (!moderator || !moderator.clerk_id || !user || !channel) {
-      res.status(404).send();
+    if (!moderator || !user || !channel) {
+      res.status(404).send({ moderator: moderator, user: user, channel: channel });
       return;
     }
 
