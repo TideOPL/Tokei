@@ -84,6 +84,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
         isLive: false,
         stream_key: key,
         pfp: evt.data.image_url,
+        createdOn: evt.data.created_at,
         channelMods: [],
         followers: [],
         following: [],

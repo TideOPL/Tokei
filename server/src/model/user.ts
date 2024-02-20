@@ -29,6 +29,10 @@ const user = new mongoose.Schema({
     require: true,
     type: String,
   },
+  createdOn: {
+    require: true,
+    type: Number,
+  },
   followers: {
     require: true,
     type: [String], // List of other Channel Clerk IDs
