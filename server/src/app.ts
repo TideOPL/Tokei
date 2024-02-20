@@ -172,6 +172,7 @@ io.on('connection', (socket) => {
     }) as any;
 
     const moderatorObject = moderatorsObject.filter((item: { user: string; channel: string; }) => item.user === userClerk);
+    console.log(moderatorObject);
 
     if (moderatorObject) {
       if (channelMods.includes(moderatorObject._id)) {
