@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from '../store';
-import { Channel, ILiveFollowing } from '~/interface/Channel';
-import { Stream } from 'stream';
+import { ILiveFollowing } from '~/interface/Channel';
 
 // Define a type for the slice state
 export interface FollowState {
@@ -19,17 +18,15 @@ export const followingSlice = createSlice({
   initialState,
   reducers: {
     addFollowingChannel: (state, action: PayloadAction<ILiveFollowing>) => {
-      if (state.following.length == 0) {
         state.following.push(action.payload);
-      }
     },
-    addNewFollowingChannel: (state, action: PayloadAction<ILiveFollowing>) => {
-      state.following.push(action.payload);
+    resetFollowingChannel: (state) => {
+      state.following.splice(0, state.following.length);
     }
   }
 })
 
-export const { addFollowingChannel, addNewFollowingChannel } = followingSlice.actions
+export const { addFollowingChannel, resetFollowingChannel } = followingSlice.actions
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectChannel = (state: RootState) => state.following

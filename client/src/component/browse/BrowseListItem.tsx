@@ -37,7 +37,7 @@ const BrowseListItem = ({
         <ImageWithFallback
           src={thumbnail}
           fallback="/placeholder-thumb.png"
-          alt={"thumbnail"}
+          alt={title}
           className="rounded-lg"
           height={248}
           width={440}

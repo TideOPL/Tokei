@@ -7,9 +7,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { env } from "~/env.mjs";
 import { ICategory } from "~/interface/Category";
 import { useEffect, useState } from "react";
-import { Browse, Channel, ILiveFollowing, Stream } from "~/interface/Channel";
-import { useAppDispatch } from "~/store/hooks";
-import { addFollowingChannel } from "~/store/slice/followSlice";
+import { Browse } from "~/interface/Channel";
 import { Badge } from "~/component/ui/badge";
 import { Separator } from "~/component/ui/separator";
 import useCategory from "~/hook/useCategory";
@@ -60,57 +58,16 @@ const Category = ({
   categoryData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { isLoaded, isSignedIn, user } = useUser();
-  const { signOut, getToken } = useAuth();
+  const { signOut } = useAuth();
   const { browseItems } = useCategory(categoryData.searchName);
   const [title, setTitle] = useState("");
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
     setTitle(` - ${categoryData.name}`);
-
-    const getFollowingList = async () => {
-      const token = await getToken();
-      const { data } = await axios.get<Channel[]>(
-        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      const liveFollowing: ILiveFollowing[] = [];
-
-      for (let j = 0; j < data.length; j++) {
-        const channel = data[j];
-
-        if (!channel) {
-          continue;
-        }
-
-        if (channel.isLive) {
-          const { data } = await axios.get<Stream>(
-            `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
-          );
-          liveFollowing.push({
-            following: channel,
-            stream: data,
-          });
-          continue;
-        }
-
-        liveFollowing.push({
-          following: channel,
-        });
-      }
-
-      liveFollowing.map((following) =>
-        dispatch(addFollowingChannel(following)),
-      );
-    };
-
-    if (isSignedIn) {
-      getFollowingList();
-    }
   }, [isSignedIn]);
 
   return (
-    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
+    <div className="max-h-screen-ios dark:bg-back-tertiary flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light">
       <Head>
         <title>{"Tokei" + title}</title>
         <meta

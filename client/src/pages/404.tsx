@@ -12,7 +12,7 @@ export default function Custom404() {
   const { signOut, getToken } = useAuth();
   const router = useRouter();
   return (
-    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
+    <div className="max-h-screen-ios dark:bg-back-tertiary flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light">
       {/* @ts-expect-error */}
       <Nav user={user} signOut={() => signOut()} />
       <div className="flex max-h-[calc(100%-64px)] flex-1 overflow-hidden">

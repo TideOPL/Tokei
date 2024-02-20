@@ -5,7 +5,7 @@ import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import Nav from "~/component/nav/Nav";
-import { Channel, ILiveFollowing, Stream } from "~/interface/Channel";
+import { Channel } from "~/interface/Channel";
 import axios from "axios";
 import { env } from "~/env.mjs";
 import useChannel from "~/hook/useChannel";
@@ -22,13 +22,11 @@ import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { IEmote } from "~/interface/chat";
 import { addEmote } from "~/store/slice/emoteSlice";
 import { addChannel } from "~/store/slice/userSlice";
-import { addFollowingChannel } from "~/store/slice/followSlice";
 import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
 import Link from "next/link";
 import useModerate from "~/hook/useModerate";
-import { time } from "console";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -101,55 +99,22 @@ const Channel = ({
   }, []);
 
   useEffect(() => {
-    const getFollowingList = async () => {
+    const testTimeOut = async () => {
       await timeoutUser(
         "user_2ca04NxB1rzXzbxZbooGbpDbcm4",
         channel.clerk_id,
         "1709078400000",
         "test mute",
       );
-      const token = await getToken();
-      const { data } = await axios.get<Channel[]>(
-        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/follow/getFollowingList`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-      const liveFollowing: ILiveFollowing[] = [];
-
-      for (let j = 0; j < data.length; j++) {
-        const channel = data[j];
-
-        if (!channel) {
-          continue;
-        }
-
-        if (channel.isLive) {
-          const { data } = await axios.get<Stream>(
-            `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/getStream?channelID=${channel.clerk_id}`,
-          );
-          liveFollowing.push({
-            following: channel,
-            stream: data,
-          });
-          continue;
-        }
-
-        liveFollowing.push({
-          following: channel,
-        });
-      }
-
-      liveFollowing.map((following) =>
-        dispatch(addFollowingChannel(following)),
-      );
     };
 
     if (isSignedIn) {
-      getFollowingList();
+      testTimeOut();
     }
   }, [isSignedIn]);
 
   return (
-    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-[#141516]">
+    <div className="max-h-screen-ios dark:bg-back-tertiary flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light">
       <Head>
         <title>{"Tokei - " + channel.username}</title>
         <meta
@@ -206,10 +171,7 @@ const Channel = ({
               />
               <div className="flex flex-col justify-center">
                 <div className="flex flex-row space-x-3 px-5 py-2">
-                  <div
-                    className="relative h-fit w-fit self-center rounded-full border-2 border-primary"
-                    contentEditable={"true"}
-                  >
+                  <div className="relative h-fit w-fit self-center rounded-full border-2 border-primary">
                     <div className="md:text-md absolute left-[8px] top-10 z-10 justify-self-end rounded-lg bg-primary px-1 text-sm  font-bold text-white md:left-3.5 md:top-12 md:font-semibold">
                       LIVE
                     </div>

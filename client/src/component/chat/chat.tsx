@@ -6,22 +6,13 @@ import { Channel } from "~/interface/Channel";
 import Message from "./message";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Cog,
-  LucideUserRoundCog,
-  Settings,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Settings } from "lucide-react";
 import ChatIdentity from "./chat-identity";
 import ChatEmotes from "./chat-emotes";
-
-import { LoadedClerk, UserResource } from "@clerk/types";
+import { UserResource } from "@clerk/types";
 import { useRouter } from "next/router";
 import { ITimeout } from "~/interface/chat";
 import useModerate from "~/hook/useModerate";
-import { time } from "console";
-import Clock from "../ui/clock";
 import TimeoutClock from "../ui/timeout-clock";
 
 interface Props {
@@ -47,10 +38,9 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   const [messages, setMessages] = useState<
     Array<{ username: string; color: string; message: string }> | Array<any>
   >([]);
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isSignedIn, user } = useUser();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [visible, setVisible] = useState(true);
-  const [openChat, setOpenChat] = useState(false);
   const [color, setColor] = useState("#FFFFFF");
   const [timeOut, setTimeOut] = useState<ITimeout | null>(null);
   const router = useRouter();
@@ -62,6 +52,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     // Create a socket connection
     const socket = io(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`);
     setSocket(socket);
+    setMessages([]);
 
     const fetch = async () => {
       const data = await amITimedOut(channel.clerk_id);
@@ -129,7 +120,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
       });
       socket.disconnect();
     };
-  }, [isSignedIn]);
+  }, [isSignedIn, channel]);
 
   useEffect(() => {
     if (divRef.current != null) {
@@ -148,13 +139,14 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   return (
     <>
       <div
-        className={`relative flex max-h-[calc(100vh-64px)] max-w-[350px] flex-col justify-between border-l border-zinc-500 bg-[#fefefe]  font-noto-sans text-white  dark:bg-[#141516] ${visible ? "w-[18%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
+        className={`dark:bg-back-tertiary relative flex max-h-[calc(100vh-64px)] max-w-[350px] flex-col justify-between border-l border-zinc-500  bg-[#fefefe] font-noto-sans  text-white ${visible ? "w-[18%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
       >
         <div className="relative flex h-full max-h-[80px] flex-initial items-center justify-between overflow-hidden border-b-2 border-b-zinc-700 shadow-md">
           <div className="w-full">
             <Button
+              size={"icon"}
               variant={"link"}
-              className="justify-start text-start hover:bg-none hover:text-zinc-900 dark:hover:bg-none dark:hover:text-zinc-50"
+              className="justify-start p-0 px-0 text-start hover:bg-none hover:text-zinc-900 dark:hover:bg-none dark:hover:text-zinc-50"
               onClick={() => setVisible(!visible)}
             >
               <ChevronRight className="h-8 w-8" />
@@ -164,7 +156,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
           <div className="w-full" />
         </div>
         <div className="relative h-full max-h-[calc(85%-80px)] overflow-y-hidden">
-          <div className="h-full overflow-x-hidden overflow-y-scroll px-2">
+          <div className="h-full overflow-x-hidden overflow-y-scroll px-2 pt-1">
             {messages != null &&
               messages.map((message) => (
                 <div ref={divRef}>
@@ -180,7 +172,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
           </div>
         </div>
 
-        <div className="mx-0 flex h-40 flex-initial flex-col px-2 pt-3 dark:bg-[#1f2023]">
+        <div className="dark:bg-back-secondary mx-0 flex h-40 flex-initial flex-col px-2 pt-3">
           <Form
             //@ts-expect-error
             user={user}
@@ -199,7 +191,8 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
       >
         <Button
           variant={"link"}
-          className={`h-24 max-h-24 w-full justify-start text-start hover:bg-none hover:text-zinc-900 dark:hover:bg-none dark:hover:text-zinc-50 ${!visible ? "w-[100%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
+          size={"icon"}
+          className={`h-24 max-h-24 w-full justify-center text-start hover:bg-none hover:text-zinc-900 dark:hover:bg-none dark:hover:text-zinc-50 ${!visible ? "w-[100%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
           onClick={() => setVisible(!visible)}
         >
           <ChevronLeft className="h-8 w-8" />

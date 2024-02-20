@@ -26,7 +26,7 @@ const Browse = (): JSX.Element => {
         <div className="flex justify-center">
           <Button
             variant="link"
-            className="absolute -top-[10px] h-[20px] rounded-md font-noto-sans font-semibold transition-all hover:no-underline dark:bg-[#141516] dark:text-zinc-500 hover:dark:text-white"
+            className="dark:bg-back-tertiary absolute -top-[10px] h-[20px] rounded-md font-noto-sans font-semibold transition-all hover:no-underline dark:text-zinc-500 hover:dark:text-white"
             onClick={() => showMoreCategory()}
           >
             Show More

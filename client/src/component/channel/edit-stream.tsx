@@ -201,7 +201,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                   <div className="relative">
                     <div className="absolute">
                       {result.length > 0 && (
-                        <div className="max-h-56 rounded-lg bg-[#1f2023] px-2 py-2">
+                        <div className="bg-back-secondary max-h-56 rounded-lg px-2 py-2">
                           <div className="max-h-52 space-y-2 overflow-y-scroll">
                             {result.map((res) => (
                               <Button
@@ -236,7 +236,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                   </div>
                 </>
               ) : (
-                <div className="flex flex-row justify-between rounded-lg bg-[#1f2023] px-2 py-1">
+                <div className="bg-back-secondary flex flex-row justify-between rounded-lg px-2 py-1">
                   <div className="flex flex-row gap-x-4">
                     <div>
                       <Image

@@ -70,7 +70,7 @@ const ChatIdentity = ({ user, initialColor, getToken, setColor }: Props) => {
       <PopoverTrigger className="flex items-center justify-center rounded-md p-1 transition-colors hover:bg-[#eaeaea]/10">
         <Star className="h-5 w-5" />
       </PopoverTrigger>
-      <PopoverContent className="mr-10 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#141516]">
+      <PopoverContent className="dark:bg-back-tertiary mr-10 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3">
         <div className="title sticky top-0 z-10 flex h-fit w-full  flex-col border-b-[1px] border-b-zinc-700 font-noto-sans ">
           <div className="mb-5 text-center font-bold uppercase">
             Chat Identity

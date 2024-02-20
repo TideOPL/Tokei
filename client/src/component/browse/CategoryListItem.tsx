@@ -17,12 +17,12 @@ const CategoryListItem = ({ category }: Props): JSX.Element => {
     >
       <div
         className={
-          "1080:min-h-[70%] 1440:min-h-[80%] relative flex min-h-[65%] w-full items-center justify-items-center rounded-xl"
+          "relative flex min-h-[65%] w-full items-center justify-items-center rounded-xl 1080:min-h-[70%] 1440:min-h-[80%]"
         }
       >
         <ImageWithFallback
           src={category.image}
-          alt={"thumbnail"}
+          alt={category.name}
           className="rounded-lg border-primary object-fill transition-all group-hover:border-4"
           fill={true}
           fallback={"/placeholder-category.png"}

@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
   });
   
 
-  socket.on('leave', (chat) => {
+  socket.on('disconnect', (chat) => {
     const address = socket.handshake.headers['x-forwarded-for']?.toString().split(',')[0] || '';
 
     const viewerFunc = async () => {
@@ -189,6 +189,8 @@ io.on('connection', (socket) => {
 
     viewerFunc();
   });
+
+
 });
 
 export const limiter = rateLimit({

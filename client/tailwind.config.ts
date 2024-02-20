@@ -60,6 +60,11 @@ const config = {
           'dark': '#1a1b1e',
           'light': '#282b33'
         },
+        'back': {
+          'primary': '#292a2d',
+          'secondary': '#1f2023',
+          'tertiary': '#141516' 
+        },
         'light-primary': {
           'light': '#FEFEFE',
           'dark': '#bfbfbf'

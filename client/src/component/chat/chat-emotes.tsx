@@ -1,8 +1,6 @@
 import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
 import { Button } from "../ui/button";
-import { FaRegFaceGrin, FaRegHeart, FaGlobe, FaX } from "react-icons/fa6";
-import { Input } from "../ui/input";
-import { FaSearch } from "react-icons/fa";
+import { FaRegFaceGrin, FaX } from "react-icons/fa6";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useState } from "react";
 import { useAppSelector } from "~/store/hooks";
@@ -21,8 +19,8 @@ const ChatEmotes = ({ setMessage, setDisableHotkey }: Props) => {
       <PopoverTrigger className="flex items-center justify-center rounded-md p-1 transition-colors hover:bg-[#eaeaea]/10 ">
         <FaRegFaceGrin className="h-5 w-5" />
       </PopoverTrigger>
-      <PopoverContent className="mb-5 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3 dark:bg-[#141516] ">
-        <div className="title relative top-0 z-10 flex h-fit  w-full flex-col border-b-[2px] border-b-zinc-700 font-noto-sans dark:bg-[#141516]">
+      <PopoverContent className="dark:bg-back-tertiary mb-5 flex h-[40vh] w-[18vw] flex-col rounded-sm border-none p-0 pt-3">
+        <div className="title dark:bg-back-tertiary relative top-0 z-10 flex  h-fit w-full flex-col border-b-[2px] border-b-zinc-700 font-noto-sans">
           <div className="relative mb-5 text-center font-bold uppercase">
             Emotes
           </div>
@@ -37,7 +35,7 @@ const ChatEmotes = ({ setMessage, setDisableHotkey }: Props) => {
               </Button>
             </PopoverClose>
           </div>
-          {/* <div className="flex h-10 flex-col pb-16 pr-2 dark:bg-[#1f2023]">
+          {/* <div className="flex h-10 flex-col pb-16 pr-2 dark:bg-back-secondary">
             <div className="flex flex-col px-4 text-zinc-400">
               <div className="relative">
                 <div className="absolute left-2 top-[1.4rem] flex flex-col">
@@ -71,6 +69,7 @@ const ChatEmotes = ({ setMessage, setDisableHotkey }: Props) => {
             <div className="grid grid-flow-row grid-cols-8 gap-2">
               {emotes.emotes.map((emote) => (
                 <Button
+                  key={emote.name}
                   variant={"ghost"}
                   className="text-xl antialiased"
                   onClick={() => setMessage((prev) => prev + emote.emote)}

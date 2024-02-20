@@ -46,7 +46,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
   const router = useRouter();
   const clerk = useClerk();
   return (
-    <div className="flex h-16 max-h-16 w-full flex-row items-center justify-between bg-[#fefefe] px-2 py-8 dark:bg-[#292a2d] sm:px-12">
+    <div className="dark:bg-back-primary flex h-16 max-h-16 w-full flex-row items-center justify-between bg-[#fefefe] px-2 py-8 sm:px-12">
       <div className="flex flex-row space-x-6 sm:space-x-12">
         <h1 className="group animate-shake">
           <Link
@@ -131,8 +131,8 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                     <FaInbox className="h-5 w-5" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="absolute -right-40 mb-5 flex h-[20vh] w-[20vw] flex-col rounded-md border-none p-0 pt-3 dark:bg-[#141516] ">
-                  <div className="title dark:bg-[#141516]e relative top-0 z-10 flex h-fit w-full flex-col border-b-[1px] border-b-zinc-700 pb-4 font-noto-sans">
+                <PopoverContent className="dark:bg-back-tertiary absolute -right-40 mb-5 flex h-[20vh] w-[20vw] flex-col rounded-md border-none p-0 pt-3 ">
+                  <div className="title dark:bg-back-tertiary relative top-0 z-10 flex h-fit w-full flex-col border-b-[1px] border-b-zinc-700 pb-4 font-noto-sans">
                     <div className="text-center font-noto-sans text-lg font-semibold uppercase">
                       Notifications
                     </div>
@@ -148,7 +148,7 @@ const Nav = ({ user, signOut }: Props): JSX.Element => {
                     variant="ghost"
                     className="h-[42px] w-[92px] rounded-full font-noto-sans dark:text-white"
                   >
-                    <div className="flex h-16 max-h-16 w-fit flex-row items-center space-x-1 bg-[#fefefe] py-8 dark:bg-[#292a2d]">
+                    <div className="dark:bg-back-primary flex h-16 max-h-16 w-fit flex-row items-center space-x-1 bg-[#fefefe] py-8">
                       <span className="font-noto-sans text-xl font-semibold text-white hover:text-primary hover:underline">
                         {user.username}
                       </span>
