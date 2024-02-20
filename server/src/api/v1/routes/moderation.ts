@@ -88,7 +88,7 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
   } 
 });
 
-router.get('/unTimeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async (req: RequireAuthProp<Request>, res: Response) => {
+router.post('/unTimeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async (req: RequireAuthProp<Request>, res: Response) => {
   try {
     if (req.body.user == null || req.body.channel == null) {
       res.status(400).send();
