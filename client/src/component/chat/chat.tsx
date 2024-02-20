@@ -90,6 +90,9 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
           });
         }
       }
+      if (message.includes(`@unban-${user?.username}`)) {
+        setTimeOut(null);
+      }
     });
 
     // Listen for incoming messages

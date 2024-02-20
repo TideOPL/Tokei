@@ -13,6 +13,7 @@ const TokeiPlayer = ({ channel, disableControls }: Props) => {
   const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(true);
   const [hasWindow, setHasWindow] = useState(false);
+  const videoRef = useRef();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -31,6 +32,10 @@ const TokeiPlayer = ({ channel, disableControls }: Props) => {
           volume={volume}
           height={"100%"}
           width={"100%"}
+          //@ts-expect-error
+          ref={videoRef}
+          //@ts-expect-error
+          onPlay={() => videoRef.current.seekTo(1, "fraction")}
         />
         <PlayerControls
           state={playing}

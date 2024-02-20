@@ -81,6 +81,7 @@ router.post('/timeoutUser', ClerkExpressRequireAuth(), bodyParser.json(), async 
 
       res.status(200).send(timeout);
       io.sockets.emit(`chat_${channel.username}`, `@ban-${user.username}-reason-${timeout.reason}-end-${timeout.timestamp_mutedEnd}-moderator-${timeout.mod_id}`);
+      redis.del(`${user.username}__timeout`);
     }
     res.status(401).send();
   } catch (e) {

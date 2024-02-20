@@ -27,6 +27,7 @@ import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
 import Link from "next/link";
 import useModerate from "~/hook/useModerate";
+import { Toaster } from "~/component/ui/sonner";
 
 export const getServerSideProps = (async (context) => {
   if (
@@ -143,7 +144,7 @@ const Channel = ({
 
       {/*@ts-ignore -- Bug with Clerk types.*/}
       <Nav user={user} signOut={() => signOut()} />
-
+      <Toaster />
       <div className="flex max-h-[calc(100%-64px)] flex-1">
         <Sidebar />
         <div className="flex h-full max-h-full flex-grow overflow-x-hidden overflow-y-scroll">

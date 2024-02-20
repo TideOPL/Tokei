@@ -10,30 +10,25 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { Button } from "../ui/button";
-import { ShieldMinus, UserRound } from "lucide-react";
+import { UserRound } from "lucide-react";
 import { useAuth, useUser } from "@clerk/nextjs";
 import useFollow from "~/hook/useFollow";
 import { Separator } from "../ui/separator";
-import { GoAlert, GoShieldCheck } from "react-icons/go";
 import {
-  IoAlert,
-  IoBan,
   IoBanOutline,
-  IoMicOffCircleOutline,
-  IoMicOffOutline,
+  IoCheckmarkOutline,
   IoMicOutline,
   IoPersonAddOutline,
   IoPersonRemoveOutline,
   IoTimeOutline,
   IoWarningOutline,
-  IoWatchOutline,
 } from "react-icons/io5";
 import { formatDate } from "~/lib/utils";
 import usePopout from "~/hook/usePopout";
 import useModerate from "~/hook/useModerate";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FaBan, FaRegClock } from "react-icons/fa6";
+import { toast } from "sonner";
 
 interface Props {
   username: string;
@@ -46,17 +41,27 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   const { isSignedIn, user } = useUser();
   const { getToken } = useAuth();
   const { channel, isMod, setIsMod } = usePopout(getToken, username);
-  const { amIMod, timeoutUser } = useModerate(getToken, chatRoom);
+  const { amIMod, timeoutUser, unTimeoutUser, checkTimeout } = useModerate(
+    getToken,
+    chatRoom,
+  );
   const { follow, following, followers, chatRoomFollowSince } = useFollow(
     getToken,
     username,
     chatRoom.username,
   );
+  const [isTimedOut, setIsTimedOut] = useState(false);
   const date = new Date(parseInt(chatRoomFollowSince.trim()));
 
   useEffect(() => {
-    console.log(amIMod);
-  }, [amIMod]);
+    const fetch = async () => {
+      const data =
+        (await checkTimeout(channel?.clerk_id || "")) != null ? true : false;
+      setIsTimedOut(data);
+    };
+
+    fetch();
+  }, [channel]);
   return (
     <div className="flex h-full flex-col justify-between px-4 py-4">
       <div className="flex flex-row">
@@ -175,7 +180,19 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                     <Tooltip>
                       <TooltipTrigger
                         // 10 minute time out
-                        onClick={async () =>
+                        onClick={async () => {
+                          if (isTimedOut) {
+                            await unTimeoutUser(channel.clerk_id).then(() => {
+                              setIsTimedOut(false);
+                              toast(
+                                `Successfully untimed-out ${channel.username}`,
+                                {
+                                  description: "They have been unmuted.",
+                                },
+                              );
+                            });
+                            return;
+                          }
                           await timeoutUser(
                             channel.clerk_id,
                             chatRoom.clerk_id,
@@ -183,17 +200,30 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                               .valueOf()
                               .toString(),
                             "Unkown Reason",
-                          )
-                        }
+                          ).then(() => {
+                            setIsTimedOut(true);
+                            toast(
+                              `Successfully timed-out ${channel.username}`,
+                              {
+                                description:
+                                  "They have been muted for 10 minutes.",
+                              },
+                            );
+                          });
+                        }}
                       >
-                        <IoTimeOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                        {isTimedOut ? (
+                          <IoCheckmarkOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                        ) : (
+                          <IoTimeOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                        )}
                       </TooltipTrigger>
                       <TooltipContent
                         style={{
                           color: "#FF6347",
                         }}
                       >
-                        Timeout {username}
+                        {isTimedOut && "Un-"}Timeout {username}
                       </TooltipContent>
                     </Tooltip>
                     <Tooltip>

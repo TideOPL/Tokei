@@ -1,9 +1,11 @@
 "use client"
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { env } from "~/env.mjs"
 import { Channel } from "~/interface/Channel";
 import { useAppSelector } from "~/store/hooks";
+import { addChannel } from "~/store/slice/userSlice";
 
 interface usePopoutType {
   channel: Channel | null | undefined;
@@ -15,31 +17,37 @@ const usePopout = (getToken: () => Promise<string | null>, channelName: string):
   const [channel, setChannel] = useState<Channel | null>();
   const [isMod, setIsMod] = useState<boolean>(false);
   const channels = useAppSelector((state) => state.channels);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetch = async () => {
-      const token = await getToken();
       const { data } = await axios.get<Channel>(
         `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${channelName}`,
       );
-      const modStatus = await axios
-        .get<boolean>(
-          `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/modCheck?channel=${channelName}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        )
-        .then((res) => res.status === 200)
-        .catch(() => false);
+
       setChannel(data);
+      dispatch(addChannel(data))
+    }
+
+    const fetchModStatus = async () => {
+      const token = await getToken();
+      const modStatus = await axios
+      .get<boolean>(
+        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/modCheck?channel=${channelName}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      )
+      .then((res) => res.status === 200)
+      .catch(() => false);
       setIsMod(modStatus);
     }
 
 
-    const channel: Channel[] = channels.channels.filter(
+    const channelCached: Channel[] = channels.channels.filter(
       (channel) => channel.username === channelName,
     );
 
-    if (channel[0] != null) {
-      setChannel(channel[0]);
+    if (channelCached[0] != null) {
+      setChannel(channelCached[0]);
       return;
     }
 
