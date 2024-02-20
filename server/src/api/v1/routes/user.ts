@@ -353,7 +353,7 @@ router.get('/moderation/amIMod', ClerkExpressRequireAuth(), async (req: RequireA
     const channel = await getUserByUsername(req.query.channel.toString());
 
     if (channel == null || moderator == null) {
-      res.status(404).send();
+      res.status(404).send({ moderator: moderator, channel: channel });
       return;
     }
 
