@@ -168,7 +168,10 @@ io.on('connection', (socket) => {
     //TODO: Check on the backend if the message sender is timed out on this channel.
 
     if (timeout) {
-      return;
+      if (timeout.timestamp_mutedEnd > Date.now()) {
+        return;
+      }
+      Timeout.findByIdAndUpdate(timeout._id, { active: false });
     }
 
     if (message.username == storedChat) {
