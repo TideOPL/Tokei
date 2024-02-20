@@ -117,7 +117,7 @@ io.on('connection', (socket) => {
   });
   
 
-  socket.on('disconnect', (chat) => {
+  socket.on('disconnect', () => {
     const address = socket.handshake.headers['x-forwarded-for']?.toString().split(',')[0] || '';
 
     const viewerFunc = async () => {
@@ -165,13 +165,15 @@ io.on('connection', (socket) => {
       icons.push('Broadcaster');
     }
 
-    const moderatorObject = await getOrSetCache('mods_' + channel.username, async () => {
-      const data = await Moderator.findOne({ channel: channel.clerk_id, user: userClerk });
+    const moderatorsObject = await getOrSetCache('mods_' + channel.username, async () => {
+      const data = await Moderator.find().exec();
 
       return data;
     }) as any;
 
-    if (moderatorObject) {
+    const moderatorObject = moderatorsObject.filter((item: { user: string; channel: string; }) => item.user === userClerk && item.channel === channel.clerk_id);
+
+    if (moderatorObject && message.username != storedChat) {
       if (channelMods.includes(moderatorObject._id)) {
         icons.push('Moderator');
       }  
