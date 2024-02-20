@@ -5,7 +5,6 @@ import { env } from "~/env.mjs"
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "~/store/hooks";
 import { setStreamInfo } from "~/store/slice/streamInfoSlice";
-import { addNewFollowingChannel } from "~/store/slice/followSlice";
 
 interface useChannelType {
   channel: Channel
