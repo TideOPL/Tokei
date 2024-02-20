@@ -166,19 +166,18 @@ io.on('connection', (socket) => {
     }
 
     const moderatorsObject = await getOrSetCache('mods_' + channel.username, async () => {
-      const data = await Moderator.find().exec();
+      const data = await Moderator.find({ channel: channel.clerk_id }).exec();
 
       return data;
     }) as any;
 
-    const moderatorObject = moderatorsObject.filter((item: { user: string; channel: string; }) => item.user === userClerk && item.channel === channel.clerk_id);
+    const moderatorObject = moderatorsObject.filter((item: { user: string; channel: string; }) => item.user === userClerk);
 
-    if (moderatorObject && message.username != storedChat) {
+    if (moderatorObject) {
       if (channelMods.includes(moderatorObject._id)) {
         icons.push('Moderator');
       }  
     }
-    
 
     if (isVerified) {
       icons.push('Verified');
