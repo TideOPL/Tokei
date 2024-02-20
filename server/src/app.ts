@@ -171,7 +171,7 @@ io.on('connection', (socket) => {
       if (timeout.timestamp_mutedEnd > Date.now()) {
         return;
       }
-      Timeout.findByIdAndUpdate(timeout._id, { active: false });
+      Timeout.findByIdAndUpdate(timeout._id, { active: false }).exec();
     }
 
     if (message.username == storedChat) {
