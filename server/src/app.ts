@@ -121,19 +121,19 @@ io.on('connection', (socket) => {
     const address = socket.handshake.headers['x-forwarded-for']?.toString().split(',')[0] || '';
 
     const viewerFunc = async () => {
-      const viewers: Array<string> | null = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
+      const viewers: Array<string> | null = await redis.lrange(`viewers_${storedChat}`, 0, -1);
 
       if (viewers) {
-        const viewer: number = viewers.indexOf(chat.username);
+        const viewer: number = viewers.indexOf(address.toString());
         if (viewer != -1) {
-          await redis.lrem(`viewers_${chat.chat}`, 1, address.toString());
+          await redis.lrem(`viewers_${storedChat}`, 1, address.toString());
           return;
         }
       }
 
-      const list: string[] = await redis.lrange(`viewers_${chat.chat}`, 0, -1);
+      const list: string[] = await redis.lrange(`viewers_${storedChat}`, 0, -1);
       
-      io.sockets.emit(`viewers_${chat.chat}`, list.length);
+      io.sockets.emit(`viewers_${storedChat}`, list.length);
     };
 
     viewerFunc();
