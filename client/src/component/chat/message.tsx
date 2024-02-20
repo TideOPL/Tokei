@@ -68,7 +68,7 @@ const Message = ({ icons, username, message, color, chatRoom }: Message) => {
             </span>
           </div>
         </PopoverTrigger>
-        <PopoverContent className="dark:bg-back-primary absolute -bottom-16 right-16 z-[99] flex h-fit w-80 flex-col rounded-sm border-none p-0 pt-3">
+        <PopoverContent className="dark:bg-back-secondary absolute -bottom-24 right-16 z-[99] flex h-fit w-80 flex-col rounded-sm border-none p-0 pt-3">
           <UserPopUp
             chatRoom={chatRoom}
             username={username}

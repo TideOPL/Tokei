@@ -44,7 +44,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   const [color, setColor] = useState("#FFFFFF");
   const [timeOut, setTimeOut] = useState<ITimeout | null>(null);
   const router = useRouter();
-  const { amITimedOut } = useModerate(getToken);
+  const { amITimedOut } = useModerate(getToken, channel);
 
   let count = 0;
 

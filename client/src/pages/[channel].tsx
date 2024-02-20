@@ -83,7 +83,7 @@ const Channel = ({
   const [viewers, setViewers] = useState("1");
   const [disableControls, setDisableControls] = useState(false);
   const streamInfo = useAppSelector((state) => state.streamInfo);
-  const { timeoutUser } = useModerate(getToken);
+  const { timeoutUser } = useModerate(getToken, channel);
 
   useEffect(() => {
     const fetch = async () => {

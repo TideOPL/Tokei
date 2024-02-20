@@ -41,3 +41,10 @@ export const changeImageSize = (originalUrl: string, newSize: string): string =>
     return newUrl;
 }
 
+export const formatDate = (date: Date): string => {
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const day = date.getDate();
+  const year = date.getFullYear();
+
+  return `${day} ${month}  ${year}`;
+}

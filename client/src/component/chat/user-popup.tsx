@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { Channel } from "../../interface/Channel";
 import axios from "axios";
 import { env } from "~/env.mjs";
@@ -11,22 +10,30 @@ import {
   TooltipTrigger,
 } from "../ui/tooltip";
 import { Button } from "../ui/button";
-import {
-  FlagIcon,
-  HammerIcon,
-  ShieldCheck,
-  ShieldMinus,
-  ShieldPlus,
-  SwordIcon,
-  UserRound,
-} from "lucide-react";
+import { ShieldMinus, UserRound } from "lucide-react";
 import { useAuth, useUser } from "@clerk/nextjs";
 import useFollow from "~/hook/useFollow";
 import { Separator } from "../ui/separator";
 import { GoAlert, GoShieldCheck } from "react-icons/go";
-import { IoBanOutline } from "react-icons/io5";
-import { date } from "zod";
-import { useAppSelector } from "~/store/hooks";
+import {
+  IoAlert,
+  IoBan,
+  IoBanOutline,
+  IoMicOffCircleOutline,
+  IoMicOffOutline,
+  IoMicOutline,
+  IoPersonAddOutline,
+  IoPersonRemoveOutline,
+  IoTimeOutline,
+  IoWarningOutline,
+  IoWatchOutline,
+} from "react-icons/io5";
+import { formatDate } from "~/lib/utils";
+import usePopout from "~/hook/usePopout";
+import useModerate from "~/hook/useModerate";
+import { useEffect } from "react";
+import Link from "next/link";
+import { FaBan, FaRegClock } from "react-icons/fa6";
 
 interface Props {
   username: string;
@@ -38,52 +45,18 @@ interface Props {
 const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   const { isSignedIn, user } = useUser();
   const { getToken } = useAuth();
-  const [channel, setChannel] = useState<Channel | null>(null);
-  const [isMod, setIsMod] = useState<boolean>(false);
+  const { channel, isMod, setIsMod } = usePopout(getToken, username);
+  const { amIMod } = useModerate(getToken, chatRoom);
   const { follow, following, followers, chatRoomFollowSince } = useFollow(
     getToken,
     username,
     chatRoom.username,
   );
-  const channels = useAppSelector((state) => state.channels);
-
   const date = new Date(parseInt(chatRoomFollowSince.trim()));
 
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const day = date.getDate();
-  const year = date.getFullYear();
-
-  const formattedDate = `${day} ${month}  ${year}`;
-
   useEffect(() => {
-    const fetch = async () => {
-      const token = await getToken();
-      const { data } = await axios.get<Channel>(
-        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/getChannel?channel=${username}`,
-      );
-      const modStatus = await axios
-        .get<boolean>(
-          `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/modCheck?channel=${username}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        )
-        .then((res) => res.status === 200)
-        .catch(() => false);
-      setChannel(data);
-      setIsMod(modStatus);
-    };
-
-    const channel: Channel[] = channels.channels.filter(
-      (channel) => channel.username === username,
-    );
-
-    if (channel[0] != null) {
-      setChannel(channel[0]);
-      return;
-    }
-
-    fetch();
-  }, []);
-
+    console.log(amIMod);
+  }, [amIMod]);
   return (
     <div className="flex h-full flex-col justify-between px-4 py-4">
       <div className="flex flex-row">
@@ -98,9 +71,9 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
           </Avatar>
         </div>
         <div className="flex flex-col">
-          <div className="text-lg" style={{ color }}>
+          <Link href={`/${username}`} className="text-lg" style={{ color }}>
             {username}
-          </div>
+          </Link>
           <div className="flex flex-row">
             <div>
               <div className="text-sm text-zinc-400">Followers</div>
@@ -114,7 +87,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                 />
                 <div>
                   <div className="text-sm text-zinc-400">Followed Since</div>
-                  <div className="text-center">{formattedDate}</div>
+                  <div className="text-center">{formatDate(date)}</div>
                 </div>
               </>
             )}
@@ -158,114 +131,95 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
         <></>
       )}
       <Separator className="my-4 dark:bg-zinc-600" />
-      {user?.username == chatRoom.username && (
-        <div>
-          {isMod ? (
-            <div>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={async () => {
-                      const token = await getToken();
-                      await axios.get(
-                        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
-                        { headers: { Authorization: `Bearer ${token}` } },
-                      );
-                    }}
-                  >
-                    <ShieldMinus className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
-                  </TooltipTrigger>
-                  <TooltipContent>Remove Moderator</TooltipContent>
-                </Tooltip>
-
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={() => console.log("Ban ", { username })}
-                  >
-                    <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    style={{
-                      color: "#FF6347",
-                    }}
-                  >
-                    Ban {username}
-                  </TooltipContent>
-                </Tooltip>
-                <div className="absolute bottom-0 right-0">
+      {user?.username != username && (
+        <div className="relative min-h-[1.5rem]">
+          <div className="flex flex-row justify-between">
+            <TooltipProvider>
+              {amIMod && chatRoom.username != username && (
+                <div className="space-x-1.5">
                   <Tooltip>
                     <TooltipTrigger
-                      onClick={() => console.log("Report ", { username })}
+                      onClick={async () => {
+                        const token = await getToken();
+                        await axios.get(
+                          `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
+                          { headers: { Authorization: `Bearer ${token}` } },
+                        );
+                        setIsMod((state) => !state);
+                      }}
                     >
-                      <GoAlert className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                      {isMod ? (
+                        <IoPersonRemoveOutline className="mr-1 h-[23px] w-[24px] self-center pb-0.5 transition-all hover:text-red-500" />
+                      ) : (
+                        <IoPersonAddOutline className="mr-1 h-[23px] w-[24px] self-center pb-0.5 transition-all hover:text-primary" />
+                      )}
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      {isMod ? "Remove Moderator" : "Add Moderator"}
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger
+                      onClick={() => console.log("Ban ", { username })}
+                    >
+                      <IoTimeOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                     </TooltipTrigger>
                     <TooltipContent
                       style={{
                         color: "#FF6347",
                       }}
                     >
-                      Report {username}
+                      Timeout {username}
                     </TooltipContent>
                   </Tooltip>
-                </div>
-              </TooltipProvider>
-            </div>
-          ) : (
-            <div className="relative">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={async () => {
-                      const token = await getToken();
-                      await axios.get(
-                        `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
-                        { headers: { Authorization: `Bearer ${token}` } },
-                      );
-                    }}
-                  >
-                    <GoShieldCheck className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-primary" />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    style={{
-                      color: "#D966BD",
-                    }}
-                  >
-                    Add Moderator
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={() => console.log("Ban ", { username })}
-                  >
-                    <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    style={{
-                      color: "#FF6347",
-                    }}
-                  >
-                    Ban {username}
-                  </TooltipContent>
-                </Tooltip>
-                <div className="absolute bottom-0 right-0">
                   <Tooltip>
                     <TooltipTrigger
-                      onClick={() => console.log("Report ", { username })}
+                      onClick={() => console.log("Ban ", { username })}
                     >
-                      <GoAlert className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                      <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                     </TooltipTrigger>
                     <TooltipContent
                       style={{
                         color: "#FF6347",
                       }}
                     >
-                      Report {username}
+                      Ban {username}
                     </TooltipContent>
                   </Tooltip>
                 </div>
-              </TooltipProvider>
-            </div>
-          )}
+              )}
+              <div className="flex w-full justify-end">
+                <Tooltip>
+                  <TooltipTrigger
+                    onClick={() => console.log("Report ", { username })}
+                  >
+                    <IoMicOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    style={{
+                      color: "#FF6347",
+                    }}
+                  >
+                    Mute {username}
+                  </TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger
+                    onClick={() => console.log("Report ", { username })}
+                  >
+                    <IoWarningOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                  </TooltipTrigger>
+                  <TooltipContent
+                    style={{
+                      color: "#FF6347",
+                    }}
+                  >
+                    Report {username}
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+            </TooltipProvider>
+          </div>
         </div>
       )}
     </div>
