@@ -139,7 +139,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   return (
     <>
       <div
-        className={`dark:bg-back-tertiary relative flex max-h-[calc(100vh-64px)] max-w-[350px] flex-col justify-between border-l border-zinc-500  bg-[#fefefe] font-noto-sans  text-white ${visible ? "w-[18%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
+        className={`relative flex max-h-[calc(100vh-64px)] max-w-[350px] flex-col justify-between border-l border-zinc-500 bg-[#fefefe]  font-noto-sans text-white  dark:bg-back-tertiary ${visible ? "w-[18%]" : "w-[0%]"} overflow-hidden transition-all duration-300 delay-150`}
       >
         <div className="relative flex h-full max-h-[80px] flex-initial items-center justify-between overflow-hidden border-b-2 border-b-zinc-700 shadow-md">
           <div className="w-full">
@@ -172,7 +172,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
           </div>
         </div>
 
-        <div className="dark:bg-back-secondary mx-0 flex h-40 flex-initial flex-col px-2 pt-3">
+        <div className="mx-0 flex h-40 flex-initial flex-col px-2 pt-3 dark:bg-back-secondary">
           <Form
             //@ts-expect-error
             user={user}
@@ -343,8 +343,10 @@ const Form = ({
           className={`h-12 max-w-lg select-text break-all rounded-none border-none pl-10 pr-12 focus:bg-none dark:bg-[#eaeaea]/5`}
         />
         {timeOut && (
-          <div className="absolute left-12 top-1 flex flex-col items-center text-center  ">
-            <div className="text-sm">You are currently timed out!</div>
+          <div className="absolute top-1 flex w-full flex-col items-center text-center  ">
+            <div className="... max-w-[65%] truncate text-sm">
+              You are currently timed out!
+            </div>
             <TimeoutClock
               changeState={setTimeOut}
               timestamp={timeOut.timestamp_mutedEnd}

@@ -35,7 +35,7 @@ const TimeoutClock = ({
   return (
     <div
       className={
-        "time flex min-w-[81.11px] flex-row font-semibold transition-all dark:text-white"
+        "time flex flex-row font-semibold transition-all dark:text-white"
       }
     >
       {time}

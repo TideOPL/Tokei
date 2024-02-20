@@ -155,11 +155,21 @@ io.on('connection', (socket) => {
       return data;
     }) as any;
 
+    const timeout = await getOrSetCache(`${message.username}_timeout`, async () => {
+      const data = await Timeout.findOne({ active: true, channel_id: channel.clerk_id, user_id: user.clerk_id }).exec();
+
+      return data;
+    }) as any;
+
     const channelMods = channel.channelMods as string[];
     const userClerk = user.clerk_id as string;
     const isVerified = user.isVerified as boolean;
 
     //TODO: Check on the backend if the message sender is timed out on this channel.
+
+    if (timeout) {
+      return;
+    }
 
     if (message.username == storedChat) {
       icons.push('Broadcaster');
