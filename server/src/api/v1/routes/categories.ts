@@ -1,13 +1,12 @@
 import express, { Router, Request, Response } from 'express';
-// import { RawCategory } from '../../../model/raw_category';
 import { Category } from '../../../model/category';
 // eslint-disable-next-line import/no-extraneous-dependencies
 // import axios from 'axios';
+// import { RawCategory } from '../../../model/raw_category';
 
 const router: Router = express.Router();
 // Get /categories/getCategories
 // router.get('/createCategories', async (req: Request, res: Response) => {
-
 //   const bannedPublishers = ['winged cloud', 't3 entertainment', 'atlus', 'huniepot', 'neko works', '落叶岛项目组, 橘子班', 'stage-nana', 'zloy krot studio', 'animu game', 'simon blasen', 'team psykskallar', 'cherry pop games', 'hanako games', 'sanctum games', 'lion games co', 'moonlit works', 'eternal dream'];
 
 //   function delay(ms: number) {
@@ -24,9 +23,13 @@ const router: Router = express.Router();
 //       return Category.find({}).sort({ weight: 'asc' }).skip( 10 ).limit( 10 ).exec();
 //     };
 
+//     const getCategory = async (name: string) => {
+//       return Category.findOne({ searchName: name }).exec();
+//     };
+
 //     const rawCategories = await getRawCategories();
 
-//     for (let i = 467; i < rawCategories.length; i++) {
+//     for (let i = 0; i < rawCategories.length; i++) {
 //       const rawCategory = rawCategories[i];
 
 //       if (!rawCategory) {
@@ -45,12 +48,22 @@ const router: Router = express.Router();
 //         continue;
 //       }
 
+
 //       const searchName = rawCategory.name.toLowerCase().replaceAll("'", '').replaceAll(':', '').replaceAll(' ', '-');
+//       console.log(rawCategory.name);
+//       const category = await getCategory(searchName);
+//       console.log(category);
+//       if (category) {
+//         continue;
+//       }
+
+
 //       let tags: string[] = [];
 //       let description = '';
 //       let age = '';
 //       if (rawCategory.appid) {
 //         const { data } = await axios.get(`https://store.steampowered.com/api/appdetails?appids=${rawCategory.appid}`);
+//         console.log(rawCategory.name);
 //         try {
 //           data[rawCategory.appid].data.genres.map((tag: { id: string, description: string }) => (
 //             tags.push(tag.description)
