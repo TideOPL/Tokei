@@ -25,6 +25,7 @@ export interface Channel {
   isLive: boolean
   isVerified: boolean
   channelMods: string[]
+  createdOn: number
 }
 
 export interface Follow {

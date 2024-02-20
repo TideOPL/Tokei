@@ -83,7 +83,6 @@ const Channel = ({
   const [viewers, setViewers] = useState("1");
   const [disableControls, setDisableControls] = useState(false);
   const streamInfo = useAppSelector((state) => state.streamInfo);
-  const { timeoutUser } = useModerate(getToken, channel);
 
   useEffect(() => {
     const fetch = async () => {
@@ -98,23 +97,8 @@ const Channel = ({
     dispatch(addChannel(channel));
   }, []);
 
-  useEffect(() => {
-    const testTimeOut = async () => {
-      await timeoutUser(
-        "user_2ca04NxB1rzXzbxZbooGbpDbcm4",
-        channel.clerk_id,
-        "1709078400000",
-        "test mute",
-      );
-    };
-
-    if (isSignedIn) {
-      testTimeOut();
-    }
-  }, [isSignedIn]);
-
   return (
-    <div className="max-h-screen-ios dark:bg-back-tertiary flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light">
+    <div className="max-h-screen-ios flex h-screen max-h-screen flex-col overflow-hidden scroll-smooth bg-light-primary-light dark:bg-back-tertiary">
       <Head>
         <title>{"Tokei - " + channel.username}</title>
         <meta

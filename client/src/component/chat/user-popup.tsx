@@ -46,7 +46,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   const { isSignedIn, user } = useUser();
   const { getToken } = useAuth();
   const { channel, isMod, setIsMod } = usePopout(getToken, username);
-  const { amIMod } = useModerate(getToken, chatRoom);
+  const { amIMod, timeoutUser } = useModerate(getToken, chatRoom);
   const { follow, following, followers, chatRoomFollowSince } = useFollow(
     getToken,
     username,
@@ -79,7 +79,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
               <div className="text-sm text-zinc-400">Followers</div>
               <div className="text-center">{followers}</div>
             </div>
-            {chatRoomFollowSince.length > 1 && (
+            {chatRoomFollowSince.length > 1 ? (
               <>
                 <Separator
                   orientation="vertical"
@@ -88,6 +88,21 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                 <div>
                   <div className="text-sm text-zinc-400">Followed Since</div>
                   <div className="text-center">{formatDate(date)}</div>
+                </div>
+              </>
+            ) : (
+              <>
+                <Separator
+                  orientation="vertical"
+                  className="mx-4 dark:bg-zinc-600"
+                />
+                <div>
+                  <div className="text-center text-sm text-zinc-400">
+                    Created On
+                  </div>
+                  <div className="text-center">
+                    {formatDate(new Date(channel?.createdOn || 0))}
+                  </div>
                 </div>
               </>
             )}
@@ -109,7 +124,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
           ))}
         </div>
       )}
-      {isSignedIn && user.username != channel?.username ? (
+      {isSignedIn && user.username != channel?.username && (
         <div className="pt-4">
           {following ? (
             <Button
@@ -127,100 +142,112 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
             </Button>
           )}
         </div>
-      ) : (
-        <></>
       )}
-      <Separator className="my-4 dark:bg-zinc-600" />
-      {user?.username != username && (
-        <div className="relative min-h-[1.5rem]">
-          <div className="flex flex-row justify-between">
-            <TooltipProvider>
-              {amIMod && chatRoom.username != username && (
-                <div className="space-x-1.5">
+      {user?.username != username && channel && (
+        <>
+          <Separator className="my-4 dark:bg-zinc-600" />
+          <div className="relative min-h-[1.5rem]">
+            <div className="flex flex-row justify-between">
+              <TooltipProvider>
+                {amIMod && chatRoom.username != username && (
+                  <div className="space-x-1.5">
+                    <Tooltip>
+                      <TooltipTrigger
+                        onClick={async () => {
+                          const token = await getToken();
+                          await axios.get(
+                            `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
+                            { headers: { Authorization: `Bearer ${token}` } },
+                          );
+                          setIsMod((state) => !state);
+                        }}
+                      >
+                        {isMod ? (
+                          <IoPersonRemoveOutline className="mr-1 h-[23px] w-[24px] self-center pb-0.5 transition-all hover:text-red-500" />
+                        ) : (
+                          <IoPersonAddOutline className="mr-1 h-[23px] w-[24px] self-center pb-0.5 transition-all hover:text-primary" />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {isMod ? "Remove Moderator" : "Add Moderator"}
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger
+                        // 10 minute time out
+                        onClick={async () =>
+                          await timeoutUser(
+                            channel.clerk_id,
+                            chatRoom.clerk_id,
+                            new Date(+new Date() + 60000 * 10)
+                              .valueOf()
+                              .toString(),
+                            "Unkown Reason",
+                          )
+                        }
+                      >
+                        <IoTimeOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          color: "#FF6347",
+                        }}
+                      >
+                        Timeout {username}
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger
+                        onClick={() => console.log("Ban ", { username })}
+                      >
+                        <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                      </TooltipTrigger>
+                      <TooltipContent
+                        style={{
+                          color: "#FF6347",
+                        }}
+                      >
+                        Ban {username}
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                )}
+                <div
+                  className={`flex ${!amIMod && "w-full"} ${chatRoom.username == username && "w-full"} justify-end`}
+                >
                   <Tooltip>
                     <TooltipTrigger
-                      onClick={async () => {
-                        const token = await getToken();
-                        await axios.get(
-                          `${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/user/moderation/addMod?channel=${username}`,
-                          { headers: { Authorization: `Bearer ${token}` } },
-                        );
-                        setIsMod((state) => !state);
-                      }}
+                      onClick={() => console.log("Report ", { username })}
                     >
-                      {isMod ? (
-                        <IoPersonRemoveOutline className="mr-1 h-[23px] w-[24px] self-center pb-0.5 transition-all hover:text-red-500" />
-                      ) : (
-                        <IoPersonAddOutline className="mr-1 h-[23px] w-[24px] self-center pb-0.5 transition-all hover:text-primary" />
-                      )}
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      {isMod ? "Remove Moderator" : "Add Moderator"}
-                    </TooltipContent>
-                  </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger
-                      onClick={() => console.log("Ban ", { username })}
-                    >
-                      <IoTimeOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                      <IoMicOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                     </TooltipTrigger>
                     <TooltipContent
                       style={{
                         color: "#FF6347",
                       }}
                     >
-                      Timeout {username}
+                      Mute {username}
                     </TooltipContent>
                   </Tooltip>
                   <Tooltip>
                     <TooltipTrigger
-                      onClick={() => console.log("Ban ", { username })}
+                      onClick={() => console.log("Report ", { username })}
                     >
-                      <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                      <IoWarningOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
                     </TooltipTrigger>
                     <TooltipContent
                       style={{
                         color: "#FF6347",
                       }}
                     >
-                      Ban {username}
+                      Report {username}
                     </TooltipContent>
                   </Tooltip>
                 </div>
-              )}
-              <div className="flex w-full justify-end">
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={() => console.log("Report ", { username })}
-                  >
-                    <IoMicOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    style={{
-                      color: "#FF6347",
-                    }}
-                  >
-                    Mute {username}
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger
-                    onClick={() => console.log("Report ", { username })}
-                  >
-                    <IoWarningOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
-                  </TooltipTrigger>
-                  <TooltipContent
-                    style={{
-                      color: "#FF6347",
-                    }}
-                  >
-                    Report {username}
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </TooltipProvider>
+              </TooltipProvider>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
