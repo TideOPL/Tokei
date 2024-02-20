@@ -174,8 +174,8 @@ io.on('connection', (socket) => {
     const moderatorObject = moderatorsObject.filter((item: { user: string; channel: string; }) => item.user === userClerk);
     console.log(moderatorObject);
 
-    if (moderatorObject) {
-      if (channelMods.includes(moderatorObject._id)) {
+    if (moderatorObject.length != 0) {
+      if (channelMods.includes(moderatorObject[0]._id)) {
         icons.push('Moderator');
       }  
     }
