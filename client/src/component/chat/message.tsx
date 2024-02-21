@@ -55,7 +55,7 @@ const Message = ({ icons, username, message, color, chatRoom }: Message) => {
       className="group mb-1 h-fit whitespace-pre-line break-words rounded-md py-0.5 pl-1 font-medium transition-all hover:bg-zinc-800/50 "
     >
       <Popover>
-        <PopoverTrigger className="inline-block h-[32px] min-h-[137.75] flex-row rounded-md px-1 transition-colors hover:bg-[#eaeaea]/10">
+        <PopoverTrigger className="etransition-colors inline-block h-[32px] min-h-[137.75] flex-row rounded-md px-1 hover:bg-[#eaeaea]/10">
           <div className="flex h-full flex-row items-baseline pb-2 pt-1">
             {userIcon.map((icon) => (
               <div style={icon.style} className="self-center pl-0.5 pt-1">
@@ -68,7 +68,7 @@ const Message = ({ icons, username, message, color, chatRoom }: Message) => {
             </span>
           </div>
         </PopoverTrigger>
-        <PopoverContent className="dark:bg-back-secondary absolute -bottom-24 right-16 z-[99] flex h-fit w-80 flex-col rounded-sm border-none p-0 pt-3">
+        <PopoverContent className="absolute -bottom-24 right-16 z-[99] flex h-fit w-80 flex-col rounded-sm border-none p-0 pt-3 dark:bg-back-secondary/90">
           <UserPopUp
             chatRoom={chatRoom}
             username={username}

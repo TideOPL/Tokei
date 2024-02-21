@@ -44,12 +44,14 @@ const PlayerControls = ({
 
   return (
     <div className="absolute top-0 z-10 h-[100%] w-full flex-col  bg-transparent p-5 opacity-0 transition-all group-hover:opacity-100 ">
+      <div className="absolute inset-0 -z-10 flex h-[5%] w-full bg-gradient-to-b from-black/20 from-10%"></div>
+      <div className="absolute inset-0 bottom-0 -z-10 flex h-full bg-gradient-to-t from-black/40 to-transparent to-10%"></div>
       <div className="flex w-full justify-end">
         <div className="rounded-lg bg-primary  px-1 py-0.5 font-noto-sans font-bold text-white ">
           LIVE
         </div>
       </div>
-      <div className="flex h-[98%] items-end justify-between">
+      <div className="relative flex h-[98%] items-end justify-between">
         <div className="flex h-36 items-end">
           <div className="play">
             {state == true ? (
