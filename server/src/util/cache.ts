@@ -33,3 +33,11 @@ export async function clearCache() {
   // Flush all keys from the Redis cache
   await redis.flushall();
 }
+
+export const deleteCachedValue = async (keys: string[]) => {
+  try {
+    keys.map(async (key) => (redis.del(key)));
+  } catch (err) {
+    console.warn(err);
+  }  
+};

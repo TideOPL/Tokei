@@ -9,6 +9,7 @@ import { Stream } from '../../model/stream';
 import getColor from '../../util/getColor';
 import Filter from 'bad-words';
 import { redis } from '../../app';
+import { deleteCachedValue } from '../../util/cache';
 const router: Router = express.Router();
 // POST /signup
 router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req: Request, res: Response) => {
@@ -117,6 +118,7 @@ router.post('/webhook', bodyParser.raw({ type: 'application/json' }), async (req
       }
 
       user.deleteOne().exec();
+      deleteCachedValue([user?.username || '', user?.clerk_id || '']);
     } catch (e) {
       console.warn('[⚠] Caught error whilst trying to delete user via webhook.');
     }
