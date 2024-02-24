@@ -4,13 +4,15 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { env } from "~/env.mjs"
 import { Channel } from "~/interface/Channel";
-import { ITimeout } from "~/interface/chat";
+import { IChatStatus, ITimeout } from "~/interface/chat";
 
 interface useModerateType {
   timeoutUser: (userToBeMuted: string, channelId: string, timestampEnd: string, reason: string) => Promise<boolean>
   unTimeoutUser: (user: string) => Promise<boolean>
-  amITimedOut: (channelId: string) => Promise<ITimeout>
-  checkTimeout: (userId: string) => Promise<ITimeout>
+  chatBanUser: (userToBeMuted: string, channelId: string, reason: string) => Promise<boolean>
+  unChatBanUser: (user: string) => Promise<boolean>
+  chatStatus: (channelId: string) => Promise<IChatStatus>
+  checkChatStatus: (userId: string) => Promise<IChatStatus>
   amIMod: boolean
 }
 
@@ -57,25 +59,43 @@ const useModerate = (getToken: () => Promise<string | null>, channel: Channel): 
     return status;
   }
 
-  const amITimedOut = async (channel: string) => {
+  const chatBanUser = async (userToBeBanned: string, channelId: string, reason: string) => {
+    if (!amIMod) {return false}
+
+    const token = await getToken()
+    const status = await axios.post(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/moderate/banUser`, { "user": userToBeBanned, "channel": channelId, "reason": reason }, { headers: { 'Authorization': `Bearer ${token}`}}).then(() => true).catch(() => false);
+
+    return status
+  }
+
+  const unChatBanUser = async (userId: string) => {
+    if (!amIMod) {return false}
+
     const token = await getToken();
-    const data  = await axios.get<ITimeout>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/moderate/amITimedOut/?channel=${channel}`, { headers: {"Authorization": `Bearer ${token}`}}).then((res) => null).catch((err) => {return err.response.data});
+    const status = await axios.post(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/moderate/unBanUser`, { "user": userId, "channel": channel.clerk_id }, { headers: { 'Authorization': `Bearer ${token}`}}).then(() => true).catch(() => false);
+
+    return status;
+  } 
+
+  const chatStatus = async (channel: string) => {
+    const token = await getToken();
+    const data  = await axios.get<IChatStatus>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/moderate/chatStatus/?channel=${channel}`, { headers: {"Authorization": `Bearer ${token}`}}).then((res) => null).catch((err) => {return err.response.data});
     
     return data
   }
 
-  const checkTimeout = async (userId: string) => {
+  const checkChatStatus = async (userId: string) => {
     if (userId == "") {
       return;
     }
 
     const token = await getToken();
-    const data  = await axios.get<ITimeout>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/moderate/checkTimeout/?channel=${channel.clerk_id}&user=${userId}`, { headers: {"Authorization": `Bearer ${token}`}}).then((res) => null).catch((err) => {return err.response.data});
+    const data  = await axios.get<IChatStatus>(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}/api/v1/moderate/checkChatStatus/?channel=${channel.clerk_id}&user=${userId}`, { headers: {"Authorization": `Bearer ${token}`}}).then((res) => null).catch((err) => {return err.response.data});
     
     return data
   }
 
-  return {timeoutUser, unTimeoutUser, amITimedOut, checkTimeout, amIMod}
+  return {timeoutUser, unTimeoutUser, chatBanUser, unChatBanUser, chatStatus, checkChatStatus, amIMod}
 }
 
 export default useModerate;

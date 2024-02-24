@@ -11,7 +11,7 @@ import ChatIdentity from "./chat-identity";
 import ChatEmotes from "./chat-emotes";
 import { UserResource } from "@clerk/types";
 import { useRouter } from "next/router";
-import { ITimeout } from "~/interface/chat";
+import { IBan, ITimeout, isIBan } from "~/interface/chat";
 import useModerate from "~/hook/useModerate";
 import TimeoutClock from "../ui/timeout-clock";
 
@@ -23,8 +23,8 @@ interface Props {
 }
 
 interface FormProps {
-  timeOut: ITimeout | null;
-  setTimeOut: React.Dispatch<React.SetStateAction<ITimeout | null>>;
+  chatStatus: ITimeout | IBan | null;
+  setChatStatus: React.Dispatch<React.SetStateAction<ITimeout | IBan | null>>;
   user: UserResource | null;
   color: string;
   getToken: () => Promise<string | null>;
@@ -36,15 +36,23 @@ interface FormProps {
 const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
   const divRef = useRef<null | HTMLDivElement>(null);
   const [messages, setMessages] = useState<
-    Array<{ username: string; color: string; message: string }> | Array<any>
+    | Array<{
+        username: string;
+        color: string;
+        message: string;
+        deleted: boolean;
+      }>
+    | Array<any>
   >([]);
   const { isSignedIn, user } = useUser();
   const [socket, setSocket] = useState<Socket | null>(null);
   const [visible, setVisible] = useState(true);
   const [color, setColor] = useState("#FFFFFF");
-  const [timeOut, setTimeOut] = useState<ITimeout | null>(null);
+  const [chatStatusObj, setChatStatusObj] = useState<IBan | ITimeout | null>(
+    null,
+  );
   const router = useRouter();
-  const { amITimedOut } = useModerate(getToken, channel);
+  const { chatStatus } = useModerate(getToken, channel);
 
   let count = 0;
 
@@ -53,14 +61,27 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     const socket = io(`${env.NEXT_PUBLIC_URL}${env.NEXT_PUBLIC_EXPRESS_PORT}`);
     setSocket(socket);
     setMessages([]);
+    const messageClone: Array<{
+      username: string;
+      color: string;
+      message: string;
+      deleted: boolean;
+    }> = [];
 
     const fetch = async () => {
-      const data = await amITimedOut(channel.clerk_id);
+      const data = await chatStatus(channel.clerk_id);
       if (!data) {
         return;
       }
-      if (parseInt(data.timestamp_mutedEnd) > Date.now()) {
-        setTimeOut(data);
+      if (data.type == "timeout") {
+        const _data = data.object as ITimeout;
+        if (parseInt(_data.timestamp_mutedEnd) > Date.now()) {
+          setChatStatusObj(_data);
+        }
+      }
+      if (data.type == "ban") {
+        const _data = data.object as IBan;
+        setChatStatusObj(_data);
       }
     };
 
@@ -71,8 +92,46 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
     });
 
     socket.on(`chat_${channel.username}`, (message: string) => {
-      if (message.includes(`@ban-${user?.username}`)) {
-        const regexPattern = /@ban-(.*?)-reason-(.*?)-end-(.*?)-moderator-(.*)/;
+      if (message.includes(`@ban`) || message.includes(`@timeout`)) {
+        const timeOutRegexPattern =
+          /@timeout-(.*?)-reason-(.*?)-end-(.*?)-moderator-(.*)/;
+        const banRegexPattern =
+          /@ban-(.*?)-reason-(.*?)-end-(.*?)-moderator-(.*)/;
+
+        const timeOutMatch = message.match(timeOutRegexPattern);
+        const banMatch = message.match(banRegexPattern);
+
+        if (
+          (timeOutMatch && timeOutMatch.length >= 1) ||
+          (banMatch && banMatch.length >= 1)
+        ) {
+          //@ts-expect-error
+          const user = !timeOutMatch ? banMatch[1] : timeOutMatch[1];
+          const updatedMessages: Array<{
+            username: string;
+            color: string;
+            message: string;
+            deleted: boolean;
+          }> = [];
+          for (let i = 0; i < messageClone.length; i++) {
+            const message = messageClone[i];
+            if (!message) {
+              continue;
+            }
+
+            if (message.username === user) {
+              updatedMessages.push({ ...message, deleted: true });
+              continue;
+            }
+            updatedMessages.push(message);
+          }
+          setMessages(updatedMessages);
+        }
+      }
+
+      if (message.includes(`@timeout-${user?.username}`)) {
+        const regexPattern =
+          /@timeout-(.*?)-reason-(.*?)-end-(.*?)-moderator-(.*)/;
 
         // Match the string against the regular expression
         const matchResult = message.match(regexPattern);
@@ -83,28 +142,58 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
           const timestampEnd = matchResult[3];
           const moderator = matchResult[4];
 
-          setTimeOut({
+          setChatStatusObj({
             reason: reason || "",
             timestamp_mutedEnd: timestampEnd?.toString() || "",
             moderator: moderator || "",
+            active: true,
           });
         }
       }
+      if (message.includes(`@untimeout-${user?.username}`)) {
+        setChatStatusObj(null);
+      }
+
+      if (message.includes(`@ban-${user?.username}`)) {
+        const regexPattern = /@ban-(.*?)-reason-(.*?)-moderator-(.*)/;
+
+        // Match the string against the regular expression
+        const matchResult = message.match(regexPattern);
+
+        // Extract the captured groups
+        if (matchResult && matchResult.length >= 4) {
+          const reason = matchResult[2];
+          const moderator = matchResult[3];
+
+          setChatStatusObj({
+            reason: reason || "",
+            moderator: moderator || "",
+            active: true,
+          });
+        }
+      }
+
       if (message.includes(`@unban-${user?.username}`)) {
-        setTimeOut(null);
+        setChatStatusObj(null);
       }
     });
 
     // Listen for incoming messages
     socket.on(`message_${channel.username}`, (message) => {
+      message.deleted = false;
+
       if (count >= 100) {
+        messageClone.slice(1);
+        messageClone.push(message);
         setMessages((prevMessages) => {
           const updatedMessages = prevMessages.slice(1);
+
           return [...updatedMessages, message];
         });
         return;
       }
 
+      messageClone.push(message);
       setMessages((prevMessages) => [...prevMessages, message]);
       count++;
     });
@@ -168,6 +257,7 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
                     username={message.username}
                     color={message.color}
                     message={message.message}
+                    deleted={message.deleted}
                     icons={message.icons}
                   />
                 </div>
@@ -184,8 +274,8 @@ const Chat = ({ setViewers, channel, getToken, setDisableHotkey }: Props) => {
             setColor={setColor}
             socket={socket}
             setDisableHotkey={setDisableHotkey}
-            timeOut={timeOut}
-            setTimeOut={setTimeOut}
+            chatStatus={chatStatusObj}
+            setChatStatus={setChatStatusObj}
           />
         </div>
       </div>
@@ -212,18 +302,33 @@ const Form = ({
   setColor,
   socket,
   setDisableHotkey,
-  timeOut,
-  setTimeOut,
+  chatStatus,
+  setChatStatus,
 }: FormProps) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [error, setError] = useState(false);
   const clerk = useClerk();
+  const [timeOut, setTimeOut] = useState<ITimeout | null>(null);
+  const [chatBan, setChatBan] = useState<IBan | null>(null);
+
+  useEffect(() => {
+    if (chatStatus) {
+      if (isIBan(chatStatus)) {
+        setChatBan(chatStatus as IBan);
+        return;
+      }
+      setTimeOut(chatStatus as ITimeout);
+      return;
+    }
+    setTimeOut(null);
+    setChatBan(null);
+  }, [chatStatus]);
 
   const submit = (
     message: string,
     setMessage: React.Dispatch<React.SetStateAction<string>>,
   ) => {
-    if (timeOut != null) {
+    if (chatStatus != null) {
       return;
     }
     if (message.length > 0) {
@@ -290,11 +395,11 @@ const Form = ({
     >
       <div className={`relative ${error && "animate-shake"}`}>
         <Input
-          disabled={timeOut != null}
+          disabled={chatStatus != null}
           onFocus={() => setDisableHotkey(true)}
           onBlur={() => setDisableHotkey(false)}
           type={"text"}
-          placeholder={timeOut == null ? "Type a message..." : ""}
+          placeholder={chatStatus == null ? "Type a message..." : ""}
           value={currentMessage}
           onChange={(value) => setCurrentMessage(value.currentTarget.value)}
           onSubmit={(evt) => {
@@ -351,9 +456,17 @@ const Form = ({
               You are currently timed out!
             </div>
             <TimeoutClock
-              changeState={setTimeOut}
+              changeState={setChatStatus}
               timestamp={timeOut.timestamp_mutedEnd}
             />
+          </div>
+        )}
+        {chatBan && (
+          <div className="absolute top-1 flex w-full flex-col items-center text-center  ">
+            <div className="... max-w-[65%] truncate text-sm">
+              You are banned from the Chat!
+            </div>
+            <div>{chatBan.reason}</div>
           </div>
         )}
         {user && (

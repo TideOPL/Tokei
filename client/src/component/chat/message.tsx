@@ -12,6 +12,7 @@ interface Message {
   username: string;
   message: string;
   color: string;
+  deleted: boolean;
   icons: string[];
   chatRoom: Channel;
 }
@@ -46,7 +47,14 @@ const IconsList: IconProp[] = [
   },
 ];
 
-const Message = ({ icons, username, message, color, chatRoom }: Message) => {
+const Message = ({
+  icons,
+  username,
+  message,
+  color,
+  deleted,
+  chatRoom,
+}: Message) => {
   const userIcon = IconsList.filter((item) => icons.includes(item.name));
 
   return (
@@ -77,7 +85,13 @@ const Message = ({ icons, username, message, color, chatRoom }: Message) => {
           />
         </PopoverContent>
       </Popover>
-      <span className="min-h-[42px]">{message}</span>
+      {!deleted ? (
+        <span className="min-h-[42px]">{message}</span>
+      ) : (
+        <span className="min-h-[42px] text-xs italic text-zinc-500">
+          Message has been deleted by a moderator.
+        </span>
+      )}
     </div>
   );
 };

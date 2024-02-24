@@ -15,7 +15,9 @@ import { useAuth, useUser } from "@clerk/nextjs";
 import useFollow from "~/hook/useFollow";
 import { Separator } from "../ui/separator";
 import {
+  IoBan,
   IoBanOutline,
+  IoCheckmarkDoneOutline,
   IoCheckmarkOutline,
   IoMicOutline,
   IoPersonAddOutline,
@@ -41,23 +43,36 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   const { isSignedIn, user } = useUser();
   const { getToken } = useAuth();
   const { channel, isMod, setIsMod } = usePopout(getToken, username);
-  const { amIMod, timeoutUser, unTimeoutUser, checkTimeout } = useModerate(
-    getToken,
-    chatRoom,
-  );
+  const {
+    amIMod,
+    timeoutUser,
+    unTimeoutUser,
+    chatBanUser,
+    unChatBanUser,
+    checkChatStatus,
+  } = useModerate(getToken, chatRoom);
   const { follow, following, followers, chatRoomFollowSince } = useFollow(
     getToken,
     username,
     chatRoom.username,
   );
   const [isTimedOut, setIsTimedOut] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
   const date = new Date(parseInt(chatRoomFollowSince.trim()));
 
   useEffect(() => {
     const fetch = async () => {
-      const data =
-        (await checkTimeout(channel?.clerk_id || "")) != null ? true : false;
-      setIsTimedOut(data);
+      const data = await checkChatStatus(channel?.clerk_id || "");
+
+      if (!data) {
+        return;
+      }
+      if (data.type == "timeout") {
+        setIsTimedOut(true);
+      }
+      if (data.type == "ban") {
+        setIsBanned(true);
+      }
     };
 
     fetch();
@@ -228,16 +243,39 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                     </Tooltip>
                     <Tooltip>
                       <TooltipTrigger
-                        onClick={() => console.log("Ban ", { username })}
-                      >
-                        <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
-                      </TooltipTrigger>
-                      <TooltipContent
-                        style={{
-                          color: "#FF6347",
+                        onClick={async () => {
+                          if (isBanned) {
+                            await unChatBanUser(channel.clerk_id).then(() => {
+                              setIsBanned(false);
+                              toast(
+                                `Successfully unBanned ${channel.username}`,
+                                {
+                                  description: "They have been unBanned.",
+                                },
+                              );
+                            });
+                            return;
+                          }
+                          await chatBanUser(
+                            channel.clerk_id,
+                            chatRoom.clerk_id,
+                            "Unkown Reason",
+                          ).then(() => {
+                            setIsBanned(true);
+                            toast(`Successfully banned ${channel.username}`, {
+                              description: "They have been permanantly banned.",
+                            });
+                          });
                         }}
                       >
-                        Ban {username}
+                        {isBanned ? (
+                          <IoCheckmarkDoneOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                        ) : (
+                          <IoBanOutline className="mr-1 h-[24px] w-[24px] self-center transition-all hover:text-red-500" />
+                        )}
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        {isBanned ? `unBan ${username}` : `Ban ${username}`}
                       </TooltipContent>
                     </Tooltip>
                   </div>
