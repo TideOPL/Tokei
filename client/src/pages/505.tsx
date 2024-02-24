@@ -5,7 +5,7 @@ export default function Custom404() {
   const { user } = useUser();
   const { signOut, getToken } = useAuth();
 
-  <div>abc</div>;
+  <div>abcd</div>;
 
   //@ts-ignore
   return <Nav user={user} signOut={() => signOut()} />;
