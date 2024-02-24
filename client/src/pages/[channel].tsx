@@ -26,7 +26,6 @@ import OfflineChannel from "~/component/channel/offline-channel";
 import FollowContainer from "~/component/channel/follow-container";
 import EditStream from "~/component/channel/edit-stream";
 import Link from "next/link";
-import useModerate from "~/hook/useModerate";
 import { Toaster } from "~/component/ui/sonner";
 
 export const getServerSideProps = (async (context) => {
@@ -149,7 +148,7 @@ const Channel = ({
         <Sidebar />
         <div className="flex h-full max-h-full flex-grow overflow-x-hidden overflow-y-scroll">
           {channel.isLive && (
-            <div className="h-full max-h-[60%] w-full max-w-[78.2vw]">
+            <div className="h-full max-h-[60%] w-full sm:max-w-[78.2vw]">
               <TokeiPlayer
                 channel={channel.username}
                 disableControls={disableControls}
@@ -245,7 +244,7 @@ const Channel = ({
               stream={stream}
               followers={followers}
               userId={user?.id || ""}
-              follow={() => follow}
+              follow={() => follow(() => getToken())}
               getToken={getToken}
               following={following}
             />

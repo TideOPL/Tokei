@@ -15,7 +15,7 @@ interface Props {
   stream: Stream | null;
   followers: string;
   following: boolean | undefined;
-  follow: (getToken: () => Promise<string | null>) => void;
+  follow: () => void;
   getToken: () => Promise<string | null>;
 }
 
@@ -83,10 +83,7 @@ const OfflineChannel = ({
           </div>
           <div className="flex flex-row items-center justify-end gap-x-2">
             {signedIn && userId != channel.clerk_id ? (
-              <FollowContainer
-                follow={() => follow(() => getToken())}
-                following={following}
-              />
+              <FollowContainer follow={() => follow()} following={following} />
             ) : (
               <></>
             )}

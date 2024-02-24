@@ -304,7 +304,7 @@ router.get('/:channel/:filename', async (req: Request, res: Response) => {
               res.appendHeader('Content-Type', 'application/vnd.apple.mpegurl');
               var ae = req.headers['accept-encoding'];
               {/**@ts-ignore**/}
-              if (ae.match(/\bgzip\b/)) {
+              if (ae != null && ae.match(/\bgzip\b/)) {
                 zlib.gzip(contents, function (error: any, zip: any) {
                   if (error) throw error;
                   res.writeHead(200,
