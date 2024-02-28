@@ -21,6 +21,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useAppDispatch, useAppSelector } from "~/store/hooks";
 import { setStreamInfo } from "~/store/slice/streamInfoSlice";
+import { Checkbox } from "../ui/checkbox";
 
 interface Props {
   setActive: React.Dispatch<React.SetStateAction<boolean>>;
@@ -201,7 +202,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                   <div className="relative">
                     <div className="absolute">
                       {result.length > 0 && (
-                        <div className="bg-back-secondary max-h-56 rounded-lg px-2 py-2">
+                        <div className="max-h-56 rounded-lg bg-back-secondary px-2 py-2">
                           <div className="max-h-52 space-y-2 overflow-y-scroll">
                             {result.map((res) => (
                               <Button
@@ -236,7 +237,7 @@ const EditStream = ({ setActive, getToken }: Props) => {
                   </div>
                 </>
               ) : (
-                <div className="bg-back-secondary flex flex-row justify-between rounded-lg px-2 py-1">
+                <div className="flex flex-row justify-between rounded-lg bg-back-secondary px-2 py-1">
                   <div className="flex flex-row gap-x-4">
                     <div>
                       <Image
@@ -265,6 +266,25 @@ const EditStream = ({ setActive, getToken }: Props) => {
                   </Button>
                 </div>
               )}
+            </div>
+            <div className="">
+              <Label htmlFor="category" className="font-semibold">
+                Mature Audience
+              </Label>
+              <div className="items-top flex space-x-2">
+                <Checkbox id="terms1" />
+                <div className="grid gap-1.5 leading-none">
+                  <label
+                    htmlFor="terms1"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  >
+                    Accept terms and conditions
+                  </label>
+                  <p className="text-muted-foreground text-sm">
+                    You agree to our Terms of Service and Privacy Policy.
+                  </p>
+                </div>
+              </div>
             </div>
             <DialogClose className="flex flex-row-reverse gap-x-2" asChild>
               <div>

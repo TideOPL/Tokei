@@ -394,6 +394,17 @@ const Form = ({
       }}
     >
       <div className={`relative ${error && "animate-shake"}`}>
+        {chatBan && (
+          <div
+            className={`absolute -left-2 -top-[4.7rem] flex h-20 w-full flex-col items-center justify-center bg-back-secondary`}
+          >
+            <div className="... max-w-[85%] truncate">
+              You have been banned from the chat!
+            </div>
+            <div className="text-center text-sm">{chatBan.reason}</div>
+          </div>
+        )}
+
         <Input
           disabled={chatStatus != null}
           onFocus={() => setDisableHotkey(true)}
@@ -462,12 +473,7 @@ const Form = ({
           </div>
         )}
         {chatBan && (
-          <div className="absolute top-1 flex w-full flex-col items-center text-center  ">
-            <div className="... max-w-[65%] truncate text-sm">
-              You are banned from the Chat!
-            </div>
-            <div>{chatBan.reason}</div>
-          </div>
+          <div className="absolute top-1 flex w-full flex-col items-center text-center  "></div>
         )}
         {user && (
           <div className="absolute left-2 top-3">

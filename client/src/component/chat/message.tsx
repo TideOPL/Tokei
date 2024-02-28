@@ -7,6 +7,7 @@ import {
 } from "@radix-ui/react-popover";
 import UserPopUp from "./user-popup";
 import { Channel } from "~/interface/Channel";
+import Link from "next/link";
 
 interface Message {
   username: string;
@@ -60,7 +61,7 @@ const Message = ({
   return (
     <div
       key={`${username}_${Date.now()}_${message}`}
-      className="group mb-1 h-fit whitespace-pre-line break-words rounded-md py-0.5 pl-1 font-medium transition-all hover:bg-zinc-800/50 "
+      className="transition-allz group mb-1 h-fit whitespace-pre-line break-words rounded-md py-0.5 pl-1 font-medium hover:bg-zinc-800/50 "
     >
       <Popover>
         <PopoverTrigger className="etransition-colors inline-block h-[32px] min-h-[137.75] flex-row rounded-md px-1 hover:bg-[#eaeaea]/10">
@@ -86,13 +87,46 @@ const Message = ({
         </PopoverContent>
       </Popover>
       {!deleted ? (
-        <span className="min-h-[42px]">{message}</span>
+        <span className="min-h-[42px]">
+          {message.includes("https://") ? (
+            <span>{MessageLink(message)}</span>
+          ) : (
+            <span>{message}</span>
+          )}
+        </span>
       ) : (
         <span className="min-h-[42px] text-xs italic text-zinc-500">
           Message has been deleted by a moderator.
         </span>
       )}
     </div>
+  );
+};
+
+const MessageLink = (message: string): JSX.Element => {
+  const urlRegex = /(https?:\/\/[^\s]+)/;
+  const parts = message.split(urlRegex);
+
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (urlRegex.test(part)) {
+          const url = part.match(urlRegex)![0];
+          return (
+            <Link
+              className="text-primary hover:text-primary_lighter hover:underline"
+              href={url}
+              target="_blank"
+              key={index}
+            >
+              {url}
+            </Link>
+          );
+        } else {
+          return <span key={index}>{part}</span>;
+        }
+      })}
+    </>
   );
 };
 

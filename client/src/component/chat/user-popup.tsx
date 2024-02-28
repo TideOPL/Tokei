@@ -17,6 +17,7 @@ import { Separator } from "../ui/separator";
 import {
   IoBan,
   IoBanOutline,
+  IoCheckmarkDone,
   IoCheckmarkDoneOutline,
   IoCheckmarkOutline,
   IoMicOutline,
@@ -31,6 +32,7 @@ import useModerate from "~/hook/useModerate";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { Input } from "../ui/input";
 
 interface Props {
   username: string;
@@ -58,6 +60,8 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
   );
   const [isTimedOut, setIsTimedOut] = useState(false);
   const [isBanned, setIsBanned] = useState(false);
+  const [initBan, setInitBan] = useState(false);
+  const [banReason, setBanReason] = useState("");
   const date = new Date(parseInt(chatRoomFollowSince.trim()));
 
   useEffect(() => {
@@ -248,7 +252,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                             await unChatBanUser(channel.clerk_id).then(() => {
                               setIsBanned(false);
                               toast(
-                                `Successfully unBanned ${channel.username}`,
+                                `Successfully Unbanned ${channel.username}`,
                                 {
                                   description: "They have been unBanned.",
                                 },
@@ -256,16 +260,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                             });
                             return;
                           }
-                          await chatBanUser(
-                            channel.clerk_id,
-                            chatRoom.clerk_id,
-                            "Unkown Reason",
-                          ).then(() => {
-                            setIsBanned(true);
-                            toast(`Successfully banned ${channel.username}`, {
-                              description: "They have been permanantly banned.",
-                            });
-                          });
+                          setInitBan((prev) => !prev);
                         }}
                       >
                         {isBanned ? (
@@ -275,7 +270,7 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                         )}
                       </TooltipTrigger>
                       <TooltipContent>
-                        {isBanned ? `unBan ${username}` : `Ban ${username}`}
+                        {isBanned ? `Unban ${username}` : `Ban ${username}`}
                       </TooltipContent>
                     </Tooltip>
                   </div>
@@ -313,6 +308,36 @@ const UserPopUp = ({ username, color, icons, chatRoom }: Props) => {
                   </Tooltip>
                 </div>
               </TooltipProvider>
+            </div>
+            <div
+              className={`overflow-hidden transition-all ${initBan ? "h-16" : "h-0 overflow-hidden"} relative right-0 w-full duration-300 delay-150`}
+            >
+              <Input
+                placeholder="Type a reason..."
+                className={`z-50 m-[1px] mt-2 h-12 w-[95%] select-text break-all rounded-none border-none pr-10 focus:border-none focus:bg-none dark:bg-[#eaeaea]/5`}
+                value={banReason}
+                onChange={(evt) => setBanReason(evt.currentTarget.value)}
+              />
+              <Button
+                variant={"link"}
+                className="absolute right-5 top-[19px] m-0 h-fit p-0"
+                onClick={async () => {
+                  await chatBanUser(
+                    channel.clerk_id,
+                    chatRoom.clerk_id,
+                    banReason,
+                  ).then(() => {
+                    setInitBan((prev) => !prev);
+                    setBanReason("");
+                    setIsBanned(true);
+                    toast(`Successfully banned ${channel.username}`, {
+                      description: "They have been permanantly banned.",
+                    });
+                  });
+                }}
+              >
+                <IoCheckmarkOutline className="mr-1 h-[22px] w-[22px] self-center transition-all hover:text-lime-400" />
+              </Button>
             </div>
           </div>
         </>
