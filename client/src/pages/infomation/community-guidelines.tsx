@@ -33,51 +33,108 @@ export default function Home() {
               Tokei Community Guidelines
             </h1>
             <p className="my-5">Last Modificated: 28th February 2024</p>
-            <p className="my-5">Welcome to Tokei.live</p>
-            <h2 className=" my-5 text-2xl font-bold text-primary">
-              Guideline 1
-            </h2>
+            <h2 className=" my-5 text-2xl font-bold text-primary">Guideline</h2>
+            <p className="my-5">
+              Welcome to TOKEI. TOKEI prioritizes providing a safe and enjoyable
+              streaming experience for users of all ages. To achieve this,
+              explicit or adult content is strictly prohibited on the platform.
+              This includes but is not limited to nudity, sexual content, and
+              explicit language. Additionally, TOKEI maintains a zero-tolerance
+              policy towards violence, hate speech, and discrimination. Content
+              that incites or promotes harm against individuals or groups based
+              on race, ethnicity, religion, gender, sexual orientation,
+              disability, or any other characteristic is not permitted.
+              Moreover, TOKEI respects copyright and intellectual property
+              rights, requiring users to adhere to all applicable laws and
+              regulations when uploading or sharing content on the platform.
+              Furthermore, TOKEI understands the importance of providing diverse
+              and inclusive content while ensuring it aligns with community
+              standards. Therefore, content creators are encouraged to produce
+              original, creative works while refraining from infringing on the
+              rights of others. TOKEI implements measures to detect and remove
+              copyrighted material without proper authorization, promoting fair
+              use and respecting the intellectual property of content creators.
+              By upholding these content guidelines, TOKEI fosters a welcoming
+              environment where users can engage with a wide range of content
+              while feeling safe and respected.
+            </p>
+
             <h3 className=" my-5 text-2xl font-bold text-primary">
               Sensitive Content
             </h3>
             <h4 className=" my-5 text-xl font-bold text-primary">
-              Sexual Content
+              Explicit Content:
             </h4>
             <p className="my-5">
-              Any sexual content real or non fictional is prohibited from
-              broadcasting to Tokei.
+              TOKEI maintains a strict policy against explicit or adult content.
+              This includes nudity, sexual content, and any material that may be
+              deemed inappropriate for a broad audience. The goal is to create a
+              platform that caters to users of various age groups and cultural
+              backgrounds, fostering a safe and inclusive environment.
             </p>
             <p>
               Tokei strictly prohibits from broadcasting or uploading content
               which contain real or fictional nudity. This includes censoring
-              nudity, such as blurring effects, pixelisation, etc. Anything
-              hinting to Nudity is prohibited
+              nudity, such as blurring effects, pixelisation, etc.
             </p>
             <h4 className=" my-5 text-xl font-bold text-primary">
               Gore and Violent Content
             </h4>
             <p className="my-5"></p>
-            <h3 className=" text-1xl my-5 font-bold text-primary">
-              1.2 Limited License
+            <h3 className=" my-5 text-lg font-bold text-primary">
+              Violence, Hate Speech, and Discrimination
             </h3>
-            <p>
-              Tokei grants you a limited, non-exclusive, non-transferable, and
-              revocable license to access and use the Service for your personal,
-              non-commercial use. Tokei reserves the right to terminate this
-              license at any time for any reason.
+            <p className="my-5">
+              The platform prohibits the upload or streaming of content that
+              promotes violence, hate speech, or discrimination based on race,
+              gender, religion, or any other characteristic. This policy is
+              aimed at ensuring that TOKEI remains a space where users feel
+              respected and protected from offensive and harmful material.
             </p>
-            <h3 className=" text-1xl my-5 font-bold text-primary">
-              1.3 Changes to Our Services
-            </h3>
             <p>
-              Changes to Our Services: Tokei reserves the right to modify,
-              suspend, or discontinue the Service (or any part thereof) at any
-              time without prior notice.
+              In addition to prohibiting content that promotes violence, hate
+              speech, or discrimination based on various characteristics, TOKEI
+              is committed to maintaining a platform that upholds high standards
+              of decency and respect for its diverse user base. This extends to
+              the prohibition of graphic and gratuitous displays of gore and
+              violence. TOKEI recognizes the potential harm and discomfort such
+              content can inflict on users, and as a result, ensures that any
+              material featuring explicit gore or violence is swiftly identified
+              and removed. This policy underscores TOKEI's dedication to
+              fostering an inclusive and safe digital environment where users
+              can engage with content without being exposed to distressing or
+              offensive material. By upholding these stringent guidelines, TOKEI
+              strives to cultivate a community that encourages positive
+              interactions, creativity, and mutual understanding among its
+              users.
+            </p>
+            <h3 className=" my-5 text-lg font-bold text-primary">Gore</h3>
+            <p className="my-5">
+              TOKEI strictly prohibit the display or streaming of any content
+              that involves explicit gore or graphic violence. This includes but
+              is not limited to depictions of extreme bodily harm, blood, or
+              disturbing imagery. Our goal is to foster a space where users can
+              enjoy content without being subjected to distressing material. We
+              believe in promoting positive interactions and maintaining an
+              atmosphere of respect for all users. Any content found violating
+              this policy will be promptly removed, and repeat offenders may
+              face account suspension or termination. By adhering to these
+              guidelines, we aim to uphold a platform that prioritizes user
+              well-being and ensures an enjoyable streaming experience for
+              everyone.
+            </p>
+            <p>
+              Games that may show a explicit amount of Gore. Example Blood. Are
+              required to enable the mature audience option within your stream
+              settings.
             </p>
 
             <h2 className=" my-5 text-2xl font-bold text-primary">
-              2. No Warranty
+              Illegal Activity
             </h2>
+            <h3 className=" my-5 text-lg font-bold text-primary">
+              Breaking the Law
+            </h3>
 
             <p>
               To the fullest extent permitted by applicable law, Tokei provides
